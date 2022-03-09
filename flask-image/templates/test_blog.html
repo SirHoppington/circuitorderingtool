@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='blog-posts.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
+    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
+	<script src="{{ url_for('static', filename='bootstrap.bundle.min.js')}}"></script>
+    {{ simplemde.css }}
+       {{ simplemde.js }}
+    <script>
+	   $(document).ready(function (e) {
+	       var example2 = new Taggle('example2');
+	       var simplemde = new SimpleMDE();
+
+			$('#upload').on('click', function () {
+			    var form_data = new FormData();
+                var ins = document.getElementById('image').files.length;
+			    var url = "{{ url_for('blogs.test_blog') }}";
+			    var tags = example2.getTagValues();
+			    var content = simplemde.value();
+                if(ins == 0) {
+					$('#msg').html('<span style="color:red">Select at least one file</span>');
+					return;
+				}
+				
+				for (var x = 0; x < tags.length; x++) {
+					form_data.append("tags[]", tags[x]);
+				}
+                for (var x = 0; x < ins; x++) {
+					form_data.append("files[]", document.getElementById('image').files[x]);
+				}
+				form_data.append("content", content);
+				form_data.append("title", document.getElementById('title').value);
+			    $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form_data, // serializes the form's elements.
+				    dataType: 'json',
+                    cache: false,
+					contentType: false,
+					processData: false,
+                    success: function (response) { // display success response
+						$('#msg').html('');
+						$.each(response, function (key, data) {
+							if(key !== 'message') {
+								$('#msg').append(key + ' -> ' + data + '<br/>');
+							} else {
+								$('#msg').append(data + '<br/>');
+							}
+						})
+					},
+					error: function (response) {
+						$('#msg').html(response.message); // display error response
+					}
+				});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+	  <div class="col-lg-8">
+    <div class="form-wrapper">
+	<hr>
+      <h1 class="mt-4">Add New Blog</h1>
+	<hr>
+	<div id="example2"> Tags</div>
+        <hr>
+      <form id="add_blog" method="POST" enctype="multipart/form-data">
+                  {{ form.csrf_token }}
+          <fieldset class="form-field">
+               {{ form.title.label}}
+              {{ form.title(size=20) }}
+			   </fieldset>
+			  <hr>
+			  <fieldset class="form-field">
+               {{ form.feature_image.label}}
+              {{ form.feature_image }}
+          </fieldset>
+           <hr>
+			  <fieldset class="form-field">
+              {{ form.contentcode.label}}
+              {{ form.contentcode }}
+          </fieldset>
+		  <hr>
+      </form>
+        <hr>
+	  <button id="upload">Upload</button>
+    </div>
+	</div>
+</div>
+</div>
+{% endblock %}

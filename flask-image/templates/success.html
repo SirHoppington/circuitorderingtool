@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table>
+{% for key in alltags['values']() %}
+<tr>
+	<th> {{ key }} </th>
+</tr>	
+{% endfor %}
+</table>
+
+{% endblock %}

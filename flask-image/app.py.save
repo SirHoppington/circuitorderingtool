@@ -1,0 +1,40 @@
+#import sys
+
+from flask import Flask, request, jsonify, flash, render_template, url_for
+from flask_bootstrap import Bootstrap
+from flask_flatpages import FlatPages
+from flask_frozen import Freezer
+from blask import BlaskApp
+import settings
+
+#FLATPAGES_AUTO_RELOAD = DEBUG
+#FLATPAGES_EXTENSION = '.md'
+
+app = Flask(__name__)
+#pages = FlatPages(app)
+#freezer = Freezer(app)
+
+#@freezer.register_generator
+#def pagelist():
+#  for page in pages:
+#   yield url_for('page', path=page.path)
+
+@app.route('/')
+def index():
+  return render_template('index.html')
+
+#@app.route('/<path:path>.html')
+#def page(page):
+#  page = pages.get_or_404(path)
+#  return render_template('page.html', page=page)
+
+#if __name__=='__main__':
+#  if len(sys.argv) > 1 and sys.argv[1] =='build':
+#    freezer.freeze()
+#  else:
+#  app.run(debug=True, host='0.0.0.0')
+   if __name__ == '__main__':
+        b = BlaskApp(templateDir=settings.templateDir, postDir=settings.postDir
+                  , defaultLayout=settings.defaultLayout,
+              staticDir=settings.staticDir, title=settings.title, errors={404:'404'})
+        b.run()

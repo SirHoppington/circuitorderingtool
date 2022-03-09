@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
+    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
+     {{ simplemde.css }}
+       {{ simplemde.js }}
+       <style>
+    .codeMirror-scroll{
+        height: 100%;
+        min-height: 60%;
+    }
+</style>
+    <script>
+	   $(document).ready(function (e) {
+	       var example2 = new Taggle('example2', {tags:
+		    [
+			{% for tag in query_tags %}
+		   '{{tag.name }}',
+		   {% endfor %}
+		   ]});
+	       var simplemde = new SimpleMDE({
+               element: document.getElementById('contentcode') }
+           );
+			$('#upload').on('click', function () {
+			    var form_data = new FormData();
+			    var url = "{{ url_for('blogs.update_blog', id=id)}}";
+			    var tags = example2.getTagValues();
+			    var contentcode = simplemde.value();
+
+				for (var x = 0; x < tags.length; x++) {
+					form_data.append("tags[]", tags[x]);
+				}
+                form_data.append("file", document.getElementById('image').files[0]);
+				form_data.append("contentcode", contentcode);
+				form_data.append("title", document.getElementById('title').value);
+
+				function onSuccess(responseText) {
+				    alert(responseText)
+                    document.getElementById("blogform").reset();
+
+                }
+                function onError() {
+				    alert("Title already in use, use a unique Title.")
+                }
+
+				$.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form_data, // serializes the form's elements.
+                    cache: false,
+					contentType: false,
+					processData: false,
+                    success: onSuccess,
+                    error: onError
+				});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-wrapper">
+                <h1 class="mt-4">Add New Blog</h1>
+                <hr>
+                <form method="POST" id="blogform" action="update_blog" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    <fieldset class="form-field">
+                        {{ form.title.label}}
+                        {{ form.title(size=20) }}
+                    </fieldset>
+                    <hr>
+                    <fieldset class="form-field">
+                        <div id="example2"></div>
+                    </fieldset>
+                    <hr>
+                    <fieldset class="form-field">
+                        {{ form.feature_image.label}}
+                        {{ form.feature_image }}
+                    </fieldset>
+                </form>
+            </div>
+	    </div>
+         <div class="col-lg-8">
+         <textarea id="contentcode">{{ blog.content }}</textarea>
+             <hr>
+             <button class="btn btn-outline-success my-2 my-sm-0" id="upload">Upload</button>
+             <hr>
+             <br>
+             <br>
+             <br>
+             <br>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+         <h1> HopNets </h1>
+<table class="table table-striped">
+  <tr>
+    {{ tag.name }}
+  </tr>
+  <tr>
+    <td> Title </td>
+    <td> published </td>
+  </tr>
+
+{% for blog in query_blogs %}
+  <tr>
+    <td><a href={{ url_for('blogs.get_single_blog', id=blog.id) }}> {{ blog.title }} </a></td>
+    <td> {{ blog.created_at }}</td>
+  </tr>
+{% endfor %}
+</table>
+{% endblock content %}
