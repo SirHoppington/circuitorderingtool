@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from app import db
 from flask_jwt_extended import jwt_required
 from forms import NewQuote
+from api.quotation_api import NewPricing
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import markdown
@@ -24,7 +25,13 @@ def my_renderer(text):
     pygmented_body = markdown.markdown(rendered_body, extensions=['codehilite', 'fenced_code'])
     return pygmented_body
 
-@provider.route('/new_quote')
+@provider.route('/new_quote', methods = ['POST', 'GET'])
 def new_quote():
+    form = NewQuote()
+    #pricing = NewPricing().run()
+    return render_template("new_quote.html", form=form)
+
+@provider.route('/view_quote')
+def view_quote():
     form = NewQuote()
     return render_template("new_quote.html", form=form)
