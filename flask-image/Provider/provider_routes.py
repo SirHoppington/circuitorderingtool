@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app import db
 from flask_jwt_extended import jwt_required
 from forms import NewQuote
-from api.quotation_api import NewPricing
+from api.virtual1 import Virtual1Api
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import markdown
@@ -20,7 +20,7 @@ def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def my_renderer(text):
-    """Inject markdown renderering into jinja template"""
+    """Inject markdown rendering into jinja template"""
     rendered_body = render_template_string(text)
     pygmented_body = markdown.markdown(rendered_body, extensions=['codehilite', 'fenced_code'])
     return pygmented_body
@@ -28,8 +28,13 @@ def my_renderer(text):
 @provider.route('/new_quote', methods = ['POST', 'GET'])
 def new_quote():
     form = NewQuote()
-    #pricing = NewPricing().run()
-    return render_template("new_quote.html", form=form)
+    if request.method == 'POST':
+        postcode = form.postcode.data
+        #accessTypes =
+        pricing = Virtual1Api().get_quote(postcode)
+        return pricing
+    else:
+        return render_template("new_quote.html", form=form)
 
 @provider.route('/view_quote')
 def view_quote():

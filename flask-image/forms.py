@@ -6,13 +6,8 @@ from werkzeug.utils import secure_filename
 
 class NewQuote(FlaskForm):
     """Add new quote form."""
-    title = StringField(
-        'Title',
+    postcode = StringField(
+        'Postcode',
         [DataRequired()],
         id='title'
     )
-    contentcode = TextAreaField(
-        'Content',
-        id='contentcode'
-    )
-    feature_image = FileField(validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')], id='image')
