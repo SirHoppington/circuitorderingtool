@@ -26,11 +26,40 @@
                         {{ form.postcode(size=20) }}
                     </fieldset>
                     <hr>
+					<fieldset class="controls">
+                        {{ form.accessTypes.label}}
+                        {{ form.accessTypes }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.bandwidths.label}}
+                        {{ form.bandwidths }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.bearers.label}}
+                        {{ form.bearers }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.productGroups.label}}
+                        {{ form.productGroups }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.suppliers.label}}
+                        {{ form.suppliers }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.terms.label}}
+                        {{ form.terms }}
+                    </fieldset>
+					<input type="submit" value="Submit">
                 </form>
             </div>
 	    </div>
          <hr>
-             <input type="submit" value="Submit">
 			 <hr>
              <br>
              <br>

@@ -4,12 +4,13 @@ from flask_login import login_required, current_user
 from app import db
 from flask_jwt_extended import jwt_required
 from forms import NewQuote
-from api.virtual1 import Virtual1Api
+from api.quote import Quote
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import markdown
 import gzip
 import subprocess
+import json
 
 
 provider = Blueprint('provider', __name__)
@@ -30,8 +31,13 @@ def new_quote():
     form = NewQuote()
     if request.method == 'POST':
         postcode = form.postcode.data
-        #accessTypes =
-        pricing = Virtual1Api().get_quote(postcode)
+        filters = form.data
+        pricing = Quote(postcode,filters).run()
+        #return response
+        #body = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode'}
+        #full_body = {"postcode":postcode, "filter":body}
+        #response = full_body
+        #return response
         return pricing
     else:
         return render_template("new_quote.html", form=form)

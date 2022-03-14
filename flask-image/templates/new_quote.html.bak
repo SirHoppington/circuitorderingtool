@@ -19,18 +19,46 @@
             <div class="form-wrapper">
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('new_quote') }}" >
-                    {{ form.csrf_token }}
+                <form method="POST" id="quoteform" action="{{ url_for('provider.new_quote') }}" >
                     <fieldset class="form-field">
                         {{ form.postcode.label}}
                         {{ form.postcode(size=20) }}
                     </fieldset>
                     <hr>
+					<fieldset class="controls">
+                        {{ form.accessTypes.label}}
+                        {{ form.accessTypes }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.bandwidths.label}}
+                        {{ form.bandwidths }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.bearers.label}}
+                        {{ form.bearers }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.productGroups.label}}
+                        {{ form.productGroups }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.suppliers.label}}
+                        {{ form.suppliers }}
+                    </fieldset>
+					<hr>
+					<fieldset class="controls">
+                        {{ form.terms.label}}
+                        {{ form.terms }}
+                    </fieldset>
+					<input type="submit" value="Submit">
                 </form>
             </div>
 	    </div>
          <hr>
-             <input type="submit" value="Submit">
 			 <hr>
              <br>
              <br>

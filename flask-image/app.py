@@ -15,7 +15,6 @@ app.config['SECRET_KEY'] = 'AAAAB3NzaC1yc2EAAAABJQAAAQEAuvjGXjjRHXzQrVWTlwkNGJ3T
 
 CORS(app)
 db.init_app(app)
-
 login_manager = LoginManager()
 login_manager.login_view = 'login.log_in'
 login_manager.init_app(app)
