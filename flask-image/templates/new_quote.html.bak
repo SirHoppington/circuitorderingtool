@@ -8,6 +8,13 @@
         height: 100%;
         min-height: 60%;
     }
+	.button {
+		display:block; 
+		width: 100%; 
+} 
+ul {
+  list-style: none;
+}
 </style>
  
 {% endblock %}
@@ -20,41 +27,67 @@
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
                 <form method="POST" id="quoteform" action="{{ url_for('provider.new_quote') }}" >
+                    {{ form.csrf_token }}
                     <fieldset class="form-field">
                         {{ form.postcode.label}}
                         {{ form.postcode(size=20) }}
                     </fieldset>
                     <hr>
-					<fieldset class="controls">
-                        {{ form.accessTypes.label}}
-                        {{ form.accessTypes }}
-                    </fieldset>
+					<div class="container">
+						<div class="row">
+						<div class="col-sm">
+							<fieldset class="form-field">
+							{{ form.accessTypes.label}}
+							{{ form.accessTypes.input}}
+							{{ form.accessTypes }}
+							</fieldset>
+						</div>	
+						<div class="col-sm">
+							<fieldset class="controls">
+							{{ form.bandwidths.label}}
+							<br>
+							{{ form.bandwidths }}
+							</fieldset>
+						</div>
+						<div class="col-sm">
+							<fieldset class="controls">
+							{{ form.bearers.label}}
+							<br>
+							{{ form.bearers }}
+							</fieldset>
+						</div>
+						</div>
 					<hr>
-					<fieldset class="controls">
-                        {{ form.bandwidths.label}}
-                        {{ form.bandwidths }}
-                    </fieldset>
-					<hr>
-					<fieldset class="controls">
-                        {{ form.bearers.label}}
-                        {{ form.bearers }}
-                    </fieldset>
-					<hr>
-					<fieldset class="controls">
-                        {{ form.productGroups.label}}
-                        {{ form.productGroups }}
-                    </fieldset>
-					<hr>
+						<div class="row">
+							<div class="col-sm">
+								<fieldset class="controls">
+								{{ form.productGroups.label}}
+								<br>
+								{{ form.productGroups }}
+								</fieldset>
+							</div>
+							<hr>
+							<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.suppliers.label}}
-                        {{ form.suppliers }}
+                        <br>
+						{{ form.suppliers }}
                     </fieldset>
+					</div>
 					<hr>
+					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.terms.label}}
-                        {{ form.terms }}
+                        <br>
+						{{ form.terms }}
                     </fieldset>
-					<input type="submit" value="Submit">
+					</div>
+					</div>
+					<hr>
+					<div class="row">
+					<input type="submit" value="Submit" class="button">
+					</div>
+				</div>					
                 </form>
             </div>
 	    </div>

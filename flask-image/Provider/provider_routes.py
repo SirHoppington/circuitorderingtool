@@ -11,7 +11,7 @@ import markdown
 import gzip
 import subprocess
 import json
-
+import pandas as pd
 
 provider = Blueprint('provider', __name__)
 
@@ -40,9 +40,12 @@ def new_quote():
         #return pricing
         #python_dict = list(pricing.values())
         print(pricing)
+        panda_pricing = pd.json_normalize(pricing, record_path = ['accessProducts'])
+        html_table = panda_pricing.to_html(classes="table")
         #return pricing
-       #return render_template("received_quote.html", python_dict=python_dict)
-        return render_template ("received_quote.html", pricing=pricing)
+        #return render_template("received_quote.html", python_dict=python_dict)
+        #return render_template ("received_quote.html", pricing=pricing)
+        return render_template("panda_quote.html", html_table=html_table)
     else:
         return render_template("new_quote.html", form=form)
 
