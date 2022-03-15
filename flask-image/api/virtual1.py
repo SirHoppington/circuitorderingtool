@@ -29,6 +29,7 @@ class Virtual1Api(Provider):
         response = requests.post(quoting, headers=self.headers, data=json_data, auth=self.basic, verify=False)
         return response.json()
 
+
 v1_api = Virtual1Api("https://apitest.virtual1.com/")
 
 

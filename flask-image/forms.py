@@ -1,8 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, SelectMultipleField
+from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from werkzeug.utils import secure_filename
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
 
 class NewQuote(FlaskForm):
     """Add new quote form."""
@@ -11,62 +16,56 @@ class NewQuote(FlaskForm):
         [DataRequired()],
         id='postcode'
     )
-    accessTypes = SelectMultipleField(
+    accessTypes = MultiCheckboxField(
         'AccessTypes',
         choices=
-        ['Any',
-         'Copper',
+        ['Copper',
          'Fibre',
          'FTTC'],
         id='accessType'
     )
-    bandwidths = SelectMultipleField(
+    bandwidths = MultiCheckboxField(
         'Bandwidths',
         choices=
-        ['Any',
-         'up to 10Mb',
-         '10Mb to 100Mb',
-         '100Mb to 1Gb',
-         '1Gb to 10Gb'],
+        [('UP_TO_10', 'up to 10Mb'),
+         ('FROM_10_TO_100','10Mb to 100Mb'),
+         ('FROM_100_TO_1000', '100Mb to 1Gb'),
+         ('FROM_1000_TO_10000', '1Gb to 10Gb')],
         id='bandwidths'
     )
-    bearers = SelectMultipleField(
+    bearers = MultiCheckboxField(
         'Bearers',
         choices=
-        ['Any',
-         '100Mb',
-         '1Gb',
-         '10Gb'],
+        [('100', '100Mb'),
+         ('1000', '1Gb'),
+         ('10000', '10Gb')],
         id='bandwidths'
     )
-    productGroups = SelectMultipleField(
+    productGroups = MultiCheckboxField(
         'ProductGroups',
         choices=
-        ['Any',
-         'EFM',
+        ['EFM',
           'EoFTTC',
           'Fibre Ethernet'],
         id='productGroups'
     )
-    suppliers = SelectMultipleField(
+    suppliers = MultiCheckboxField(
         'Suppliers',
         choices=
-        ['Any',
-         'BT Wholesale',
-          'Colt',
-          'Level 3',
-          'SSE',
-          'TTB',
-          'VMB',
-          'Virtual1',
-          'Vodafone'],
+        [('BT Wholesale', 'BT Wholesale'),
+         ('Colt', 'Colt'),
+         ('Level 3 Communications', 'Level 3'),
+         ('SSE Telecoms', 'SSE Telecoms'),
+         ('TalkTalk Business', 'TalkTalk Business'),
+         ('Virgin Media Business', 'Virgin Media Business'),
+         ('Virtual1', 'Virtual1'),
+         ('Vodafone', 'Vodafone')],
         id='suppliers'
     )
-    terms = SelectMultipleField(
+    terms = MultiCheckboxField(
         'Terms',
         choices=
-        ['Any',
-         '12 Months',
+        ['12 Months',
           '36 Months'],
         id='productGroups'
     )

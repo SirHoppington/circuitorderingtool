@@ -37,8 +37,12 @@ def new_quote():
         #body = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode'}
         #full_body = {"postcode":postcode, "filter":body}
         #response = full_body
-        #return response
-        return pricing
+        #return pricing
+        #python_dict = list(pricing.values())
+        print(pricing)
+        #return pricing
+       #return render_template("received_quote.html", python_dict=python_dict)
+        return render_template ("received_quote.html", pricing=pricing)
     else:
         return render_template("new_quote.html", form=form)
 
