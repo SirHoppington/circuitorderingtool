@@ -1,11 +1,11 @@
 from app import db
 from datetime import datetime
-from Tags_Blog.tag_blog_table import tag_blog
+#from Tags_Blog.tag_blog_table import tag_blog
 
-class Blog(db.Model):
+class ProviderQuote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=False)
-    content = db.Column(db.Text, nullable=False)
+    provider = db.Column(db.String(50), nullable=False)
+    supplier_ref = db.Column(db.Integer, nullable=False)
     feature_image = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     tags = db.relationship('Tag', secondary=tag_blog, backref=db.backref('blogs_associated', lazy="dynamic"))

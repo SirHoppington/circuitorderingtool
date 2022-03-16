@@ -1,6 +1,7 @@
 from flask import request, json
 import requests
 import json
+import pandas as pd
 
 
 class Provider:
@@ -15,20 +16,27 @@ class Virtual1Api(Provider):
 
     basic = requests.auth.HTTPBasicAuth('apiuser@capita.co.uk', 'EyNoe*Vr')
 
-    def get_quote(self, postcode, filters):
-        # for arg in kwargs:
-        #   if arg == suppliers:
-        quoting = f"{self.url}layer2-api/quoting"
-        #quoting = url
-        #quoting = "https://apitest.virtual1.com/layer2-api/quoting"
-        #body = {"postcode": postcode}
-        body = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode'}
-        full_body = {"postcode":postcode, "filter":body}
-        json_data = json.dumps(full_body)
-        #json_data = full_body
-        response = requests.post(quoting, headers=self.headers, data=json_data, auth=self.basic, verify=False)
-        return response.json()
+    v1_quote_mapper = {"accessType": "Access Type", "availableWithoutHardware": "Available without hardware",
+                       "bandwidth": "Bandwidth(Mb)", "bearer": "Bearer(Mb)",
+                       "carrier": "Carrier", "hardwareOptions": "Hardware", "indicative": "Indicative",
+                       "installCharges": "Install Charges (GDP)",
+                       "leadTime": "Lead Time (Days)", "monthlyFees": "Monthly fee (GDP)", "product": "Product",
+                       "productReference": "Product ref", "secondaryOptions": "Secondary", "term": "Term",
+                       "quoteReference": "Supplier Reference"}
 
+    def get_quote(self, postcode, filters):
+        quote_url = f"{self.url}layer2-api/quoting"
+        cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode'}
+        body = {"postcode":postcode, "filter":cleansed_form}
+        response = requests.post(quote_url, headers=self.headers, data=json.dumps(body), auth=self.basic, verify=False)
+        panda_pricing = pd.json_normalize(response.json(), record_path = ['accessProducts'], meta = ['quoteReference']).rename(columns=self.v1_quote_mapper)
+        return panda_pricing
+
+    def fetch_quote(self, quote_reference):
+        retrieve_url = f"{self.url}layer2-api/retrieveQuote?quoteReference={quote_reference}"
+        response = requests.get(retrieve_url)
+        quote_details = pd.json_normalize(response.json(), record_path = ['accessProducts'], meta = ['quoteReference']).rename(columns=self.v1_quote_mapper)
+        return quote_details
 
 v1_api = Virtual1Api("https://apitest.virtual1.com/")
 

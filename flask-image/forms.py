@@ -1,8 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired, Length
-from flask_wtf.file import FileField, FileRequired, FileAllowed
-from werkzeug.utils import secure_filename
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
@@ -68,4 +66,12 @@ class NewQuote(FlaskForm):
         ['12 Months',
           '36 Months'],
         id='productGroups'
+    )
+
+class RetrieveQuote(FlaskForm):
+    """Add new quote form."""
+    quote_ref = StringField(
+        'Quote Reference',
+        [DataRequired()],
+        id='quoteId'
     )
