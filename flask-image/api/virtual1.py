@@ -4,6 +4,7 @@ import json
 import pandas as pd
 
 
+
 class Provider:
     def __init__(self, url):
         self.url = url
@@ -30,13 +31,16 @@ class Virtual1Api(Provider):
         body = {"postcode":postcode, "filter":cleansed_form}
         response = requests.post(quote_url, headers=self.headers, data=json.dumps(body), auth=self.basic, verify=False)
         panda_pricing = pd.json_normalize(response.json(), record_path = ['accessProducts'], meta = ['quoteReference']).rename(columns=self.v1_quote_mapper)
+
+        #will save all of panda to database table, likely best to only save quotation reference.
+        #panda.to_sql(name='provider_pricing', con=db.engine, index=False)
         return panda_pricing
 
     def fetch_quote(self, quote_reference):
         retrieve_url = f"{self.url}layer2-api/retrieveQuote?quoteReference={quote_reference}"
-        response = requests.get(retrieve_url)
-        quote_details = pd.json_normalize(response.json(), record_path = ['accessProducts'], meta = ['quoteReference']).rename(columns=self.v1_quote_mapper)
-        return quote_details
+        response = requests.get(retrieve_url, auth=self.basic)
+        panda_pricing = pd.json_normalize(response.json(), record_path = ['accessProducts'], meta = ['quoteReference']).rename(columns=self.v1_quote_mapper)
+        return panda_pricing
 
 v1_api = Virtual1Api("https://apitest.virtual1.com/")
 
