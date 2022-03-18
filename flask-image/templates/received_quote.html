@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
+    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
+       <style>
+    .codeMirror-scroll{
+        height: 100%;
+        min-height: 60%;
+    }
+	.button {
+		display:block; 
+		width: 100%; 
+} 
+ul {
+  list-style: none;
+}
+
+</style>
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-wrapper">
+                <h1 class="mt-4">Pricing Results</h1>
+                <hr>
+				{% for value in pricing.get('accessProducts') %}
+				<table class="table">
+					<thead>
+					</thead>
+						<tbody>
+						<tr>
+							<tr>
+							<th colspan="2"> Pricing result {{ loop.index }} </th>
+							</tr>
+								{% for k, v in value.items() %}
+								<th> {{ k }}</th> 
+								<td> {{ v }} </td>
+								</tr>   
+								{% endfor %}
+		  			    </tbody>
+</table>
+<br>
+	   {% endfor %}
+            </div>
+	    </div>
+         <hr>
+			 <hr>
+             <br>
+             <br>
+             <br>
+             <br>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

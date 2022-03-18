@@ -8,6 +8,7 @@ import pandas as pd
 from Provider.provider_model import ProviderQuote
 from Quote.quote_model import Quotation
 from Quote.association_table import quote_table
+from app import db
 
 provider = Blueprint('provider', __name__)
 
@@ -27,7 +28,9 @@ def view_pricing():
         fetch_quote = pricing.retrieve_quote(form.quote_ref.data)
         return render_template("panda_quote.html", html_table=fetch_quote[0], quote_ref=fetch_quote[1])
     else:
-        return render_template("view_pricing.html", form=form)
+        # Move DB queries to separate module and import, keeps the views clean.
+        quotes= db.session.query(ProviderQuote).filter((quote_table.c.quotation_id==Quotation.id) & (quote_table.c.provider_id==ProviderQuote.id)).all()
+        return render_template("view_pricing.html", form=form, quotes=quotes)
 
 @provider.route('/view_quotation_table', methods = ['POST', 'GET'])
 def view_quotation_table():

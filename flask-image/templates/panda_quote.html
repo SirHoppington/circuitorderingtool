@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+       <style>
+    .codeMirror-scroll{
+        height: 100%;
+        min-height: 60%;
+    }
+	.button {
+		display:block; 
+		width: 100%; 
+} 
+ul {
+  list-style: none;
+}
+
+</style>
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<h1 class="mt-4">Pricing Results - {{ quote_ref }}</h1>
+  {{ html_table | safe }}
+  </div>
+{% endblock %}
