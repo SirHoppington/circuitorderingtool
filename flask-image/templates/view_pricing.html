@@ -4,10 +4,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
     <script src="{{ url_for('static', filename='taggle.js')}}"></script>
        <style>
-    .codeMirror-scroll{
-        height: 100%;
-        min-height: 60%;
-    }
 	.button {
 		display:block; 
 		width: 100%; 
@@ -31,44 +27,51 @@ ul {
                     <hr>
 					<div class="container">
 						<div class="row">
-						<div class="col-sm">
+						  <div class="col-sm">
 							<fieldset class="form-field">
 							{{ form.quote_ref.label}}
 							{{ form.quote_ref }}
 							</fieldset>
-						</div>	
-					</div>
+						  </div>
+					    </div>
 					</div>
 					<hr>
 					<input type="submit" value="Submit" class="button">		
                 </form>
-						<div class="container">
-						<div class="row">
-						<div class="col-sm">
-						<table class="table">
-						<tr> 
-						<th>Quotation reference</th>
-						<th>Postcode</th>
-						<th>Suppliers</th>
-						<th>Supplier reference</th>
-						<th>Quote created</th>
-						</tr>
-						{% for quote in quotes %}
-						<tr>
-						{% for q in quote.quotes %}
-						  <th>{{ q.id }}</th>
-						  <th>{{ q.name}}</th>
-						  {% endfor %}
-						<th>{{ quote.provider }}</th>
-						<th>{{ quote.supplier_ref }}</th>
-						<th>{{ quote.created_at }}</th>
-						</tr>
-						{% endfor %}
-						</table>
-						</div>
-						</div>
-			</div>		
+                  <div class="container">
+                      <div class="row">
+                          <div class="col-sm">
+                              <table class="table">
+                                  <tr>
+                                      <th>Quotation reference</th>
+                                      <th>Postcode</th>
+                                      <th>Suppliers</th>
+                                      <th>Supplier reference</th>
+                                      <th>Quote created</th>
+                                  </tr>
+                                  {% for quote in quotes %}
+                                      <tr>
+                                          {% for q in quote.quotes %}
+                                              <th>{{ q.id }}</th>
+                                              <th>{{ q.name}}</th>
+                                              {% endfor %}
+                                          <th>{{ quote.provider }}</th>
+                                          <th>{{ quote.supplier_ref }}</th>
+                                          <th>{{ quote.created_at }}</th>
+                                      <th>{% for q in quote.quotes %}
+                                          <form action="{{ url_for('provider.get_pricing', id=q.id) }}">
+                                          <input type="submit" value="View"/>
+                                      </form>
+                                          {% endfor %}
+                                      </th>
+                                      </tr>
+                                  {% endfor %}
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+            </div>
         </div>
-	</div>
+    </div>
 </div>
 {% endblock %}

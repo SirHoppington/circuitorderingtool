@@ -26,7 +26,11 @@ ul {
             <div class="form-wrapper">
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('provider.new_quote') }}" >
+				{% for quote in quotes %}
+				 {% for q in quote.quotes %}
+                <form method="POST" id="quoteform" action="{{ url_for('provider.get_pricing', id= q.id) }}">
+				{% endfor %}
+				{% endfor %}
                     {{ form.csrf_token }}
                     <fieldset class="form-field">
                         {{ form.postcode.label}}
@@ -38,7 +42,6 @@ ul {
 						<div class="col-sm">
 							<fieldset class="form-field">
 							{{ form.accessTypes.label}}
-							{{ form.accessTypes.input}}
 							{{ form.accessTypes }}
 							</fieldset>
 						</div>	
