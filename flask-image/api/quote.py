@@ -11,10 +11,15 @@ class Quote():
 
     def run(self, postcode, filters):
 
-        # V1 API:
+        # try V1 API:
         try:
             # returns v1 response as a Panda Dataframe with correct column headers.
             v1_response = v1_api.get_quote(postcode, filters)
+        except Exception as e:
+            return (str(e))
+        ## Add try/except for future provider Quotation APIs.
+        try:
+
             v1_ref = v1_response['Supplier Reference'].iloc[0]
             # Save to DB:
             v1_pricing = ProviderQuote(provider="Virtual1", supplier_ref=v1_ref)
