@@ -27,8 +27,9 @@ class Quote():
             db.session.add(v1_pricing)
             new_quote = Quotation(name=postcode)
             v1_pricing.quotes.append(new_quote)
-            quote_id = new_quote.id
+            db.session.add(new_quote)
             db.session.commit()
+            quote_id = new_quote.id
             # Insert code to merge supplier pandas then return the results as html table.
             return v1_response.to_html(classes=["table"], border="0", index=False), quote_id
         except Exception as e:
