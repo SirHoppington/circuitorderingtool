@@ -41,10 +41,11 @@ class Quote():
         try:
             #v1_ref = db.session.query(ProviderQuote).filter((quote_table.c.quotation_id==Quotation.id) & (quote_table.c.provider_id==ProviderQuote.id) & (ProviderQuote.provider=="Virtual1") & (Quotation.net==reference)).first()
             v1_ref = db.session.query(ProviderQuote).filter((quote_table.c.quotation_id==reference) & (quote_table.c.provider_id==ProviderQuote.id) & (ProviderQuote.provider=="Virtual1")).first()
+            net_ref = db.session.query(Quotation).filter((quote_table.c.quotation_id==reference) & (quote_table.c.provider_id==ProviderQuote.id) & (Quotation.id == reference)).first()
         except Exception as e:
             return (str(e))
         v1_response = v1_api.fetch_quote(v1_ref.supplier_ref)
         #net_ref = v1_ref.quotes.net
-        return v1_response.to_html(classes=["table"], border="0", index=False), v1_ref.id
+        return v1_response.to_html(classes=["table"], border="0", index=False), net_ref.net
 
 pricing = Quote()
