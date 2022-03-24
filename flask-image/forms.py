@@ -9,6 +9,11 @@ class MultiCheckboxField(SelectMultipleField):
 
 class NewQuote(FlaskForm):
     """Add new quote form."""
+    net = StringField(
+        'NET:',
+        [DataRequired()],
+        id='net'
+    )
     postcode = StringField(
         'Postcode',
         [DataRequired()],
@@ -70,21 +75,33 @@ class NewQuote(FlaskForm):
 
 class RetrieveQuote(FlaskForm):
     """Add new quote form."""
-    quote_ref = StringField(
-        'Quote Reference',
+    net = StringField(
+        'NET Reference',
         [DataRequired()],
-        id='quoteId'
+        id='net'
     )
 
 class NewOrder(FlaskForm):
     """Create new order form"""
+    quoteReference = StringField(
+        'Supplier Quote Reference',
+        id='quoteReferenceId'
+    )
+    pricingRequstAccessProductId = StringField(
+        'Pricing Request Product ID',
+        id='pricingRequstAccessProductIdId'
+    )
+    pricingRequestHardwareId = StringField(
+        'pricing request hardware ID',
+        id='pricingRequestHardwareIdId'
+    )
+    pricingRequestAdditionalHardwareOptionIds = StringField(
+        'Additional Hardware Option Ids',
+        id='pricingRequestAdditionalHardwareOptionIdsId'
+    )
     purchaseOrderNumber = StringField(
         'Purchase Order Number',
         id='purchaseOrderId'
-    )
-    orderReference = StringField(
-        'Order Reference',
-        id='orderReferenceId'
     )
     orderReference = StringField(
         'Order Reference',
@@ -98,7 +115,7 @@ class NewOrder(FlaskForm):
         'Last Name',
         id='primaryContactLastNameId'
     )
-    telephone = Integer(
+    telephone = StringField(
         'Telephone',
         id='primaryContactTelephoneId'
     )

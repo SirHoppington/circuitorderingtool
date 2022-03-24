@@ -26,7 +26,7 @@ ul {
             <div class="form-wrapper">
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('provider.get_pricing') }}" >
+                <form method="POST" id="quoteform" action="{{ url_for('provider.new_quote') }}" >
                     {{ form.csrf_token }}
                     <fieldset class="form-field">
                         {{ form.postcode.label}}

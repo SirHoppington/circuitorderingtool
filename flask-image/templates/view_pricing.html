@@ -29,8 +29,8 @@ ul {
 						<div class="row">
 						  <div class="col-sm">
 							<fieldset class="form-field">
-							{{ form.quote_ref.label}}
-							{{ form.quote_ref }}
+							{{ form.net.label}}
+							{{ form.net }}
 							</fieldset>
 						  </div>
 					    </div>
@@ -43,16 +43,16 @@ ul {
                           <div class="col-sm">
                               <table class="table">
                                   <tr>
-                                      <th>Quotation reference</th>
+                                      <th>Net Ref</th>
                                       <th>Postcode</th>
                                       <th>Suppliers</th>
-                                      <th>Supplier reference</th>
+                                      <th>Supplier Ref</th>
                                       <th>Quote created</th>
                                   </tr>
                                   {% for quote in quotes %}
                                       <tr>
                                           {% for q in quote.quotes %}
-                                              <th>{{ q.id }}</th>
+                                              <th>{{ q.net }}</th>
                                               <th>{{ q.name}}</th>
                                               {% endfor %}
                                           <th>{{ quote.provider }}</th>

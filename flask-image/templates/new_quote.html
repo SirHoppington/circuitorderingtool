@@ -29,6 +29,10 @@ ul {
                 <form method="POST" id="quoteform" action="{{ url_for('provider.new_quote') }}" >
                     {{ form.csrf_token }}
                     <fieldset class="form-field">
+                        {{ form.net.label}}
+                        {{ form.net(size=20) }}
+                    </fieldset>
+					  <fieldset class="form-field">
                         {{ form.postcode.label}}
                         {{ form.postcode(size=20) }}
                     </fieldset>
