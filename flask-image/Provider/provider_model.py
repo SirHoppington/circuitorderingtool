@@ -10,6 +10,7 @@ class ProviderQuote(db.Model):
     supplier_ref = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_associated', lazy="dynamic"))
+    orders = db.relationship('Order', secondary=quote_table, backref=db.backref('order_associated', lazy="dynamic"))
 
     def __init__(self, provider, supplier_ref):
         self.provider = provider,

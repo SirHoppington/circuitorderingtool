@@ -44,6 +44,13 @@ class Order():
         v1_response = v1_api.fetch_quote(v1_ref.supplier_ref)
         return v1_response.to_html(classes=["table"], border="0", index=False), reference
 
+    def place(self, reference):
+        order = Order(status="Assigned")
+        db.session.add(order)
+        quote_ref = Quotation(name=postcode)
+        v1_pricing.quotes.append(new_quote)
+        db.session.add(new_quote)
+        db.session.commit()
 
 new_order = Order()
         

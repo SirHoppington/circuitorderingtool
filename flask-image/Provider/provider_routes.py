@@ -36,9 +36,13 @@ def view_pricing():
 
 @provider.route('/view_orders', methods = ['GET'])
 def view_orders():
+    form = RetrieveQuote()
     # DB query to show orders that have been placed.
-    #quotes= db.session.query(ProviderQuote).filter((quote_table.c.quotation_id==Quotation.id) & (quote_table.c.provider_id==ProviderQuote.id)).all()
-    return render_template("view_orders.html", quotes=quotes)
+    quotes= db.session.query(ProviderQuote).filter((quote_table.c.quotation_id==Quotation.id) & (quote_table.c.provider_id==ProviderQuote.id)).all()
+    if request.method == 'POST':
+        return render_template("new_order.html", quotes=quotes)
+    else:
+        return render_template("view_orders.html", quotes=quotes, form=form)
 
 @provider.route('/place_order', methods = ['POST', 'GET'])
 def place_order():
@@ -47,7 +51,12 @@ def place_order():
         order_request = new_order.run(form.data)
         return render_template("order_confirmation.html", html_table=order_request[0], quote_ref=order_request[1])
     else:
-        return render_template("new_order.html", form=form)
+        return render_template("place_order.html", form=form)
+
+@provider.route('/new_order/<int:id>', methods = ['GET'])
+def new_order():
+    order = new_order.place(id)
+    return render_template("new_order.html", net_ref=order)
 
 @provider.route('/view_pricing/<int:id>', methods = ['GET'])
 def get_pricing(id):
