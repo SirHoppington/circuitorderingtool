@@ -4,7 +4,7 @@ class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(20))
-    order_to_quotes = db.relationship('Quote', secondary=quote_table, backref=db.backref('quote_to_order_associated', lazy="dynamic"))
+    #order_to_quotes = db.relationship('Quote', secondary=quote_table, backref=db.backref('quote_to_order_associated', lazy="dynamic"))
     @property
     def serialize(self):
         return {
