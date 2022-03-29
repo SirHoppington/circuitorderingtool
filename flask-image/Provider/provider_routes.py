@@ -27,18 +27,18 @@ def view_pricing():
     form = RetrieveQuote()
     #quotes = db.session.query(ProviderQuote).filter(
     #    (quote_table.c.quotation_id == Quotation.id) & (quote_table.c.provider_id == ProviderQuote.id)).all()
-    quotes = db.session.query(NetRef).filter(
+    quotes = db.session.query(ProviderQuote, Quotation).filter(
         (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
     print(quotes)
-    return "success"
-    #if request.method == 'POST':
-    #    net_ref = db.session.query(Quotation).filter(
-    #        (quote_table.c.quotation_id == Quotation.id) & (quote_table.c.provider_id == ProviderQuote.id) & (
-    #                Quotation.net == form.net.data)).first()
-    #    fetch_quote = pricing.retrieve_quote(net_ref.id)
-    #    return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
-    #else:
-    #    return render_template("view_pricing.html", form=form, quotes=quotes)
+    #return "success"
+    if request.method == 'POST':
+        net_ref = db.session.query(Quotation).filter(
+            (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id) & (
+                    Quotation.net == form.net.data)).first()
+        fetch_quote = pricing.retrieve_quote(net_ref.id)
+        return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
+    else:
+        return render_template("view_pricing.html", form=form, quotes=quotes)
 
 @provider.route('/view_orders', methods = ['GET'])
 def view_orders():

@@ -51,21 +51,18 @@ ul {
                                   </tr>
                                   {% for quote in quotes %}
                                       <tr>
-                                          {% for q in quote.quotes %}
-                                              <th>{{ q.net }}</th>
-                                              <th>{{ q.name}}</th>
-                                              {% endfor %}
-                                          <th>{{ quote.provider }}</th>
-                                          <th>{{ quote.supplier_ref }}</th>
-                                          <th>{{ quote.created_at }}</th>
-                                      <th>{% for q in quote.quotes %}
-                                          <form action="{{ url_for('provider.get_pricing', id=q.id) }}">
+                                              <th>{{ quote[1].net }}</th>
+                                              <th>{{ quote[1].name}}</th>	  
+                                          <th>{{ quote[0].provider }}</th>
+                                          <th>{{ quote[0].supplier_ref }}</th>
+                                          <th>{{ quote[0].created_at }}</th>
+                                      <th>
+                                          <form action="{{ url_for('provider.get_pricing', id=quote[1].id) }}">
                                           <input type="submit" value="View"/>
                                       </form>
                                           {% endfor %}
                                       </th>
                                       </tr>
-                                  {% endfor %}
                               </table>
                           </div>
                       </div>
