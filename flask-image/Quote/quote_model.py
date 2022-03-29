@@ -1,4 +1,4 @@
-from app import db
+"""from app import db
 
 class Quotation(db.Model):
     __tablename__ = 'quotation'
@@ -18,4 +18,4 @@ class Quotation(db.Model):
         self.net = net
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<id {}>'.format(self.id)"""

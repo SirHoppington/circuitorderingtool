@@ -1,8 +1,9 @@
 from api.virtual1 import v1_api
 import pandas as pd
-from Provider.provider_model import ProviderQuote
-from Quote.quote_model import Quotation
-from Quote.association_table import quote_table
+#from Provider.provider_model import ProviderQuote
+#from Quote.quote_model import Quotation
+#from Quote.association_table import quote_table
+from Quote.association_table import NetRef, ProviderQuote, Quotation, Order
 from app import db
 
 class Quote():
@@ -23,12 +24,16 @@ class Quote():
             v1_ref = v1_response['Supplier Reference'].iloc[0]
             # Save to DB:
             v1_pricing = ProviderQuote(provider="Virtual1", supplier_ref=v1_ref)
-            print(v1_pricing)
             ## INSERT API-2 db.session.add and append to quotes.
             db.session.add(v1_pricing)
             new_quote = Quotation(name=postcode, net=reference)
-            v1_pricing.quotes.append(new_quote)
             db.session.add(new_quote)
+            new_order = Order(status="Not ordered")
+            db.session.add(new_order)
+            db.session.commit()
+            associate_network_ref = NetRef(provider=v1_pricing, quote=new_quote, order=new_order)
+            db.session.add(associate_network_ref)
+            print(associate_network_ref)
             db.session.commit()
             net_ref = new_quote.net
             # Insert code to merge supplier pandas then return the results as html table.

@@ -1,6 +1,7 @@
 from Provider.provider_model import ProviderQuote
 from Quote.quote_model import Quotation
-from Quote.association_table import quote_table
+#from Quote.association_table import quote_table
+from Quote.association_table import NetRef
 from app import db
 
 """DB queries"""

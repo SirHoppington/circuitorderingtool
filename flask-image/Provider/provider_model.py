@@ -1,7 +1,7 @@
-from app import db
+"""from app import db
 from datetime import datetime
 #from Quotes.quote_model import quote_table
-from Quote.association_table import quote_table
+#from Quote.association_table import quote_table
 
 class ProviderQuote(db.Model):
     __tablename__ = "provider_pricing"
@@ -9,7 +9,7 @@ class ProviderQuote(db.Model):
     provider = db.Column(db.String(50), nullable=False)
     supplier_ref = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_associated', lazy="dynamic"))
+    #quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_associated', lazy="dynamic"))
     #orders = db.relationship('Order', secondary=quote_table, backref=db.backref('order_associated', lazy="dynamic"))
 
     def __init__(self, provider, supplier_ref):
@@ -27,4 +27,4 @@ class ProviderQuote(db.Model):
             'provider' : self.provider,
             'supplier_ref' : self.supplier_ref,
             'created_at' : self.created_at,
-        }
+        }"""

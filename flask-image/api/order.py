@@ -1,8 +1,9 @@
 from api.virtual1 import v1_api
 import pandas as pd
-from Provider.provider_model import ProviderQuote
-from Quote.quote_model import Quotation
-from Quote.association_table import quote_table
+#from Provider.provider_model import ProviderQuote
+#from Quote.quote_model import Quotation
+#from Quote.association_table import quote_table
+from Quote.association_table import NetRef, ProviderQuote, Quotation
 from app import db
 
 class Order():
