@@ -9,6 +9,7 @@ from api.order import new_order
 #from Quote.association_table import quote_table
 from Quote.association_table import NetRef, ProviderQuote, Quotation, Order
 from app import db
+from queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
 
 provider = Blueprint('provider', __name__)
 
@@ -25,26 +26,19 @@ def new_quote():
 @provider.route('/view_pricing', methods = ['POST', 'GET'])
 def view_pricing():
     form = RetrieveQuote()
-    #quotes = db.session.query(ProviderQuote).filter(
-    #    (quote_table.c.quotation_id == Quotation.id) & (quote_table.c.provider_id == ProviderQuote.id)).all()
-    quotes = db.session.query(ProviderQuote, Quotation).filter(
-        (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
-    print(quotes)
-    #return "success"
     if request.method == 'POST':
-        net_ref = db.session.query(Quotation).filter(
-            (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id) & (
-                    Quotation.net == form.net.data)).first()
+        net_ref = search_quotation_ref(form.net.data)
         fetch_quote = pricing.retrieve_quote(net_ref.id)
         return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
     else:
+        quotes = get_all_pricing()
         return render_template("view_pricing.html", form=form, quotes=quotes)
 
 @provider.route('/view_orders', methods = ['GET'])
 def view_orders():
     form = RetrieveQuote()
     # DB query to show orders that have been placed.
-    quotes= db.session.query(ProviderQuote).filter((quote_table.c.quotation_id==Quotation.id) & (quote_table.c.provider_id==ProviderQuote.id)).all()
+    quotes= get_all_pricing()
     if request.method == 'POST':
         return render_template("new_order.html", quotes=quotes)
     else:

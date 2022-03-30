@@ -1,7 +1,7 @@
-from Provider.provider_model import ProviderQuote
-from Quote.quote_model import Quotation
+#from Provider.provider_model import ProviderQuote
+#from Quote.quote_model import Quotation
 #from Quote.association_table import quote_table
-from Quote.association_table import NetRef
+from Quote.association_table import ProviderQuote, NetRef, Quotation, Order
 from app import db
 
 """DB queries"""
@@ -15,8 +15,20 @@ def search_provider(reference):
 
 # search Quotation table via Quote reference:
 def search_quotation_ref(reference):
-    result = net_ref = db.session.query(Quotation).filter(
-        (quote_table.c.quotation_id == reference) & (quote_table.c.provider_id == ProviderQuote.id) & (
-                Quotation.id == reference)).first()
+    result = db.session.query(Quotation).filter(
+            (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.order_id == Order.id) & (
+                    Quotation.net == reference)).first()
     return result
 
+#Search ProviderQuote and Quotation table for all results
+def get_all_pricing():
+    result = db.session.query(ProviderQuote, Quotation).filter(
+        (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
+    return result
+
+#Search ProviderQuote and Quotation table for v1 pricing
+def search_v1_quote_by_id(reference):
+    result = db.session.query(ProviderQuote, Quotation).filter(
+        (NetRef.quotation_id == reference) & (NetRef.provider_id == ProviderQuote.id) & (
+                ProviderQuote.provider == "Virtual1") & (Quotation.id == reference)).first()
+    return result

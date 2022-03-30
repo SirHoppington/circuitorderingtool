@@ -5,6 +5,7 @@ import pandas as pd
 #from Quote.association_table import quote_table
 from Quote.association_table import NetRef, ProviderQuote, Quotation, Order
 from app import db
+from queries import search_v1_quote_by_id
 
 class Quote():
     def __init__(self):
@@ -44,13 +45,11 @@ class Quote():
 
     def retrieve_quote(self, reference):
         try:
-            #v1_ref = db.session.query(ProviderQuote).filter((quote_table.c.quotation_id==Quotation.id) & (quote_table.c.provider_id==ProviderQuote.id) & (ProviderQuote.provider=="Virtual1") & (Quotation.net==reference)).first()
-            v1_ref = db.session.query(ProviderQuote).filter((NetRef.quotation_id==reference) & (NetRef.provider_id==ProviderQuote.id) & (ProviderQuote.provider=="Virtual1")).first()
-            net_ref = db.session.query(Quotation).filter((NetRef.quotation_id==reference) & (NetRef.provider_id==ProviderQuote.id) & (Quotation.id == reference)).first()
+            net_ref = search_v1_quote_by_id(reference)
+            print(net_ref)
         except Exception as e:
             return (str(e))
-        v1_response = v1_api.fetch_quote(v1_ref.supplier_ref)
-        #net_ref = v1_ref.quotes.net
-        return v1_response.to_html(classes=["table"], border="0", index=False), net_ref.net
+        v1_response = v1_api.fetch_quote(net_ref[0].supplier_ref)
+        return v1_response.to_html(classes=["table"], border="0", index=False), net_ref[1].net
 
 pricing = Quote()
