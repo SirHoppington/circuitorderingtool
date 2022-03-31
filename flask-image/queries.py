@@ -1,7 +1,4 @@
-#from Provider.provider_model import ProviderQuote
-#from Quote.quote_model import Quotation
-#from Quote.association_table import quote_table
-from Quote.association_table import ProviderQuote, NetRef, Quotation, Order
+from Models.association_table import ProviderQuote, NetRef, Quotation, Order
 from app import db
 
 """DB queries"""
@@ -32,3 +29,18 @@ def search_v1_quote_by_id(reference):
         (NetRef.quotation_id == reference) & (NetRef.provider_id == ProviderQuote.id) & (
                 ProviderQuote.provider == "Virtual1") & (Quotation.id == reference)).first()
     return result
+
+def add_quote(provider, supplier_ref, postcode, reference, status):
+    v1_pricing = ProviderQuote(provider=provider, supplier_ref=supplier_ref)
+    ## INSERT API-2 db.session.add and append to quotes.
+    db.session.add(v1_pricing)
+    new_quote = Quotation(name=postcode, net=reference)
+    db.session.add(new_quote)
+    new_order = Order(status="Not ordered")
+    db.session.add(new_order)
+    db.session.commit()
+    associate_network_ref = NetRef(provider=v1_pricing, quote=new_quote, order=new_order)
+    db.session.add(associate_network_ref)
+    print(associate_network_ref)
+    db.session.commit()
+    return new_quote

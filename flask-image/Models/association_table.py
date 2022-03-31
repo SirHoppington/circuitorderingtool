@@ -1,12 +1,6 @@
 from app import db
 from datetime import datetime
 
-#quote_table = db.Table('quote_table',
-#                    db.Column('provider_id', db.Integer, db.ForeignKey('provider_pricing.id'), primary_key=True),
-#                    db.Column('quotation_id', db.Integer, db.ForeignKey('quotation.id'), primary_key=True),
-#                    db.Column('order_id', db.Integer, db.ForeignKey('order_table.id'), primary_key=True)
-#                    )
-
 class NetRef(db.Model):
     __tablename__ = 'network_ref_associations'
     provider_id = db.Column(db.Integer, db.ForeignKey('provider_pricing.id'), primary_key=True)
@@ -16,11 +10,6 @@ class NetRef(db.Model):
     provider = db.relationship ('ProviderQuote', backref='networkrefs')
     order = db.relationship('Order', backref='networkrefs')
     quotation = db.relationship('Quotation', backref='networkrefs')
-
-    #db.UniqueConstraint('provider_id', 'quotation_id', 'order_id')
-    #db.relationship ('ProviderQuote', uselist=False, backref='networkrefs', lazy='dynamic')
-    #db.relationship('Order', uselist=False, backref='networkrefs', lazy='dynamic')
-    #db.relationship('Quotation', uselist=False, backref='networkrefs', lazy='dynamic')
 
     def __init__(self, provider, quote, order):
         self.provider_id = provider.id,

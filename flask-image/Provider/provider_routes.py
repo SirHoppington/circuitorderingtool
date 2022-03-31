@@ -2,13 +2,8 @@ from flask import Blueprint, request, jsonify, make_response, render_template, r
 from forms import NewQuote, RetrieveQuote, NewOrder
 import pandas as pd
 import json
-from api.quote import pricing
-from api.order import new_order
-#from Provider.provider_model import ProviderQuote
-#from Quote.quote_model import Quotation
-#from Quote.association_table import quote_table
-from Quote.association_table import NetRef, ProviderQuote, Quotation, Order
-from app import db
+from Quote.quote import pricing
+from Order.order import new_order
 from queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
 
 provider = Blueprint('provider', __name__)
