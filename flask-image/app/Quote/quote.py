@@ -1,6 +1,6 @@
-from app.app.api.virtual1 import v1_api
+from app.api.virtual1 import v1_api
 import pandas as pd
-from app.app.queries import search_v1_quote_by_id, add_quote
+from app.queries import search_v1_quote_by_id, add_quote
 
 class Quote():
     def __init__(self):

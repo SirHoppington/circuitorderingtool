@@ -1,5 +1,5 @@
-from app.app.Models.association_table import ProviderQuote, NetRef, Quotation, Order
-from app.app import db
+from app.Models.association_table import ProviderQuote, NetRef, Quotation, Order
+from app import db
 
 """DB queries"""
 

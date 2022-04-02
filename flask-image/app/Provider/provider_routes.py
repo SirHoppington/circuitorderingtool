@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify, make_response, render_template, render_template_string, url_for, redirect, json
-from app.app.forms import NewQuote, RetrieveQuote, NewOrder
+from app.forms import NewQuote, RetrieveQuote, NewOrder
 import pandas as pd
 import json
-from app.app.Quote.quote import pricing
-from app.app.Order.order import new_order
-from app.app.queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
+from app.Quote.quote import pricing
+from app.Order.order import new_order
+from app.queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
 
 provider = Blueprint('provider', __name__)
 
