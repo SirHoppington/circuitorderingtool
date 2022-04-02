@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify, make_response, render_template, render_template_string, url_for, redirect, json
-from forms import NewQuote, RetrieveQuote, NewOrder
+from app.app.forms import NewQuote, RetrieveQuote, NewOrder
 import pandas as pd
 import json
-from Quote.quote import pricing
-from Order.order import new_order
-from queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
+from app.app.Quote.quote import pricing
+from app.app.Order.order import new_order
+from app.app.queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
 
 provider = Blueprint('provider', __name__)
 
@@ -13,6 +13,7 @@ def new_quote():
     form = NewQuote()
     if request.method == 'POST':
         quote_request = pricing.run(form.postcode.data, form.data, form.net.data)
+
 
         return render_template("panda_quote.html", html_table=quote_request[0], net_ref=quote_request[1])
     else:

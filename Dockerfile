@@ -28,7 +28,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 #COPY . .
 #COPY . .
-#COPY app.py .
+#COPY __init__.py .
 #COPY wsgi.ini .
 
 #CMD ["uwsgi", "wsgi.ini"]
@@ -36,5 +36,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 ## RUN commands or apps in container when it loads
 #CMD ["/bin/bash"]
 
-#CMD ["export", "FLASK_APP=app.py"]
+#CMD ["export", "FLASK_APP=__init__.py"]
 #CMD ["flask", "run", "--host=0.0.0.0"]

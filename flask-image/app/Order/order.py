@@ -1,7 +1,7 @@
-from api.virtual1 import v1_api
+from app.app.api.virtual1 import v1_api
 import pandas as pd
-from Models.association_table import NetRef, ProviderQuote, Quotation, Order
-from app import db
+from app.app.Models.association_table import NetRef, ProviderQuote, Quotation, Order
+from app.app import db
 
 class Order():
     def __init__(self):
