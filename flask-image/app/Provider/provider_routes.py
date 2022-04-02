@@ -14,7 +14,6 @@ def new_quote():
     if request.method == 'POST':
         quote_request = pricing.run(form.postcode.data, form.data, form.net.data)
 
-
         return render_template("panda_quote.html", html_table=quote_request[0], net_ref=quote_request[1])
     else:
         return render_template("new_quote.html", form=form)
