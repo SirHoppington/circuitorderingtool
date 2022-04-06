@@ -1,4 +1,4 @@
-from app.api.virtual1 import v1_api
+from app.api.provider import v1_api
 import pandas as pd
 from app.Models.association_table import NetRef, ProviderQuote, Quotation, Order
 from app import db

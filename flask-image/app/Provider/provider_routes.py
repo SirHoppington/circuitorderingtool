@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response, render_template, r
 from app.forms import NewQuote, RetrieveQuote, NewOrder
 import pandas as pd
 import json
-from app.Quote.quote import pricing
+from app.Quote.quote import pricing, fetch_pricing
 from app.Order.order import new_order
 from app.queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
 
@@ -23,7 +23,7 @@ def view_pricing():
     form = RetrieveQuote()
     if request.method == 'POST':
         net_ref = search_quotation_ref(form.net.data)
-        fetch_quote = pricing.retrieve_quote(net_ref.id)
+        fetch_quote = fetch_pricing.run(net_ref.id)
         return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
     else:
         quotes = get_all_pricing()
@@ -55,7 +55,7 @@ def new_order():
 
 @provider.route('/view_pricing/<int:id>', methods = ['GET'])
 def get_pricing(id):
-    fetch_quote = pricing.retrieve_quote(id)
+    fetch_quote = fetch_pricing.run(id)
     return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
 
 #@provider.route('/view_order/<int:id>', methods = ['POST', 'GET'])

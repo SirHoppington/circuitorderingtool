@@ -1,8 +1,10 @@
-from app.api.virtual1 import v1_api
+from app.api.provider import v1_api
 import pandas as pd
 from app.queries import search_v1_quote_by_id, add_quote
 
-class Quote():
+
+# Use case class to request a new quotation.
+class NewQuote:
     def __init__(self):
         pass
 
@@ -26,8 +28,13 @@ class Quote():
         except Exception as e:
             return (str(e))
 
+# Use case class to retrieve a quote based on reference.
+class FetchQuote:
 
-    def retrieve_quote(self, reference):
+    def __init__(self):
+        pass
+
+    def run(self, reference):
         try:
             net_ref = search_v1_quote_by_id(reference)
             print(net_ref)
@@ -36,4 +43,5 @@ class Quote():
         v1_response = v1_api.fetch_quote(net_ref[0].supplier_ref)
         return v1_response.to_html(classes=["table"], border="0", index=False), net_ref[1].net
 
-pricing = Quote()
+pricing = NewQuote()
+fetch_pricing = FetchQuote()
