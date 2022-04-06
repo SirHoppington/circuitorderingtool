@@ -1,6 +1,6 @@
 from app.Quote.quote import pricing
 import pandas as pd
-
+"""
 def test_new_quote():
 
     filters = {'net': '6666', 'postcode': 'E3 4JW', 'accessTypes': ['Fibre'], 'bandwidths': ['UP_TO_10'],
@@ -18,3 +18,4 @@ def test_new_quote():
  ' </tr>\n    <tr>\n      <td>Fibre</td>\n      <td>10</td>\n      <td>100</td>\n      <td>Level 3 Communications</td>\n   '
  '   <td>0.0000</td>\n      <td>55</td>\n      <td>441.7800</td>\n      <td>Ethernet Everywhere™</td>\n      <td>278201722</td>\n   '
  '   <td>36</td>\n      <td>278201697</td>\n    </tr>\n  </tbody>\n</table>', '6666'))
+ """

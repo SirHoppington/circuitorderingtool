@@ -36,7 +36,7 @@ def add_quote(provider, supplier_ref, postcode, reference, status):
     db.session.add(v1_pricing)
     new_quote = Quotation(name=postcode, net=reference)
     db.session.add(new_quote)
-    new_order = Order(status="Not ordered")
+    new_order = Order(status=status)
     db.session.add(new_order)
     db.session.commit()
     associate_network_ref = NetRef(provider=v1_pricing, quote=new_quote, order=new_order)
@@ -44,3 +44,4 @@ def add_quote(provider, supplier_ref, postcode, reference, status):
     print(associate_network_ref)
     db.session.commit()
     return new_quote
+

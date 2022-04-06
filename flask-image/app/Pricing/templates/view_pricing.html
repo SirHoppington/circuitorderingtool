@@ -1,0 +1,74 @@
+{% extends '../../templates/base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
+    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
+       <style>
+	.button {
+		display:block; 
+		width: 100%; 
+} 
+ul {
+  list-style: none;
+}
+</style>
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-wrapper">
+                <h1 class="mt-4">Search existing quote</h1>
+                <hr>
+                <form method="POST" id="quoteform" action="{{ url_for('pricing.view_pricing') }}" >
+                    {{ form.csrf_token }}
+                    <hr>
+					<div class="container">
+						<div class="row">
+						  <div class="col-sm">
+							<fieldset class="form-field">
+							{{ form.net.label}}
+							{{ form.net }}
+							</fieldset>
+						  </div>
+					    </div>
+					</div>
+					<hr>
+					<input type="submit" value="Submit" class="button">		
+                </form>
+                  <div class="container">
+                      <div class="row">
+                          <div class="col-sm">
+                              <table class="table">
+                                  <tr>
+                                      <th>Net Ref</th>
+                                      <th>Postcode</th>
+                                      <th>Suppliers</th>
+                                      <th>Supplier Ref</th>
+                                      <th>Quote created</th>
+                                  </tr>
+                                  {% for quote in quotes %}
+                                      <tr>
+                                              <th>{{ quote[1].net }}</th>
+                                              <th>{{ quote[1].name}}</th>	  
+                                          <th>{{ quote[0].provider }}</th>
+                                          <th>{{ quote[0].supplier_ref }}</th>
+                                          <th>{{ quote[0].created_at }}</th>
+                                      <th>
+                                          <form action="{{ url_for('pricing.get_pricing', id=quote[1].id) }}">
+                                          <input type="submit" value="View"/>
+                                      </form>
+                                          {% endfor %}
+                                      </th>
+                                      </tr>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,63 +2,62 @@ from flask import request, json
 import requests
 import json
 import pandas as pd
-
+from app.utilities import json_to_panda_v1
 
 
 class Provider:
-    def __init__(self, url):
-        self.url = url
 
-
-class Virtual1Api(Provider):
     headers = {
         "Content-Type": "application/json"
     }
 
-    basic = requests.auth.HTTPBasicAuth('apiuser@capita.co.uk', 'EyNoe*Vr')
+    def __init__(self,name, url, username, password , quote_url, retrieve_quote_url, order_url):
+        self.name = name
+        self.url = url
+        self.auth = requests.auth.HTTPBasicAuth(username, password)
+        self.quote_url = quote_url
+        self.retrieve_quote_url = retrieve_quote_url
+        self.order_url = order_url
 
-    v1_quote_mapper = {"accessType": "Access Type", "bandwidth": "Bandwidth(Mb)", "bearer": "Bearer(Mb)",
-    "carrier": "Carrier", "installCharges": "Install Charges (GDP)",
-    "leadTime": "Lead Time (Days)", "monthlyFees": "Monthly fee (GDP)", "product": "Product",
-    "productReference": "Product ref", "term": "Term", "quoteReference": "Supplier Reference"}
 
+    # fetch quote API.
+    def quote_api(self, body):
+        api_url = self.url + self.quote_url
+        response = requests.post(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
+        return response
+
+     # retrieve quote API.
+    def retrieve_quote_api(self, quote_reference):
+        api_url = self.url + self.retrieve_quote_url + str(quote_reference)
+        response = requests.get(api_url, auth=self.auth)
+        return response
+
+        # Receive form details and send to API quote and return panda.
     def get_quote(self, postcode, filters):
-        quote_url = f"{self.url}layer2-api/quoting"
         cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode'}
-        body = {"postcode":postcode, "filter":cleansed_form}
-        response = requests.post(quote_url, headers=self.headers, data=json.dumps(body), auth=self.basic, verify=False)
-        panda_pricing = pd.json_normalize(response.json(), record_path=['accessProducts'],
-                                          meta=['quoteReference']).rename(columns=self.v1_quote_mapper)
-        panda_pricing.drop(['availableWithoutHardware', 'hardwareOptions', 'secondaryOptions', 'indicative'], axis=1,
-                           inplace=True)
+        body = {"postcode": postcode, "filter": cleansed_form}
+        response = self.quote_api(body)
+        panda_pricing = json_to_panda_v1(response)
+        # will save all panda to database table, likely best to only save quotation reference.
+        # panda.to_sql(name='provider_pricing', con=db.engine, index=False)
 
-        #will save all of panda to database table, likely best to only save quotation reference.
-        #panda.to_sql(name='provider_pricing', con=db.engine, index=False)
         return panda_pricing
 
+        # Fetch quote via API and return as Panda.
     def fetch_quote(self, quote_reference):
-        retrieve_url = f"{self.url}layer2-api/retrieveQuote?quoteReference={quote_reference}"
-        response = requests.get(retrieve_url, auth=self.basic)
-        panda_pricing = pd.json_normalize(response.json(), record_path = ['accessProducts'], meta = ['quoteReference']).rename(columns=self.v1_quote_mapper)
-        panda_pricing.drop(['availableWithoutHardware', 'hardwareOptions', 'secondaryOptions', 'indicative'], axis=1,
-                           inplace=True)
+        response = self.retrieve_quote_api(quote_reference)
+        panda_pricing = json_to_panda_v1(response)
+
         return panda_pricing
 
+        # Create new order.
     def create_order(self, order_details):
-        order_url = f"{self.url}layer2-api/ordering"
-        response = requests.get(order_url, auth=self.basic)
-        panda_pricing = pd.json_normalize(response.json(), record_path = ['accessProducts'], meta = ['quoteReference']).rename(columns=self.v1_quote_mapper)
-        panda_pricing.drop(['availableWithoutHardware', 'hardwareOptions', 'secondaryOptions', 'indicative'], axis=1,
-                           inplace=True)
+        response = requests.get(self.order_url, auth=self.basic)
+        panda_pricing = json_to_panda_v1(response)
+
         return panda_pricing
 
 
-v1_api = Virtual1Api("https://apitest.virtual1.com/")
-
-
-
-
-
-
-
-                
+v1_api = Provider("Virtual 1", "https://apitest.virtual1.com/",
+                  "apiuser@capita.co.uk", "EyNoe*Vr", "layer2-api/quoting",
+                  "layer2-api/retrieveQuote?quoteReference=", "layer2-api/ordering")

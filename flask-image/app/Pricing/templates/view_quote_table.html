@@ -1,0 +1,49 @@
+{% extends '../../templates/base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
+    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
+       <style>
+    .codeMirror-scroll{
+        height: 100%;
+        min-height: 60%;
+    }
+	.button {
+		display:block; 
+		width: 100%; 
+} 
+ul {
+  list-style: none;
+}
+</style>
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-wrapper">
+                <h1 class="mt-4">Search existing quote</h1>
+                <hr>
+                <form method="POST" id="quoteform" action="{{ url_for('pricing.view_pricing') }}" >
+                    {{ form.csrf_token }}
+                    <hr>
+					<div class="container">
+						<div class="row">
+						<div class="col-sm">
+							<fieldset class="form-field">
+							{{ form.quote_ref.label}}
+							{{ form.quote_ref }}
+							</fieldset>
+						</div>	
+					</div>
+					</div>
+					<hr>
+					<input type="submit" value="Submit" class="button">		
+                </form>
+			</div>		
+        </div>
+	</div>
+</div>
+{% endblock %}
