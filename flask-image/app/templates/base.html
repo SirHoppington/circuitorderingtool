@@ -35,16 +35,16 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
          <div class="dropdown-divider"></div>
-         <a class="dropdown-item" href={{ url_for('provider.new_quote') }}> New Quote </a>
+         <a class="dropdown-item" href={{ url_for('provider_pricing.new_quote') }}> New Quote </a>
 		 <div class="dropdown-divider"></div>
-         <a class="dropdown-item" href={{ url_for('provider.view_pricing') }}> View Quotes</a>
+         <a class="dropdown-item" href={{ url_for('provider_pricing.view_pricing') }}> View Quotes</a>
         </div>
       </li>
 	   <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Orders</a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
          <div class="dropdown-divider"></div>
-         <a class="dropdown-item" href={{ url_for('provider.view_orders') }}>View Orders</a>
+         <a class="dropdown-item" href={{ url_for('order.view_orders') }}>View Orders</a>
         </div>
       </li>
     </ul>

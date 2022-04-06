@@ -32,7 +32,7 @@ def search_v1_quote_by_id(reference):
 
 def add_quote(provider, supplier_ref, postcode, reference, status):
     v1_pricing = ProviderQuote(provider=provider, supplier_ref=supplier_ref)
-    ## INSERT API-2 db.session.add and append to quotes.
+    ## INSERT API-2 db.session.add and append quotes.
     db.session.add(v1_pricing)
     new_quote = Quotation(name=postcode, net=reference)
     db.session.add(new_quote)

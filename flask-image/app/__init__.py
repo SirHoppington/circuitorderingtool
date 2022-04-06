@@ -22,8 +22,11 @@ def create_app(config_class=Config):
     login_manager.login_view = 'login.log_in'
     login_manager.init_app(app)
 
-    from app.Provider.provider_routes import provider
-    app.register_blueprint(provider)
+    from app.Order.order_routes import order
+    app.register_blueprint(order)
+
+    from app.Pricing.pricing_routes import provider_pricing
+    app.register_blueprint(provider_pricing)
 
     from app.User.user_model import User
 

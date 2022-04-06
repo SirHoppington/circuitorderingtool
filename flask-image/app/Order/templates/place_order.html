@@ -1,4 +1,4 @@
-{% extends '../../templates/base.html' %}
+{% extends 'base.html' %}
 
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
@@ -26,7 +26,7 @@ ul {
             <div class="form-wrapper">
                 <h1 class="mt-4">New Circuit Order</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('provider.new_quote') }}" >
+                <form method="POST" id="quoteform" action="{{ url_for('provider_pricing.new_quote') }}" >
                     {{ form.csrf_token }}
 					<div class="row">
 					<div class="col-sm">

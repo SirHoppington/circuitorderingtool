@@ -1,4 +1,4 @@
-{% extends '../../templates/base.html' %}
+{% extends 'base.html' %}
 
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
@@ -22,7 +22,7 @@ ul {
             <div class="form-wrapper">
                 <h1 class="mt-4">Search existing quote</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('pricing.view_pricing') }}" >
+                <form method="POST" id="quoteform" action="{{ url_for('provider_pricing.view_pricing') }}" >
                     {{ form.csrf_token }}
                     <hr>
 					<div class="container">
@@ -57,7 +57,7 @@ ul {
                                           <th>{{ quote[0].supplier_ref }}</th>
                                           <th>{{ quote[0].created_at }}</th>
                                       <th>
-                                          <form action="{{ url_for('pricing.get_pricing', id=quote[1].id) }}">
+                                          <form action="{{ url_for('provider_pricing.get_pricing', id=quote[1].id) }}">
                                           <input type="submit" value="View"/>
                                       </form>
                                           {% endfor %}

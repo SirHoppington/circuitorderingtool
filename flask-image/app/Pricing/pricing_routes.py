@@ -1,45 +1,33 @@
-from flask import Blueprint, request, jsonify, make_response, render_template, render_template_string, url_for, redirect, json
-from forms import NewQuote, RetrieveQuote, NewOrder
-import pandas as pd
-import json
-from app.Quote.quote import supplier_pricing
-from app.Order.order import new_order
-from app import db
+from flask import Blueprint, request, render_template
+from app.forms import NewQuote, RetrieveQuote, NewOrder
+#import pandas as pd
+from app.Quote.quote import pricing, fetch_pricing
 from app.queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
 
-pricing = Blueprint(
-    'pricing', __name__,
-    template_folder='templates',
-    static_folder='static'
-)
+provider_pricing = Blueprint('provider_pricing', __name__, template_folder='templates')
 
-@pricing.route('/new_quote', methods = ['POST', 'GET'])
+@provider_pricing.route('/new_quote', methods = ['POST', 'GET'])
 def new_quote():
     form = NewQuote()
     if request.method == 'POST':
-        quote_request = supplier_pricing.run(form.postcode.data, form.data, form.net.data)
+        quote_request = pricing.run(form.postcode.data, form.data, form.net.data)
 
         return render_template("panda_quote.html", html_table=quote_request[0], net_ref=quote_request[1])
     else:
         return render_template("new_quote.html", form=form)
 
-@pricing.route('/view_pricing', methods = ['POST', 'GET'])
+@provider_pricing.route('/view_pricing', methods = ['POST', 'GET'])
 def view_pricing():
     form = RetrieveQuote()
     if request.method == 'POST':
         net_ref = search_quotation_ref(form.net.data)
-        fetch_quote = pricing.retrieve_quote(net_ref.id)
+        fetch_quote = fetch_pricing.run(net_ref.id)
         return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
     else:
         quotes = get_all_pricing()
         return render_template("view_pricing.html", form=form, quotes=quotes)
 
-@pricing.route('/view_pricing/<int:id>', methods = ['GET'])
+@provider_pricing.route('/view_pricing/<int:id>', methods = ['GET'])
 def get_pricing(id):
-    fetch_quote = pricing.retrieve_quote(id)
+    fetch_quote = fetch_pricing.run(id)
     return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
-
-#@provider.route('/view_order/<int:id>', methods = ['POST', 'GET'])
-#def get_order(id):
-#    fetch_quote = pricing.retrieve_quote(net)
-#    return render_template("panda_quote.html", html_table=fetch_quote[0], net_ref=fetch_quote[1])
