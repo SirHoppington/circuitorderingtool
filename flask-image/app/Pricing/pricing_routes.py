@@ -1,6 +1,5 @@
 from flask import Blueprint, request, render_template
-from app.forms import NewQuote, RetrieveQuote, NewOrder
-#import pandas as pd
+from app.forms import NewQuote, RetrieveQuote
 from app.Quote.quote import pricing, fetch_pricing
 from app.queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
 

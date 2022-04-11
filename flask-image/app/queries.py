@@ -23,6 +23,12 @@ def get_all_pricing():
         (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
     return result
 
+#Search ProviderQuote, Quotation and order table for all results
+def get_all_orders():
+    result = db.session.query(ProviderQuote, Quotation, Order).filter(
+        (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
+    return result
+
 #Search ProviderQuote and Quotation table for v1 pricing
 def search_v1_quote_by_id(reference):
     result = db.session.query(ProviderQuote, Quotation).filter(

@@ -4,7 +4,6 @@ import json
 import pandas as pd
 from app.utilities import json_to_panda_v1
 
-
 class Provider:
 
     headers = {
@@ -18,7 +17,6 @@ class Provider:
         self.quote_url = quote_url
         self.retrieve_quote_url = retrieve_quote_url
         self.order_url = order_url
-
 
     # fetch quote API.
     def quote_api(self, body):
@@ -40,23 +38,19 @@ class Provider:
         panda_pricing = json_to_panda_v1(response)
         # will save all panda to database table, likely best to only save quotation reference.
         # panda.to_sql(name='provider_pricing', con=db.engine, index=False)
-
         return panda_pricing
 
         # Fetch quote via API and return as Panda.
     def fetch_quote(self, quote_reference):
         response = self.retrieve_quote_api(quote_reference)
         panda_pricing = json_to_panda_v1(response)
-
         return panda_pricing
 
         # Create new order.
     def create_order(self, order_details):
         response = requests.get(self.order_url, auth=self.basic)
         panda_pricing = json_to_panda_v1(response)
-
         return panda_pricing
-
 
 v1_api = Provider("Virtual 1", "https://apitest.virtual1.com/",
                   "apiuser@capita.co.uk", "EyNoe*Vr", "layer2-api/quoting",

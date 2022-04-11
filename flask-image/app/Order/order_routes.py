@@ -1,10 +1,7 @@
-from flask import Blueprint, request, jsonify, make_response, render_template, render_template_string, url_for, redirect, json
-from app.forms import NewQuote, RetrieveQuote, NewOrder
-import pandas as pd
-import json
-from app.Quote.quote import pricing, fetch_pricing
+from flask import Blueprint, request, render_template
+from app.forms import RetrieveQuote, NewOrder
 from app.Order.order import new_order
-from app.queries import search_quotation_ref, get_all_pricing, search_v1_quote_by_id
+from app.queries import get_all_orders
 
 order = Blueprint('order', __name__, template_folder='templates')
 
@@ -12,11 +9,11 @@ order = Blueprint('order', __name__, template_folder='templates')
 def view_orders():
     form = RetrieveQuote()
     # DB query to show orders that have been placed.
-    quotes= get_all_pricing()
+    orders = get_all_orders()
     if request.method == 'POST':
-        return render_template("new_order.html", quotes=quotes)
+        return render_template("new_order.html", orders=orders)
     else:
-        return render_template("view_orders.html", quotes=quotes, form=form)
+        return render_template("view_orders.html", orders=orders, form=form)
 
 @order.route('/place_order', methods = ['POST', 'GET'])
 def place_order():
