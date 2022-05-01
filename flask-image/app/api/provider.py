@@ -35,10 +35,12 @@ class Provider:
         cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode'}
         body = {"postcode": postcode, "filter": cleansed_form}
         response = self.quote_api(body)
-        panda_pricing = json_to_panda_v1(response)
+        #quote_pricing = quote_to_panda_v1(response)
+        #product_pricing = product_to_panda_v1(response)
+        product_pricing = json_to_panda_v1(response)
         # will save all panda to database table, likely best to only save quotation reference.
         # panda.to_sql(name='provider_pricing', con=db.engine, index=False)
-        return panda_pricing
+        return product_pricing
 
         # Fetch quote via API and return as Panda.
     def fetch_quote(self, quote_reference):

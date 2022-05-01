@@ -13,9 +13,13 @@ def map_v1_quote():
 ## Convert API JSON response to Panda DataFrame:
 
 def json_to_panda_v1(response):
-    v1_quote_map = map_v1_quote()
-    result = pd.json_normalize(response.json(), record_path=['accessProducts'],
-                                      meta=['quoteReference']).rename(columns=v1_quote_map)
-    result.drop(['availableWithoutHardware', 'hardwareOptions', 'secondaryOptions', 'indicative'], axis=1,
-                       inplace=True)
-    return result
+    # v1_quote_map = map_v1_quote()
+    #result = pd.json_normalize(response.json(), record_path=['accessProducts'],
+    #                          meta=['quoteReference'])
+    product_result = pd.json_normalize(response.json(), record_path=['accessProducts'])
+    product_result.drop(['leadTime', 'availableWithoutHardware', 'hardwareOptions', 'secondaryOptions', 'indicative'], axis=1,
+                inplace=True)
+    quote_result = pd.json_normalize(response.json(), meta=['quoteReference'])
+    quote_result.drop(['accessProducts', 'hardwareProducts', 'secondaryAccess'], axis=1, inplace=True)
+    quote_result["provider"] = "Virtual 1"
+    return product_result, quote_result

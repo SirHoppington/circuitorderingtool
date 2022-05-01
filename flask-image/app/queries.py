@@ -1,5 +1,6 @@
-from app.Models.association_table import ProviderQuote, NetRef, Quotation, Order
+from app.Models.association_table import ProviderQuote, NetRef, Quotation, Order, ProviderProduct
 from app import db
+import pandas as pd
 
 """DB queries"""
 
@@ -19,8 +20,8 @@ def search_quotation_ref(reference):
 
 #Search ProviderQuote and Quotation table for all results
 def get_all_pricing():
-    result = db.session.query(ProviderQuote, Quotation).filter(
-        (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
+    result = db.session.query(Quotation, ProviderQuote).filter(
+        (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)).all()
     return result
 
 #Search ProviderQuote, Quotation and order table for all results
@@ -31,23 +32,41 @@ def get_all_orders():
 
 #Search ProviderQuote and Quotation table for v1 pricing
 def search_v1_quote_by_id(reference):
-    result = db.session.query(ProviderQuote, Quotation).filter(
-        (NetRef.quotation_id == reference) & (NetRef.provider_id == ProviderQuote.id) & (
-                ProviderQuote.provider == "Virtual1") & (Quotation.id == reference)).first()
+    result = db.session.query(ProviderQuote).filter(
+        (NetRef.quotation_id == reference) & (NetRef.provider_id == ProviderQuote.id)  & (Quotation.id == reference)).first()
     return result
 
-def add_quote(provider, supplier_ref, postcode, reference, status):
-    v1_pricing = ProviderQuote(provider=provider, supplier_ref=supplier_ref)
+#Search ProviderQuote and Quotation table for v1 pricing
+def search_provider_pricing(reference):
+    result = db.session.query(ProviderQuote).filter(
+        (ProviderQuote.quoteReference == reference)).first()
+    return result
+
+def search_provider_products(reference):
+    result = db.session.query(ProviderProduct).filter(
+        (ProviderProduct.productReference == reference)).first()
+    return result
+
+def add_quote(panda, supplier_ref, postcode, reference, status):
+    try:
+        panda[0].to_sql(name='provider_product', con=db.engine, index=False, if_exists='append', method='multi')
+        panda[1].to_sql(name='provider_pricing', con=db.engine, index=False, if_exists='append', method='multi')
     ## INSERT API-2 db.session.add and append quotes.
-    db.session.add(v1_pricing)
-    new_quote = Quotation(name=postcode, net=reference)
-    db.session.add(new_quote)
-    new_order = Order(status=status)
-    db.session.add(new_order)
-    db.session.commit()
-    associate_network_ref = NetRef(provider=v1_pricing, quote=new_quote, order=new_order)
-    db.session.add(associate_network_ref)
-    print(associate_network_ref)
-    db.session.commit()
+        new_quote = Quotation(name=postcode, net=reference)
+        db.session.add(new_quote)
+        new_order = Order(status=status)
+        db.session.add(new_order)
+        db.session.commit()
+        v1_quote = search_provider_pricing(supplier_ref)
+        #v1_provider_pricing = search_provider_products(supplier_ref)
+        products = panda[0]
+        #print (products['productReference'].iloc[0])
+        for x in products['productReference']:
+            v1_pricing = search_provider_products(x)
+            associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quote=new_quote, order=new_order)
+            db.session.add(associate_network_ref)
+            db.session.commit()
+    except Exception as e:
+        print (str(e))
     return new_quote
 

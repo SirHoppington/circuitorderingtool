@@ -45,19 +45,19 @@ ul {
                                   <tr>
                                       <th>Net Ref</th>
                                       <th>Postcode</th>
-                                      <th>Suppliers</th>
+                                      <th>Supplier</th>
                                       <th>Supplier Ref</th>
                                       <th>Quote created</th>
                                   </tr>
                                   {% for quote in quotes %}
                                       <tr>
-                                              <th>{{ quote[1].net }}</th>
-                                              <th>{{ quote[1].name}}</th>	  
-                                          <th>{{ quote[0].provider }}</th>
-                                          <th>{{ quote[0].supplier_ref }}</th>
-                                          <th>{{ quote[0].created_at }}</th>
+                                              <th>{{ quote[0].net }}</th>
+                                              <th>{{ quote[0].name}}</th>
+											  <th>{{ quote[1].provider}}</th>
+											  <th>{{ quote[1].quoteReference}}</th>
+											  <th>{{ quote[1].created_at}}</th>
                                       <th>
-                                          <form action="{{ url_for('provider_pricing.get_pricing', id=quote[1].id) }}">
+                                          <form action="{{ url_for('provider_pricing.get_pricing', id=quote[0].id) }}">
                                           <input type="submit" value="View"/>
                                       </form>
                                           {% endfor %}

@@ -18,13 +18,14 @@ class NewQuote:
             return (str(e))
         ## Add try/except for future provider Quotation APIs.
         try:
-
-            v1_ref = v1_response['Supplier Reference'].iloc[0]
+            v1_quote = v1_response[1]
+            v1_quote_ref = v1_quote['quoteReference'].iloc[0]
             ## Add quote to Database
-            new_quote = add_quote("Virtual1", v1_ref, postcode, reference, "Not ordered")
+            new_quote = add_quote(v1_response, v1_quote_ref, postcode, reference, "Not ordered")
+            print("test")
             net_ref = new_quote.net
             # Insert code to merge supplier pandas then return the results as html table.
-            return v1_response.to_html(classes=["table"], border="0", index=False), net_ref
+            return v1_response[0].to_html(classes=["table"], border="0", index=False), net_ref
         except Exception as e:
             return (str(e))
 
@@ -40,7 +41,7 @@ class FetchQuote:
             print(net_ref)
         except Exception as e:
             return (str(e))
-        v1_response = v1_api.fetch_quote(net_ref[0].supplier_ref)
+        v1_response = v1_api.fetch_quote(net_ref.quoteReference)
         return v1_response.to_html(classes=["table"], border="0", index=False), net_ref[1].net
 
 pricing = NewQuote()
