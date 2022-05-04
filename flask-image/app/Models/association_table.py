@@ -5,7 +5,7 @@ class NetRef(db.Model):
     __tablename__ = 'network_ref_associations'
     provider_id = db.Column(db.Integer, db.ForeignKey('provider_pricing.id'), primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('provider_product.id'), primary_key=True)
-    quotation_id = db.Column(db.Integer, db.ForeignKey('quotation.id'), primary_key=True)
+    quotation_net = db.Column(db.Integer, db.ForeignKey('quotation.net'), primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order_table.id'), primary_key=True)
 
     provider = db.relationship ('ProviderQuote', backref='networkrefs')
@@ -16,7 +16,7 @@ class NetRef(db.Model):
     def __init__(self, provider, product, quotation, order):
         self.provider_id = provider.id,
         self.product_id = product.id,
-        self.quotation_id = quotation.id,
+        self.quotation_net = quotation.net,
         self.order_id = order.id
 
     def __repr__(self):
@@ -24,13 +24,11 @@ class NetRef(db.Model):
 
 class Quotation(db.Model):
     __tablename__ = 'quotation'
-    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
-    net = db.Column(db.String(20))
+    net = db.Column(db.Integer, primary_key=True)
     @property
     def serialize(self):
         return {
-            'id' : self.id,
             'name' : self.name,
             'net' : self.net
         }
@@ -40,7 +38,7 @@ class Quotation(db.Model):
         self.net = net
 
     def __repr__(self):
-        return repr(self.id)
+        return repr(self.net)
 
 class Order(db.Model):
     __tablename__ = 'order_table'

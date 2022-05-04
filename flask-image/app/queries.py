@@ -7,52 +7,45 @@ import pandas as pd
 # search Provider table via Quote reference:
 def search_provider(reference):
     result = db.session.query(ProviderQuote).filter(
-        (quote_table.c.quotation_id == reference) & (quote_table.c.provider_id == ProviderQuote.id) & (
+        (quote_table.c.quotation_net == reference) & (quote_table.c.provider_id == ProviderQuote.id) & (
                 ProviderQuote.provider == "Virtual1")).first()
     return result
 
 # search Quotation table via Quote reference:
 def search_quotation_ref(reference):
     result = db.session.query(Quotation).filter(
-            (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.order_id == Order.id) & (
+            (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.order_id == Order.id) & (
                     Quotation.net == reference)).first()
     return result
 
 #Search ProviderQuote and Quotation table for all results
 def get_all_pricing():
     result = db.session.query(Quotation, ProviderQuote).filter(
-        (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)).all()
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)).all()
     return result
 
 #Search ProviderQuote and Quotation table for all results
 def get_net_ref(ref):
     result = db.session.query(Quotation).filter(
-        (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_id == ref )).first()
+        (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_net == ref )).first()
     return result
-
-#Search ProviderQuote and Quotation table matching on NetRef
-def get_pricing_net(ref):
-    result = db.session.query(ProviderQuote, ProviderProduct).filter(
-        (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_id == Quotation.id ) & (NetRef.product_id == ProviderQuote.id ) & (NetRef.quotation.net == ref)).all()
-    return result
-
 
 #Search ProviderQuote and ProviderProduct table for all results
 def get_provider_pricing(ref):
     result = db.session.query(ProviderQuote, ProviderProduct).filter(
-        (NetRef.product_id == ProviderProduct.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_id == ref)).all()
+        (NetRef.product_id == ProviderProduct.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_net == ref)).all()
     return result
 
 #Search ProviderQuote, Quotation and order table for all results
 def get_all_orders():
     result = db.session.query(ProviderQuote, Quotation, Order).filter(
-        (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id)).all()
     return result
 
 #Search ProviderQuote and Quotation table for v1 pricing
 def search_v1_quote_by_id(reference):
     result = db.session.query(ProviderQuote).filter(
-        (NetRef.quotation_id == reference) & (NetRef.provider_id == ProviderQuote.id)  & (Quotation.id == reference)).first()
+        (NetRef.quotation_net == reference) & (NetRef.provider_id == ProviderQuote.id)  & (Quotation.id == reference)).first()
     return result
 
 #Search ProviderQuote and Quotation table for v1 pricing

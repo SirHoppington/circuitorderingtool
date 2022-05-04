@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block head %}
+       <style>
+    .codeMirror-scroll{
+        height: 100%;
+        min-height: 60%;
+    }
+	.button {
+		display:block; 
+		width: 100%; 
+} 
+ul {
+  list-style: none;
+}
+
+</style>
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<h1 class="mt-4">NET:{{net_ref}}</h1>
+  <form action="{{ url_for('provider_pricing.get_pricing', net=1) }}">
+    <table class="table">
+                                  <tr>
+                                      <th>Provider</th>
+                                      <th>Provider ref</th>
+                                      <th>Access Type</th>
+                                      <th>Bandwidth</th>
+                                      <th>Bearer</th>
+									  <th>Carrier</th>
+                                      <th>Install Charges</th>
+                                      <th>Monthly Fees</th>
+									  <th>Product</th>
+									  <th>Product ref</th>
+									  <th>term</th>
+                                      <th> add to quote</th>
+                                  </tr>
+                                  {% for quote in pricing %}
+                                      <tr>
+                                              <th>{{ quote[0].provider }}</th>
+                                              <th>{{ quote[0].quoteReference}}</th>
+											  <th>{{ quote[1].accessType}}</th>
+											  <th>{{ quote[1].bandwidth}}</th>
+                                              <th>{{ quote[1].bearer}}</th>
+											  <th>{{ quote[1].carrier}}</th>
+											  <th>{{ quote[1].installCharges}}</th>
+											  <th>{{ quote[1].monthlyFees}}</th>
+											  <th>{{ quote[1].product}}</th>
+											  <th>{{ quote[1].productReference}}</th>
+											  <th>{{ quote[1].term}}</th>
+                                              <th>
+                                                <input type="checkbox" id={{ quote[1].productReference }}/>
+                                            </th>
+                                      </tr>
+                                          {% endfor %}
+                                      <tr>
+                                              <th></th>
+                                              <th></th>
+											  <th></th>
+											  <th></th>
+                                              <th></th>
+											  <th></th>
+											  <th></th>
+											  <th></th>
+											  <th></th>
+											  <th></th>
+                                              <th></th>
+                                          <th> <input type="submit" value="Add to Quote"/></th>
+                                      </tr>
+                              </table>
+                        </form>
+                    </div>
+{% endblock %}
