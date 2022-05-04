@@ -24,6 +24,25 @@ def get_all_pricing():
         (NetRef.quotation_id == Quotation.id) & (NetRef.provider_id == ProviderQuote.id)).all()
     return result
 
+#Search ProviderQuote and Quotation table for all results
+def get_net_ref(ref):
+    result = db.session.query(Quotation).filter(
+        (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_id == ref )).first()
+    return result
+
+#Search ProviderQuote and Quotation table matching on NetRef
+def get_pricing_net(ref):
+    result = db.session.query(ProviderQuote, ProviderProduct).filter(
+        (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_id == Quotation.id ) & (NetRef.product_id == ProviderQuote.id ) & (NetRef.quotation.net == ref)).all()
+    return result
+
+
+#Search ProviderQuote and ProviderProduct table for all results
+def get_provider_pricing(ref):
+    result = db.session.query(ProviderQuote, ProviderProduct).filter(
+        (NetRef.product_id == ProviderProduct.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_id == ref)).all()
+    return result
+
 #Search ProviderQuote, Quotation and order table for all results
 def get_all_orders():
     result = db.session.query(ProviderQuote, Quotation, Order).filter(
@@ -63,7 +82,7 @@ def add_quote(panda, supplier_ref, postcode, reference, status):
         #print (products['productReference'].iloc[0])
         for x in products['productReference']:
             v1_pricing = search_provider_products(x)
-            associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quote=new_quote, order=new_order)
+            associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quotation=new_quote, order=new_order)
             db.session.add(associate_network_ref)
             db.session.commit()
     except Exception as e:

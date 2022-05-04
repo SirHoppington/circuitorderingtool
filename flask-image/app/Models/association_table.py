@@ -13,10 +13,10 @@ class NetRef(db.Model):
     order = db.relationship('Order', backref='networkrefs')
     quotation = db.relationship('Quotation', backref='networkrefs')
 
-    def __init__(self, provider, product, quote, order):
+    def __init__(self, provider, product, quotation, order):
         self.provider_id = provider.id,
         self.product_id = product.id,
-        self.quotation_id = quote.id,
+        self.quotation_id = quotation.id,
         self.order_id = order.id
 
     def __repr__(self):
@@ -75,7 +75,7 @@ class ProviderQuote(db.Model):
         self.provider = provider
 
     def __repr__(self):
-        return repr(self.productReference)
+        return repr(self.quoteReference)
 
 
     @property
@@ -99,9 +99,10 @@ class ProviderProduct(db.Model):
     product = db.Column(db.Text)
     productReference = db.Column(db.Text)
     term = db.Column(db.Text)
+    customer_quote = db.Column(db.Text)
 
 
-    def __init__(self, accessType, bandwidth, bearer, carrier, installCharges, monthlyFees, product, productReference, term):
+    def __init__(self, accessType, bandwidth, bearer, carrier, installCharges, monthlyFees, product, productReference, term, customer_quote):
         self.accessType = accessType,
         self.bandwidth = bandwidth,
         self.bearer = bearer,
@@ -110,7 +111,8 @@ class ProviderProduct(db.Model):
         self.monthlyFees = monthlyFees,
         self.product = product,
         self.productReference = productReference,
-        self.term = term
+        self.term = term,
+        self.customer_quote = customer_quote
 
     def __repr__(self):
         return repr(self.productReference)
@@ -130,5 +132,6 @@ class ProviderProduct(db.Model):
             'monthlyFees' : self.monthlyFees,
             'product' : self.product,
             'productReference' : self.productReference,
-            'term' : self.term
+            'term' : self.term,
+            'customer_quote': self.customer_quote
         }

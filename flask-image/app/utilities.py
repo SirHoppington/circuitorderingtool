@@ -19,6 +19,7 @@ def json_to_panda_v1(response):
     product_result = pd.json_normalize(response.json(), record_path=['accessProducts'])
     product_result.drop(['leadTime', 'availableWithoutHardware', 'hardwareOptions', 'secondaryOptions', 'indicative'], axis=1,
                 inplace=True)
+    product_result["customer_quote"] = "none"
     quote_result = pd.json_normalize(response.json(), meta=['quoteReference'])
     quote_result.drop(['accessProducts', 'hardwareProducts', 'secondaryAccess'], axis=1, inplace=True)
     quote_result["provider"] = "Virtual 1"

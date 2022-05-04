@@ -22,10 +22,10 @@ class NewQuote:
             v1_quote_ref = v1_quote['quoteReference'].iloc[0]
             ## Add quote to Database
             new_quote = add_quote(v1_response, v1_quote_ref, postcode, reference, "Not ordered")
-            print("test")
             net_ref = new_quote.net
             # Insert code to merge supplier pandas then return the results as html table.
-            return v1_response[0].to_html(classes=["table"], border="0", index=False), net_ref
+            #return net_ref
+            return net_ref
         except Exception as e:
             return (str(e))
 
