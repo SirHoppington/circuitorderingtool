@@ -35,9 +35,11 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
          <div class="dropdown-divider"></div>
-         <a class="dropdown-item" href={{ url_for('provider_pricing.new_quote') }}> New Quote </a>
+         <a class="dropdown-item" href={{ url_for('customer_quote.new_quote') }}> New Quote </a>
 		 <div class="dropdown-divider"></div>
          <a class="dropdown-item" href={{ url_for('provider_pricing.view_pricing') }}> View Quotes</a>
+            <div class="dropdown-divider"></div>
+         <a class="dropdown-item" href={{ url_for('provider_pricing.view_pricing') }}> View Pricing</a>
         </div>
       </li>
 	   <li class="nav-item dropdown">

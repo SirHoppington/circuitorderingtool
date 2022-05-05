@@ -19,6 +19,9 @@ def create_app(config_class=Config):
     from app.Pricing.pricing_routes import provider_pricing
     app.register_blueprint(provider_pricing)
 
+    from app.Quote.quote_routes import customer_quote
+    app.register_blueprint(customer_quote)
+
     return app
 
 

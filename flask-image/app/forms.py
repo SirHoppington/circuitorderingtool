@@ -9,8 +9,18 @@ class MultiCheckboxField(SelectMultipleField):
 
 class NewQuote(FlaskForm):
     """Add new quote form."""
+    customer_name = StringField(
+        'Customer Name',
+        [DataRequired()],
+        id='net'
+    )
+    customer_email = StringField(
+        'Customer email',
+        [DataRequired()],
+        id='net'
+    )
     net = StringField(
-        'NET:',
+        'NET reference',
         [DataRequired()],
         id='net'
     )

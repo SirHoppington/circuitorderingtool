@@ -7,20 +7,42 @@ class NetRef(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('provider_product.id'), primary_key=True)
     quotation_net = db.Column(db.Integer, db.ForeignKey('quotation.net'), primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order_table.id'), primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer_table.id'), primary_key=True)
 
     provider = db.relationship ('ProviderQuote', backref='networkrefs')
     product = db.relationship('ProviderProduct', backref='networkrefs')
     order = db.relationship('Order', backref='networkrefs')
     quotation = db.relationship('Quotation', backref='networkrefs')
+    customer = db.relationship('Customer', backref='networkrefs')
 
-    def __init__(self, provider, product, quotation, order):
+    def __init__(self, provider, product, quotation, order, customer):
         self.provider_id = provider.id,
         self.product_id = product.id,
         self.quotation_net = quotation.net,
-        self.order_id = order.id
+        self.order_id = order.id,
+        self.customer_id = customer.id
 
     def __repr__(self):
         return '{}'.format(self.provider_id)
+
+class Customer(db.Model):
+    __tablename__ = 'customer_table'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(40))
+    name = db.Column(db.String(40))
+    @property
+    def serialize(self):
+        return {
+            'email' : self.email,
+            'name' : self.name
+        }
+
+    def __init__(self, name, email):
+        self.name = name,
+        self.email = email
+
+    def __repr__(self):
+        return repr(self.name)
 
 class Quotation(db.Model):
     __tablename__ = 'quotation'
@@ -29,6 +51,7 @@ class Quotation(db.Model):
     @property
     def serialize(self):
         return {
+            'id': self.id,
             'name' : self.name,
             'net' : self.net
         }
@@ -63,7 +86,10 @@ class ProviderQuote(db.Model):
     quoteReference = db.Column(db.Text)
     provider = db.Column(db.Text)
     id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.TIMESTAMP(timezone=False),
+                           default=datetime.utcnow,
+                           server_default=db.text("CURRENT_TIMESTAMP"),
+                           nullable=False)
 
     #quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_associated', lazy="dynamic"))
     #orders = db.relationship('Order', secondary=quote_table, backref=db.backref('order_associated', lazy="dynamic"))

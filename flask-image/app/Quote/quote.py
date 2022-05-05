@@ -8,7 +8,7 @@ class NewQuote:
     def __init__(self):
         pass
 
-    def run(self, postcode, filters, reference):
+    def run(self, postcode, filters, reference, name, email):
 
         # try V1 API:
         try:
@@ -21,7 +21,7 @@ class NewQuote:
             v1_quote = v1_response[1]
             v1_quote_ref = v1_quote['quoteReference'].iloc[0]
             ## Add quote to Database
-            new_quote = add_quote(v1_response, v1_quote_ref, postcode, reference, "Not ordered")
+            new_quote = add_quote(v1_response, v1_quote_ref, postcode, reference, "Not ordered", name, email)
             net_ref = new_quote.net
             # Insert code to merge supplier pandas then return the results as html table.
             #return net_ref

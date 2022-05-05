@@ -1,4 +1,4 @@
-from app.Models.association_table import ProviderQuote, NetRef, Quotation, Order, ProviderProduct
+from app.Models.association_table import ProviderQuote, NetRef, Quotation, Order, ProviderProduct, Customer
 from app import db
 import pandas as pd
 
@@ -58,8 +58,13 @@ def search_provider_products(reference):
     result = db.session.query(ProviderProduct).filter(
         (ProviderProduct.productReference == reference)).first()
     return result
+def search_customer(email):
+    result = db.session.query(Customer).filter(
+        (Customer.email == email)).first()
+    return result
 
-def add_quote(panda, supplier_ref, postcode, reference, status):
+
+def add_quote(panda, supplier_ref, postcode, reference, status, name, email):
     try:
         panda[0].to_sql(name='provider_product', con=db.engine, index=False, if_exists='append', method='multi')
         panda[1].to_sql(name='provider_pricing', con=db.engine, index=False, if_exists='append', method='multi')
@@ -68,6 +73,10 @@ def add_quote(panda, supplier_ref, postcode, reference, status):
         db.session.add(new_quote)
         new_order = Order(status=status)
         db.session.add(new_order)
+        existing_customer = search_customer(email)
+        if not existing_customer:
+            existing_customer = Customer(name=name, email=email)
+            db.session.add(existing_customer)
         db.session.commit()
         v1_quote = search_provider_pricing(supplier_ref)
         #v1_provider_pricing = search_provider_products(supplier_ref)
@@ -75,7 +84,7 @@ def add_quote(panda, supplier_ref, postcode, reference, status):
         #print (products['productReference'].iloc[0])
         for x in products['productReference']:
             v1_pricing = search_provider_products(x)
-            associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quotation=new_quote, order=new_order)
+            associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quotation=new_quote, order=new_order, customer=existing_customer)
             db.session.add(associate_network_ref)
             db.session.commit()
     except Exception as e:

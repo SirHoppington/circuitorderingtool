@@ -26,8 +26,16 @@ ul {
             <div class="form-wrapper">
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('provider_pricing.new_quote') }}" >
+                <form method="POST" id="quoteform" action="{{ url_for('customer_quote.new_quote') }}" >
                     {{ form.csrf_token }}
+                    <fieldset class="form-field">
+                        {{ form.customer_name.label}}
+                        {{ form.customer_name(size=40) }}
+                    </fieldset>
+                    <fieldset class="form-field">
+                        {{ form.customer_email.label}}
+                        {{ form.customer_email(size=40) }}
+                    </fieldset>
                     <fieldset class="form-field">
                         {{ form.net.label}}
                         {{ form.net(size=20) }}

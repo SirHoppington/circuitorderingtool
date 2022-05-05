@@ -32,7 +32,7 @@ class Provider:
 
         # Receive form details and send to API quote and return panda.
     def get_quote(self, postcode, filters):
-        cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode'}
+        cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode' and k != 'customer_email' and k != 'customer_name'}
         body = {"postcode": postcode, "filter": cleansed_form}
         response = self.quote_api(body)
         #quote_pricing = quote_to_panda_v1(response)
