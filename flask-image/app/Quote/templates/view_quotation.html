@@ -7,9 +7,9 @@
         min-height: 60%;
     }
 	.button {
-		display:block; 
-		width: 100%; 
-} 
+		display:block;
+		width: 100%;
+}
 ul {
   list-style: none;
 }
@@ -72,7 +72,7 @@ background:#eee;
 
 
 </style>
- 
+
 {% endblock %}
 
 {% block content %}
@@ -85,9 +85,7 @@ background:#eee;
         <div class="row">
           <!-- BEGIN FILTERS -->
           <div class="col-md-3">
-              <h2 class="grid-title"> <div class="float-left">Filters</div></h2>
-              <br>
-              <br>
+            <h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
             <hr>
 
             <!-- BEGIN FILTER BY CATEGORY -->
@@ -141,9 +139,7 @@ background:#eee;
           <!-- END FILTERS -->
           <!-- BEGIN RESULT -->
           <div class="col-md-9">
-              <h2 class="grid-title"><div class="float-left">Pricing results NET:{{net_ref}}</div></h2>
-            <br>
-            <br>
+            <h2><i class="fa fa-file-o"></i>NET{{net_ref}} Quotation</h2>
             <hr>
             <div class="padding"></div>
 
@@ -175,22 +171,24 @@ background:#eee;
       <table class="table table-hover">
       <tbody>
       {% for quote in pricing %}
-          <form action="{{ url_for('customer_quote.add_quote', net=net_ref) }}">
       <tr>
           <td class="image"><img src="/static/imgs/virtual1.jpg" alt=""></td>
           <td class="provider"><strong>{{ quote[0].provider }}</strong><br>{{ quote[1].product}} {{ quote[1].bandwidth}}MB/
           {{ quote[1].bearer}}MB {{ quote[1].accessType}}</td>
           <td class="Term"><strong>Term</strong><br>{{ quote[1].term}} </td>
           <td class="Carrier"><strong>Carrier</strong><br>{{ quote[1].carrier}} </td>
+          <td class="Provider Ref"><strong>Provider Reference</strong><br>{{ quote[0].quoteReference}} </td>
+          <td class="Product Ref"><strong>Product Reference</strong><br>{{ quote[1].productReference}} </td>
           <td class="price text-right"><strong>Charges</strong><br>£{{ quote[1].installCharges}} install<br>£{{ quote[1].monthlyFees}} P/M </td>
-          <td class="select"><strong>Add to Quote</strong></strong><br><input type="checkbox" id={{ quote[1].productReference }}/> </td>
+          <td class="select"><strong>Add to Quote</strong><br><input type="checkbox" id={{ quote[1].productReference }}/> </td>
       </tr>
-      {% endfor %}
       </tbody>
-          </table>
-          <div class="float-right"><input type="submit" value="Add to Quote"/></div>
-              </form>
-          </div>
+      {% endfor %}
+                                        <tr>
+                                          <th> <input type="submit" value="Add to Quote"/></th>
+                                      </tr>
+                              </table>
+                    </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
-from app.forms import NewQuote, RetrieveQuote
+from app.forms import NewQuote, RetrieveQuote, addToQuote
 from app.Quote.quote import pricing, fetch_pricing
-from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, get_net_ref
+from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, get_net_ref, search_products_ref
 
 customer_quote = Blueprint('customer_quote', __name__, template_folder='templates')
 
@@ -14,6 +14,15 @@ def new_quote():
         return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     else:
         return render_template("new_quote.html", form=form)
+
+@customer_quote.route('/add_quote/<int:net>', methods = ['POST'])
+def add_quote(net):
+    for ref in form.data:
+        product = search_products_ref(ref)
+        product.customer_quote = "Added"
+        db.session.commit()
+    return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+
 @customer_quote.route('/', methods = ['POST', 'GET'])
 @customer_quote.route('/view_pricing', methods = ['POST', 'GET'])
 def view_pricing():
@@ -29,4 +38,4 @@ def view_pricing():
 @customer_quote.route('/view_pricing/<int:net>', methods = ['GET'])
 def get_pricing(net):
     pricing = get_provider_pricing(net)
-    return render_template("view_provider_pricing.html", pricing=pricing, net_ref=net)
+    return render_template("view_quotation.html", pricing=pricing, net_ref=net)

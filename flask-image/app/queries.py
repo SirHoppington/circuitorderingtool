@@ -18,6 +18,12 @@ def search_quotation_ref(reference):
                     Quotation.net == reference)).first()
     return result
 
+# search ProviderProduct table via product reference:
+def search_products_ref(ref):
+    result = db.session.query(ProviderProduct).filter(
+            (ProviderProduct.productReference == ref)).first()
+    return result
+
 #Search ProviderQuote and Quotation table for all results
 def get_all_pricing():
     result = db.session.query(Quotation, ProviderQuote).filter(
