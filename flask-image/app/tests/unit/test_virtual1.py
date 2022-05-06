@@ -1,4 +1,4 @@
-from app.api.virtual1 import v1_api
+from app.api.provider import v1_api
 
 #def test_get_quote():
 #    filters = {'net': '6666', 'postcode': 'E3 4JW', 'accessTypes': ['Fibre'], 'bandwidths': ['UP_TO_10'],

@@ -14,7 +14,7 @@ def new_quote():
         return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     else:
         return render_template("new_quote.html", form=form)
-
+@customer_quote.route('/', methods = ['POST', 'GET'])
 @customer_quote.route('/view_pricing', methods = ['POST', 'GET'])
 def view_pricing():
     form = RetrieveQuote()

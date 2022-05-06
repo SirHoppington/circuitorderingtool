@@ -1,15 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from config import Config
+from config import config
 
 db = SQLAlchemy()
 migrate = Migrate()
 
-def create_app(config_class=Config):
+def create_app(config_name):
     app = Flask(__name__, instance_path='/usr/var/src/app')
-    app.config.from_object(config_class)
-
+    app.config.from_object(config.get(config_name or 'default'))
     db.init_app(app)
     migrate.init_app(app,db)
 
