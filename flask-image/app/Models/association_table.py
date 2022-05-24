@@ -1,29 +1,6 @@
 from app import db
 from datetime import datetime
 
-class NetRef(db.Model):
-    __tablename__ = 'network_ref_associations'
-    provider_id = db.Column(db.Integer, db.ForeignKey('provider_pricing.id'), primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('provider_product.id'), primary_key=True)
-    quotation_net = db.Column(db.Integer, db.ForeignKey('quotation.net'), primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order_table.id'), primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer_table.id'), primary_key=True)
-
-    provider = db.relationship ('ProviderQuote', backref='networkrefs')
-    product = db.relationship('ProviderProduct', backref='networkrefs')
-    order = db.relationship('Order', backref='networkrefs')
-    quotation = db.relationship('Quotation', backref='networkrefs')
-    customer = db.relationship('Customer', backref='networkrefs')
-
-    def __init__(self, provider, product, quotation, order, customer):
-        self.provider_id = provider.id,
-        self.product_id = product.id,
-        self.quotation_net = quotation.net,
-        self.order_id = order.id,
-        self.customer_id = customer.id
-
-    def __repr__(self):
-        return '{}'.format(self.provider_id)
 
 class Customer(db.Model):
     __tablename__ = 'customer_table'
@@ -45,7 +22,7 @@ class Customer(db.Model):
         return repr(self.name)
 
 class Quotation(db.Model):
-    __tablename__ = 'quotation'
+    __tablename__ = 'quotation_table'
     name = db.Column(db.String(20))
     net = db.Column(db.Integer, primary_key=True)
     @property
@@ -159,3 +136,27 @@ class ProviderProduct(db.Model):
             'term' : self.term,
             'customer_quote': self.customer_quote
         }
+
+class NetRef(db.Model):
+    __tablename__ = 'network_ref_associations'
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider_pricing.id'), primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('provider_product.id'), primary_key=True)
+    quotation_net = db.Column(db.Integer, db.ForeignKey('quotation_table.net'), primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order_table.id'), primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer_table.id'), primary_key=True)
+
+    provider = db.relationship ('ProviderQuote', backref='networkrefs')
+    product = db.relationship('ProviderProduct', backref='networkrefs')
+    order = db.relationship('Order', backref='networkrefs')
+    quotation = db.relationship('Quotation', backref='networkrefs')
+    customer = db.relationship('Customer', backref='networkrefs')
+
+    def __init__(self, provider, product, quotation, order, customer):
+        self.provider_id = provider.id,
+        self.product_id = product.id,
+        self.quotation_net = quotation.net,
+        self.order_id = order.id,
+        self.customer_id = customer.id
+
+    def __repr__(self):
+        return '{}'.format(self.provider_id)

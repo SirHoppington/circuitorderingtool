@@ -1,6 +1,6 @@
 from app.Models.association_table import Quotation, Order, NetRef, ProviderQuote, ProviderProduct, Customer
 import pytest
-from app import create_app
+from app import create_app, db
 
 @pytest.fixture(scope='module')
 def test_quote():
@@ -42,8 +42,24 @@ def test_association():
 
 @pytest.fixture(scope='module')
 def test_client():
-    flask_app = create_app('development')
+    flask_app = create_app('testing')
     with flask_app.test_client() as test_client:
         #create application context
         with flask_app.app_context():
             yield test_client
+
+@pytest.fixture(scope='module')
+def test_db():
+    flask_app = create_app('testing')
+    with flask_app.app_context():
+        db.create_all()
+        yield flask_app
+        db.session.remove()
+        db.drop_all()
+
+
+
+@pytest.fixture(scope='module')
+def test_provider():
+    filters = {'fibre', '100', '1000', 'BT', '250', '100.50', 'fibre everywhere', '1234567', '36', 'None'}
+    return filters
