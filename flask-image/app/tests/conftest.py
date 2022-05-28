@@ -48,6 +48,7 @@ def test_client():
         with flask_app.app_context():
             yield test_client
 
+# Fixture to create new database tables in the test database, yield results for unit test and once run to drop tables.
 @pytest.fixture(scope='module')
 def test_db():
     flask_app = create_app('testing')

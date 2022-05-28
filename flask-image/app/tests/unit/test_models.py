@@ -1,27 +1,29 @@
 from app.Models.association_table import Quotation, Customer, Order, ProviderQuote, ProviderProduct
 from app import db
 
-def test_new_quote(test_db):
+def test_new_quote(test_db, test_quote):
     """
     GIVEN a Quotation model
     WHEN a new Quotation is created
     THEN check the name and net has been asserted correctly
     """
     with test_db.app_context():
-       quote = Quotation('BT349Gh', '12345')
-       db.session.add(quote)
+       db.session.add(test_quote)
        db.session.commit()
 
-       assert quote == '12345'
+       assert test_quote.net == 12345
 
-def test_new_customer(test_customer):
+def test_new_customer(test_db, test_customer):
     """
     GIVEN a Quotation model
     WHEN a new Quotation is created
     THEN check the name and net has been asserted correctly
     """
-    assert test_customer.email == 'johnsmith@gmail.com'
-    assert test_customer.name == ('John Smith',)
+    with test_db.app_context():
+        db.session.add(test_customer)
+        db.session.commit()
+        assert test_customer.email == 'johnsmith@gmail.com'
+        assert test_customer.name == ('John Smith')
 
 def test_new_order(test_order):
     """

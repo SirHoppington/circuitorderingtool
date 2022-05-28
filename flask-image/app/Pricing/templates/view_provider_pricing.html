@@ -93,19 +93,19 @@ background:#eee;
             <!-- BEGIN FILTER BY CATEGORY -->
             <h4>By category:</h4>
             <div class="checkbox">
-              <label><input type="checkbox" class="icheck"> Application</label>
+              <label><input type="checkbox" class="icheck"> Fibre</label>
             </div>
             <div class="checkbox">
-              <label><input type="checkbox" class="icheck"> Design</label>
+              <label><input type="checkbox" class="icheck"> FttC</label>
             </div>
             <div class="checkbox">
-              <label><input type="checkbox" class="icheck"> Desktop</label>
+              <label><input type="checkbox" class="icheck"> ADSL</label>
             </div>
             <div class="checkbox">
-              <label><input type="checkbox" class="icheck"> Management</label>
+              <label><input type="checkbox" class="icheck"> EFM</label>
             </div>
             <div class="checkbox">
-              <label><input type="checkbox" class="icheck"> Mobile</label>
+              <label><input type="checkbox" class="icheck"> Wireless</label>
             </div>
             <!-- END FILTER BY CATEGORY -->
 
@@ -172,10 +172,10 @@ background:#eee;
               </div>
             </div>
     <div class="table-responsive"></div>
-      <table class="table table-hover">
+          <form method="POST" action="{{ url_for('customer_quote.add_quote', net=net_ref) }}">
+              <table class="table table-hover">
       <tbody>
-      {% for quote in pricing %}
-          <form action="{{ url_for('customer_quote.add_quote', net=net_ref) }}">
+              {% for quote in pricing %}
       <tr>
           <td class="image"><img src="/static/imgs/virtual1.jpg" alt=""></td>
           <td class="provider"><strong>{{ quote[0].provider }}</strong><br>{{ quote[1].product}} {{ quote[1].bandwidth}}MB/
@@ -183,12 +183,12 @@ background:#eee;
           <td class="Term"><strong>Term</strong><br>{{ quote[1].term}} </td>
           <td class="Carrier"><strong>Carrier</strong><br>{{ quote[1].carrier}} </td>
           <td class="price text-right"><strong>Charges</strong><br>£{{ quote[1].installCharges}} install<br>£{{ quote[1].monthlyFees}} P/M </td>
-          <td class="select"><strong>Add to Quote</strong></strong><br><input type="checkbox" id={{ quote[1].productReference }}/> </td>
+          <td class="select"><strong>Add to Quote</strong></strong><br><input type="checkbox" name="prod_ref" value={{ quote[1].productReference }}> </td>
       </tr>
       {% endfor %}
       </tbody>
           </table>
-          <div class="float-right"><input type="submit" value="Add to Quote"/></div>
+                    <div class="float-right"><input type="submit" value="Add to Quote"/></div>
               </form>
           </div>
         </div>

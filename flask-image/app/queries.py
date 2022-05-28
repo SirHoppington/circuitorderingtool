@@ -41,6 +41,10 @@ def get_provider_pricing(ref):
     result = db.session.query(ProviderQuote, ProviderProduct).filter(
         (NetRef.product_id == ProviderProduct.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_net == ref)).all()
     return result
+def get_quotation_products(ref):
+    result = db.session.query(ProviderQuote, ProviderProduct).filter(
+        (NetRef.product_id == ProviderProduct.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.quotation_net == ref) & (ProviderProduct.customer_quote == "Added")).all()
+    return result
 
 #Search ProviderQuote, Quotation and order table for all results
 def get_all_orders():
@@ -96,4 +100,10 @@ def add_quote(panda, supplier_ref, postcode, reference, status, name, email):
     except Exception as e:
         print (str(e))
     return new_quote
+
+def add_product_to_quote(product):
+    prod = search_products_ref(product)
+    prod.customer_quote = "Added"
+    db.session.commit()
+    return True
 
