@@ -26,8 +26,8 @@ def search_products_ref(ref):
 
 #Search ProviderQuote and Quotation table for all results
 def get_all_pricing():
-    result = db.session.query(Quotation, ProviderQuote).filter(
-        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)).all()
+    result = db.session.query(Quotation, ProviderQuote, Customer).filter(
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.customer_id == Customer.id)).all()
     return result
 
 #Search ProviderQuote and Quotation table for all results
