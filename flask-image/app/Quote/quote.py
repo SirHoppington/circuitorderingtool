@@ -1,4 +1,4 @@
-from app.api.provider import v1_api
+from app.api.provider import v1_api, btw_test_api
 import pandas as pd
 from app.queries import search_v1_quote_by_id, add_quote
 
@@ -17,6 +17,12 @@ class NewQuote:
         except Exception as e:
             return (str(e))
         ## Add try/except for future provider Quotation APIs.
+        try:
+            btw_response = btw_test_api.get_quote(postcode, filters)
+        except Exception:
+            btw_test_api.fetch_access_token()
+            btw_response = btw_test_api.get_quote(postcode, filters)
+
         try:
             v1_quote = v1_response[1]
             v1_quote_ref = v1_quote['quoteReference'].iloc[0]

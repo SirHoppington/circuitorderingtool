@@ -3,6 +3,9 @@ import requests
 import json
 import pandas as pd
 from app.utilities import json_to_panda_v1
+from requests_oauthlib import OAuth2Session
+from oauthlib.oauth2 import BackendApplicationClient
+from requests.auth import HTTPBasicAuth
 
 class Provider:
 
@@ -10,10 +13,11 @@ class Provider:
         "Content-Type": "application/json"
     }
 
-    def __init__(self,name, url, username, password , quote_url, retrieve_quote_url, order_url):
+    auth = "basic"
+
+    def __init__(self,name, url, quote_url, retrieve_quote_url, order_url):
         self.name = name
         self.url = url
-        self.auth = requests.auth.HTTPBasicAuth(username, password)
         self.quote_url = quote_url
         self.retrieve_quote_url = retrieve_quote_url
         self.order_url = order_url
@@ -55,6 +59,32 @@ class Provider:
         panda_pricing = json_to_panda_v1(response)
         return panda_pricing
 
-v1_api = Provider("Virtual 1", "https://apitest.virtual1.com/",
-                  "apiuser@capita.co.uk", "EyNoe*Vr", "layer2-api/quoting",
-                  "layer2-api/retrieveQuote?quoteReference=", "layer2-api/ordering")
+class BasicProvider(Provider):
+    def __init__(self, name, url, quote_url, retrieve_quote_url, order_url, username, password):
+        self.auth = requests.auth.HTTPBasicAuth(username, password)
+        super().__init__(name, url, quote_url, retrieve_quote_url, order_url)
+
+class OAuthProvider(Provider):
+
+    def __init__(self,name, url , quote_url, retrieve_quote_url, order_url, client_id, client_secret, authorization_url):
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.authorization_url = authorization_url
+        super().__init__(name, url, quote_url, retrieve_quote_url, order_url)
+
+    def fetch_access_token(self):
+        auth1 = HTTPBasicAuth(self.client_id, self.client_secret)
+        client = BackendApplicationClient(client_id=self.client_id)
+        oauth = OAuth2Session(client=client)
+        # token should be used in auth header
+        token = oauth.fetch_token(token_url=self.authorization_url, auth=auth1)
+        auth = token
+        print(auth)
+
+v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
+                  "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
+                  "layer2-api/ordering", "apiuser@capita.co.uk", "EyNoe*Vr")
+
+btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/tmf-api/quoteManagement/v4",
+                        "quote", "quote", "no_order",
+                        "ErWw3KjIAjvtQVl6ZG3Gn1S3kGEAijpg","YZA99v6Ci9qSHTYY", "https://api-testa.business.bt.com/oauth/accesstoken")
