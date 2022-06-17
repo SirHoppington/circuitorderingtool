@@ -21,7 +21,7 @@ def search_quotation_ref(reference):
 # search ProviderProduct table via product reference:
 def search_products_ref(ref):
     result = db.session.query(ProviderProduct).filter(
-            (ProviderProduct.productReference == ref)).first()
+            (ProviderProduct.id == ref)).first()
     return result
 
 #Search ProviderQuote and Quotation table for all results
@@ -73,21 +73,23 @@ def search_customer(email):
         (Customer.email == email)).first()
     return result
 
+def add_customer(postcode, reference, status, name, email):
+    new_quote = Quotation(name=postcode, net=reference)
+    db.session.add(new_quote)
+    new_order = Order(status=status)
+    db.session.add(new_order)
+    existing_customer = search_customer(email)
+    if not existing_customer:
+        existing_customer = Customer(name=name, email=email)
+        db.session.add(existing_customer)
+    db.session.commit()
+    return new_quote, new_order, existing_customer
 
-def add_quote(panda, supplier_ref, postcode, reference, status, name, email,btw_response):
+def add_v1_quote(panda, supplier_ref, new_quote, new_order, existing_customer):
     try:
         panda[0].to_sql(name='provider_product', con=db.engine, index=False, if_exists='append', method='multi')
         panda[1].to_sql(name='provider_pricing', con=db.engine, index=False, if_exists='append', method='multi')
     ## INSERT API-2 db.session.add and append quotes.
-        new_quote = Quotation(name=postcode, net=reference)
-        db.session.add(new_quote)
-        new_order = Order(status=status)
-        db.session.add(new_order)
-        existing_customer = search_customer(email)
-        if not existing_customer:
-            existing_customer = Customer(name=name, email=email)
-            db.session.add(existing_customer)
-        db.session.commit()
         v1_quote = search_provider_pricing(supplier_ref)
         #v1_provider_pricing = search_provider_products(supplier_ref)
         products = panda[0]
@@ -97,10 +99,9 @@ def add_quote(panda, supplier_ref, postcode, reference, status, name, email,btw_
             associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quotation=new_quote, order=new_order, customer=existing_customer)
             db.session.add(associate_network_ref)
             db.session.commit()
-        add_btw_quote(btw_response, new_quote, new_order, existing_customer)
     except Exception as e:
         print (str(e))
-    return new_quote
+    return True
 
 def add_btw_quote(response,new_quote, new_order, existing_customer):
     print("we are here")

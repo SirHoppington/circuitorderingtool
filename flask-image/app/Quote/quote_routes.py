@@ -42,9 +42,9 @@ def test_quote():
 
 @customer_quote.route('/add_quote/<int:net>', methods = ['POST'])
 def add_quote(net):
-    product_refs = request.form.getlist("prod_ref")
-    print(product_refs)
-    for product in product_refs:
+    product_id = request.form.getlist("prod_id")
+    print(product_id)
+    for product in product_id:
         add_product_to_quote(product)
     #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     return "products added to quote!"
