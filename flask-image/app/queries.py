@@ -74,7 +74,7 @@ def search_customer(email):
     return result
 
 
-def add_quote(panda, supplier_ref, postcode, reference, status, name, email):
+def add_quote(panda, supplier_ref, postcode, reference, status, name, email,btw_response):
     try:
         panda[0].to_sql(name='provider_product', con=db.engine, index=False, if_exists='append', method='multi')
         panda[1].to_sql(name='provider_pricing', con=db.engine, index=False, if_exists='append', method='multi')
@@ -97,9 +97,48 @@ def add_quote(panda, supplier_ref, postcode, reference, status, name, email):
             associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quotation=new_quote, order=new_order, customer=existing_customer)
             db.session.add(associate_network_ref)
             db.session.commit()
+        add_btw_quote(btw_response, new_quote, new_order, existing_customer)
     except Exception as e:
         print (str(e))
     return new_quote
+
+def add_btw_quote(response,new_quote, new_order, existing_customer):
+    print("we are here")
+    print("we are here")
+    print("we are here")
+    print("we are here")
+    print("we are here")
+    dict = response.json()
+    bt_ref = dict["id"]
+    print(bt_ref)
+    btw_quote = ProviderQuote(quoteReference=bt_ref, provider="BT Wholesale")
+    db.session.add(btw_quote)
+    db.session.commit()
+    for item in dict["quoteItem"]:
+        access = item["product"]["product"][0]["@type"]
+        bearer = item["product"]["product"][0]["bandwidth"]
+        bandwidth = item["product"]["product"][1]["bandwidth"]
+        carrier = item["product"]["product"][0]["productInformation"]["accessProvider"]
+        product = item["product"]["@type"]
+        counter = 0
+        nr_charges = []
+        r_charges = []
+        terms = []
+        for x, y in zip(item["product"]["product"][0] ["productPrice"], item["product"]["product"][1] ["productPrice"]):
+            if (counter % 2) ==0:
+                nr_charges.append(x["price"]["taxIncludedAmount"]["value"] + y["price"]["taxIncludedAmount"]["value"])
+                terms.append(x["name"])
+            else:
+                r_charges.append(x["price"]["taxIncludedAmount"]["value"] + y["price"]["taxIncludedAmount"]["value"])
+            counter += 1
+        for a, b, c in zip(nr_charges, r_charges, terms):
+            new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
+                                      installCharges=a, monthlyFees=b, product=product, productReference="NA", term= c, customer_quote="none")
+            db.session.add(new_product)
+            associate_network_ref = NetRef(provider=btw_quote,product=new_product, quotation=new_quote, order=new_order, customer=existing_customer)
+            db.session.add(associate_network_ref)
+            db.session.commit()
+    return True
 
 def add_product_to_quote(product):
     prod = search_products_ref(product)

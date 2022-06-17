@@ -11,23 +11,31 @@ class NewQuote:
     def run(self, postcode, filters, reference, name, email):
 
         # try V1 API:
-        try:
-            # returns v1 response as a Panda Dataframe with correct column headers.
-            v1_response = v1_api.get_quote(postcode, filters)
-        except Exception as e:
-            return (str(e))
+        if "Virtual1" or "TalkTalk Business" in filters["suppliers"]:
+        #for providers in filters:
+        #    if
+            try:
+                # returns v1 response as a Panda Dataframe with correct column headers.
+                v1_response = v1_api.get_quote(postcode, filters)
+            except Exception as e:
+                return (str(e))
         ## Add try/except for future provider Quotation APIs.
+        if "BT Wholesale" in filters["suppliers"]:
+            try:
+                btw_response = btw_test_api.get_quote(postcode, filters)
+                if btw_response.content["code"] == "41:":
+                    btw_test_api.fetch_access_token()
+                    btw_response = btw_test_api.get_quote(postcode, filters)
+            except Exception:
+                btw_test_api.fetch_access_token()
+                btw_response = btw_test_api.get_quote(postcode, filters)
         try:
-            btw_response = btw_test_api.get_quote(postcode, filters)
-        except Exception:
-            btw_test_api.fetch_access_token()
-            btw_response = btw_test_api.get_quote(postcode, filters)
 
-        try:
             v1_quote = v1_response[1]
             v1_quote_ref = v1_quote['quoteReference'].iloc[0]
             ## Add quote to Database
-            new_quote = add_quote(v1_response, v1_quote_ref, postcode, reference, "Not ordered", name, email)
+            new_quote = add_quote(v1_response, v1_quote_ref, postcode, reference, "Not ordered", name, email, btw_response)
+            #new_bt_quote = add_btw_quote(btw_response, status, name, email)
             net_ref = new_quote.net
             # Insert code to merge supplier pandas then return the results as html table.
             #return net_ref
