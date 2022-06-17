@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template
 from app.forms import NewQuote, RetrieveQuote
 from app.Quote.quote import pricing, fetch_pricing
 from app.api.provider import btw_test_api
-from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products
+from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, remove_product_from_quote
 
 customer_quote = Blueprint('customer_quote', __name__, template_folder='templates')
 
@@ -49,6 +49,17 @@ def add_quote(net):
     #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     return "products added to quote!"
     #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+
+@customer_quote.route('/remove_quote/<int:net>', methods = ['POST'])
+def remove_quote(net):
+    product_id = request.form.getlist("prod_id")
+    print(product_id)
+    for product in product_id:
+        remove_product_from_quote(product)
+    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+    return "products removed from quote!"
+    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+
 
 @customer_quote.route('/', methods = ['POST', 'GET'])
 @customer_quote.route('/view_quotations', methods = ['POST', 'GET'])

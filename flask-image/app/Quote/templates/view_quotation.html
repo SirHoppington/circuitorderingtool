@@ -141,7 +141,7 @@ background:#eee;
           <!-- END FILTERS -->
           <!-- BEGIN RESULT -->
           <div class="col-md-9">
-              <h2 class="grid-title"><div class="float-left">Pricing results NET:{{net_ref}}</div></h2>
+              <h2 class="grid-title"><div class="float-left">Customer Quotation NET:{{net_ref}}</div></h2>
             <br>
             <br>
             <hr>
@@ -172,7 +172,7 @@ background:#eee;
               </div>
             </div>
     <div class="table-responsive"></div>
-          <form method="POST" action="{{ url_for('customer_quote.add_quote', net=net_ref) }}">
+          <form method="POST" action="{{ url_for('customer_quote.remove_quote', net=net_ref) }}">
               <table class="table table-hover">
       <tbody>
               {% for quote in pricing %}
@@ -183,7 +183,7 @@ background:#eee;
           <td class="Term"><strong>Term</strong><br>{{ quote[1].term}} </td>
           <td class="Carrier"><strong>Carrier</strong><br>{{ quote[1].carrier}} </td>
           <td class="price text-right"><strong>Charges</strong><br>£{{ quote[1].installCharges}} install<br>£{{ quote[1].monthlyFees}} P/M </td>
-          <td class="select"><strong>Remove from Quote</strong></strong><br><input type="checkbox" name="prod_ref" value={{ quote[1].productReference }}> </td>
+          <td class="select"><strong>Remove from Quote</strong></strong><br><input type="checkbox" name="prod_id" value={{ quote[1].id }}> </td>
       </tr>
       {% endfor %}
       </tbody>

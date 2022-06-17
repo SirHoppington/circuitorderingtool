@@ -183,7 +183,7 @@ background:#eee;
           <td class="Term"><strong>Term</strong><br>{{ quote[1].term}} </td>
           <td class="Carrier"><strong>Carrier</strong><br>{{ quote[1].carrier}} </td>
           <td class="price text-right"><strong>Charges</strong><br>£{{ quote[1].installCharges}} install<br>£{{ quote[1].monthlyFees}} P/M </td>
-          <td class="select"><strong>Add to Quote</strong></strong><br><input type="checkbox" name="prod_ref" value={{ quote[1].productReference }}> </td>
+          <td class="select"><strong>Add to Quote</strong></strong><br><input type="checkbox" name="prod_id" value={{ quote[1].id }}> </td>
       </tr>
       {% endfor %}
       </tbody>

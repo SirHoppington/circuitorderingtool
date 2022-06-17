@@ -91,9 +91,7 @@ def add_v1_quote(panda, supplier_ref, new_quote, new_order, existing_customer):
         panda[1].to_sql(name='provider_pricing', con=db.engine, index=False, if_exists='append', method='multi')
     ## INSERT API-2 db.session.add and append quotes.
         v1_quote = search_provider_pricing(supplier_ref)
-        #v1_provider_pricing = search_provider_products(supplier_ref)
         products = panda[0]
-        #print (products['productReference'].iloc[0])
         for x in products['productReference']:
             v1_pricing = search_provider_products(x)
             associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quotation=new_quote, order=new_order, customer=existing_customer)
@@ -104,11 +102,6 @@ def add_v1_quote(panda, supplier_ref, new_quote, new_order, existing_customer):
     return True
 
 def add_btw_quote(response,new_quote, new_order, existing_customer):
-    print("we are here")
-    print("we are here")
-    print("we are here")
-    print("we are here")
-    print("we are here")
     dict = response.json()
     bt_ref = dict["id"]
     print(bt_ref)
@@ -147,3 +140,8 @@ def add_product_to_quote(product):
     db.session.commit()
     return True
 
+def remove_product_from_quote(product):
+    prod = search_products_ref(product)
+    prod.customer_quote = "none"
+    db.session.commit()
+    return True
