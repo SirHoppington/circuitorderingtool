@@ -1,17 +1,17 @@
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
 from flask_login import login_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.User.user_model import User
+from app.Models.association_table import User
 from app import db
 
-login = Blueprint('login', __name__)
+login = Blueprint('login', __name__, template_folder='templates')
 
 @login.route('/signup', methods=['POST',"GET", "POST"])
 def signup_post():
 
     if request.method == 'POST':
 
-        email = "nickhopgood@gmail.com"
+        email = request.form.get('email')
         password = request.form.get('password')
 
         user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
@@ -49,6 +49,6 @@ def log_in():
 
     # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
-        return redirect(url_for('blogs.create_blog'))
+        return redirect(url_for('customer_quote.view_quotations'))
 
     return render_template('login.html')

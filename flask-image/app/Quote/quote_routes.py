@@ -1,12 +1,16 @@
 from flask import Blueprint, request, render_template
+from flask_login import login_required, current_user
 from app.forms import NewQuote, RetrieveQuote
 from app.Quote.quote import pricing, fetch_pricing
 from app.api.provider import btw_test_api
-from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, remove_product_from_quote
+from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, \
+    get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, \
+    remove_product_from_quote, send_quote_to_order
 
 customer_quote = Blueprint('customer_quote', __name__, template_folder='templates')
 
 @customer_quote.route('/new_quote', methods = ['POST', 'GET'])
+@login_required
 def new_quote():
     form = NewQuote()
     if request.method == 'POST':
@@ -17,6 +21,7 @@ def new_quote():
         return render_template("new_quote.html", form=form)
 
 @customer_quote.route('/test_quote', methods = ['POST', 'GET'])
+@login_required
 def test_quote():
     form = NewQuote()
     if request.method == 'POST':
@@ -41,6 +46,7 @@ def test_quote():
 
 
 @customer_quote.route('/add_quote/<int:net>', methods = ['POST'])
+@login_required
 def add_quote(net):
     product_id = request.form.getlist("prod_id")
     print(product_id)
@@ -60,9 +66,17 @@ def remove_quote(net):
     return "products removed from quote!"
     #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
 
+@customer_quote.route('/add_to_order/<int:net>', methods = ['POST'])
+@login_required
+def add_to_order(net):
+    send_quote_to_order(net)
+    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+    return "product sent to orders team!"
+    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
 
 @customer_quote.route('/', methods = ['POST', 'GET'])
 @customer_quote.route('/view_quotations', methods = ['POST', 'GET'])
+@login_required
 def view_quotations():
     form = RetrieveQuote()
     if request.method == 'POST':
@@ -74,6 +88,7 @@ def view_quotations():
         return render_template("view_all_quotations.html", form=form, quotes=quotes)
 
 @customer_quote.route('/view_quotation/<int:net>', methods = ['GET'])
+@login_required
 def get_quotation(net):
     pricing = get_provider_pricing(net)
     quote = get_quotation_products(net)

@@ -1,4 +1,5 @@
 from flask import Blueprint, request, render_template
+from flask_login import login_required, current_user
 from app.forms import RetrieveQuote
 from app.Quote.quote import pricing, fetch_pricing
 from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, get_net_ref
@@ -6,6 +7,7 @@ from app.queries import search_quotation_ref, get_all_pricing, get_provider_pric
 provider_pricing = Blueprint('provider_pricing', __name__, template_folder='templates')
 
 @provider_pricing.route('/view_pricing', methods = ['POST', 'GET'])
+@login_required
 def view_pricing():
     form = RetrieveQuote()
     if request.method == 'POST':
@@ -17,6 +19,7 @@ def view_pricing():
         return render_template("view_pricing.html", form=form, quotes=quotes)
 
 @provider_pricing.route('/view_pricing/<int:net>', methods = ['GET'])
+@login_required
 def get_pricing(net):
     pricing = get_provider_pricing(net)
     return render_template("view_provider_pricing.html", pricing=pricing, net_ref=net)

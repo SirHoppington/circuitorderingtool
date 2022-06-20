@@ -189,6 +189,7 @@ background:#eee;
       </tbody>
           </table>
                     <div class="float-right"><input type="submit" value="Remove from Quote"/></div>
+                    <div class="float-right"><input type="submit" value="Send to Orders" formaction="{{ url_for('customer_quote.add_to_order', net=net_ref) }}"/></div>
               </form>
           </div>
         </div>
