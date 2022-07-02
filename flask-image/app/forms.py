@@ -96,39 +96,32 @@ class NewOrder(FlaskForm):
         'Supplier Quote Reference',
         id='quoteReferenceId'
     )
-    pricingRequstAccessProductId = StringField(
+    pricingRequestAccessProductId = StringField(
         'Pricing Request Product ID',
-        id='pricingRequstAccessProductIdId'
+        id='pricingRequestAccessProductIdId'
     )
     pricingRequestHardwareId = StringField(
         'pricing request hardware ID',
         id='pricingRequestHardwareIdId'
     )
-    pricingRequestAdditionalHardwareOptionIds = StringField(
-        'Additional Hardware Option Ids',
-        id='pricingRequestAdditionalHardwareOptionIdsId'
-    )
     purchaseOrderNumber = StringField(
         'Purchase Order Number',
         id='purchaseOrderId'
     )
-    orderReference = StringField(
-        'Order Reference',
-        id='orderReferenceId'
-    )
-    firstName = StringField(
+
+    primaryFirstName = StringField(
         'First Name',
         id ='primaryContactFirstNameId'
     )
-    lastName = StringField(
+    primaryLastName = StringField(
         'Last Name',
         id='primaryContactLastNameId'
     )
-    telephone = StringField(
+    primaryTelephone = StringField(
         'Telephone',
         id='primaryContactTelephoneId'
     )
-    email = StringField(
+    primaryEmail = StringField(
         'Email',
         id='primaryContactEmail'
     )
@@ -136,25 +129,9 @@ class NewOrder(FlaskForm):
         'End Customer Company Name',
         id='endCustomerCompanyNameId'
     )
-    companyRegistration = StringField(
-        'Company Registration',
-        id='companyRegistrationId'
-    )
     postcode = StringField(
         'Postcode',
         id='postcode'
-    )
-    lastName = StringField(
-        'Last Name',
-        id='primaryContactLastNameId'
-    )
-    unitBuildingNo = StringField(
-        'Unit Building No',
-        id='unitBuildingNoId'
-    )
-    buildingName = StringField(
-        'Building Name',
-        id='buildingNameId'
     )
     streetNumber = StringField(
         'Street No',
@@ -171,10 +148,6 @@ class NewOrder(FlaskForm):
     county = StringField(
         'County',
         id='countyId'
-    )
-    country = StringField(
-        'Country',
-        id='countryId'
     )
     firstName = StringField(
         'First Name',
@@ -196,21 +169,34 @@ class NewOrder(FlaskForm):
         'Site Constraint',
         id='siteConstraintId'
     )
-    siteStatus = StringField(
-        'Site Status',
-        id='siteStatusId'
-    )
-    wasConstructedBefore2000 = StringField(
+    wasConstructedBefore2000 = SelectField(
         'Constructed before 2000',
-        id='wasConstructedBefore2000Id'
+        id='wasConstructedBefore2000Id',
+        choices=
+        ['YES',
+         'NO',
+         'DONT_KNOW']
     )
-    isAsbestosRegisterAvailable = StringField(
+    isAsbestosRegisterAvailable = SelectField(
         'Is Asbestos Register Available',
-        id='isAsbestosRegisterAvailableId'
+        id='isAsbestosRegisterAvailableId',
+        choices=
+        ['YES',
+         'NO',
+         'DONT_KNOW']
     )
-    siteNotes = StringField(
-        'Site Notes',
-        id='siteNotesId'
+    areSSRAMSRequired = SelectField(
+        'Are SSRAMs required',
+        id='areSSRAMSRequired',
+        choices=
+        ['YES',
+         'NO']
+    )
+    landlordConsentNeeded = SelectField(
+        'Is Landlord Consent Required',
+        id='landlordConsentRequired',
+        choices=['YES',
+                 'NO']
     )
     nni = StringField(
         'NNI',
@@ -228,37 +214,35 @@ class NewOrder(FlaskForm):
         'Rack',
         id='rackId'
     )
-    nni = StringField(
-        'NNI',
-        id='nniId'
-    )
-    taggingMethod = StringField(
-        'Tagging Method',
-        id='taggingMethodId'
-    )
-    requiredVLAN = StringField(
-        'Required VLAN',
-        id='requiredVLANId'
+    taggingMethod = SelectField(
+        'Tagging Required',
+        id='taggingMethodId',
+        choices = ['YES','NO']
     )
     designType = StringField(
         'Design Type',
         id='designTypeId'
     )
-    interfaceType = StringField(
+    interfaceType = SelectField(
         'Interface Type',
-        id='interfaceTypeId'
+        id='interfaceTypeId',
+        choices = [
+            '100Base-T RJ45',
+        '1000Base-T RJ45',
+        'LC-Multi Mode',
+        'LC-Single Mode']
     )
-    autonegotiation = StringField(
+    autonegotiation = SelectField(
         'Autonegotion',
-        id='autonegotiationId'
+        id='autonegotiationId',
+        choices = ['Enabled'
+                   'Disabled']
     )
-    interfaceSpeed = StringField(
+    interfaceSpeed = SelectField(
         'Interface Speed',
-        id='interfaceSpeedId'
-    )
-    duplex = StringField(
-        'Duplex',
-        id='duplexId'
+        id='interfaceSpeedId',
+        choices = ['GigE',
+                   'FaE']
     )
     deliveryAddress = StringField(
         'Delivery Address',
@@ -272,63 +256,3 @@ class NewOrder(FlaskForm):
         'Delivery Contact Number',
         id='deliveryContactNumberId'
     )
-    secondaryAccess = StringField(
-        'Seconday Access',
-        id='secondaryAccessId'
-    )
-    secondaryHardwareId = StringField(
-        'Seconday Harware Id',
-        id='secondaryHardwareIdId'
-    )
-    secondaryAdditionalHardwareOptionIds = StringField(
-        'Seconday Additional Hardware Option Ids',
-        id='secondaryAdditionalHardwareOptionIdsId'
-    )
-    secondaryNNI = StringField(
-        'NNI',
-        id='nniId'
-    )
-    secondaryTaggingMethod = StringField(
-        'Tagging Method',
-        id='taggingMethodId'
-    )
-    secondaryRequiredVLAN = StringField(
-        'Required VLAN',
-        id='requiredVLANId'
-    )
-    secondaryDesignType = StringField(
-        'Design Type',
-        id='designTypeId'
-    )
-    secondaryInterfaceType = StringField(
-        'Interface Type',
-        id='interfaceTypeId'
-    )
-    secondaryAutonegotiation = StringField(
-        'Autonegotion',
-        id='autonegotiationId'
-    )
-    secondaryInterfaceSpeed = StringField(
-        'Interface Speed',
-        id='interfaceSpeedId'
-    )
-    secondaryDuplex = StringField(
-        'Duplex',
-        id='duplexId'
-    )
-    secondaryDeliveryAddress = StringField(
-        'Delivery Address',
-        id='deliveryAddressId'
-    )
-    secondaryDeliveryContact = StringField(
-        'Delivery Contact',
-        id='deliveryContactId'
-    )
-    secondaryDeliveryContactNum = StringField(
-        'Delivery Contact Number',
-        id='deliveryContactNumId'
-    )
-
-
-
-

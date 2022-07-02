@@ -26,7 +26,7 @@ ul {
             <div class="form-wrapper">
                 <h1 class="mt-4">New Circuit Order</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('provider_pricing.new_quote') }}" >
+                <form method="POST" id="quoteform" action="{{ url_for('order.place_order') }}" >
                     {{ form.csrf_token }}
 					<div class="row">
 					<div class="col-sm">
@@ -38,9 +38,9 @@ ul {
 					</div>
 						<div class="col-sm">
                     <fieldset class="form-field">
-                        {{ form.pricingRequstAccessProductId.label}}
+                        {{ form.pricingRequestAccessProductId.label}}
 						<br>
-                        {{ form.pricingRequstAccessProductId(size=20) }}
+                        {{ form.pricingRequestAccessProductId(size=20) }}
                     </fieldset>
 					</div>
 						<div class="col-sm">
@@ -48,13 +48,6 @@ ul {
                         {{ form.pricingRequestHardwareId.label}}
 						<br>
                         {{ form.pricingRequestHardwareId(size=20) }}
-                    </fieldset>
-					</div>
-						<div class="col-sm">
-                    <fieldset class="form-field">
-                        {{ form.pricingRequestAdditionalHardwareOptionIds.label}}
-						<br>
-                        {{ form.pricingRequestAdditionalHardwareOptionIds(size=20) }}
                     </fieldset>
 					</div>
 					<div class="col-sm">
@@ -65,35 +58,28 @@ ul {
                     </fieldset>
 					</div>
 					<hr>
-					<div class="col-sm">
-							<fieldset class="form-field">
-							{{ form.orderReference.label}}
-							<br>
-							{{ form.orderReference }}
-							</fieldset>
-							</div>
 						</div>						
 						<hr>
 						<div class="row">
 						<div class="col-sm">
-						<h2 class="mt-4">Primary Provisioning Contact</h1>
+						<h2 class="mt-4">Primary Provisioning Contact</h2>
 						</div>
 						</div>
 						<hr>
 						<div class="row">
 						<div class="col-sm">
 							<fieldset class="controls">
-							{{ form.firstName.label}}
+							{{ form.primaryFirstName.label}}
 							<br>
-							{{ form.firstName }}
+							{{ form.primaryFirstName }}
 							</fieldset>
 							</div>
 					<hr>
 							<div class="col-sm">
 								<fieldset class="controls">
-								{{ form.lastName.label}}
+								{{ form.primaryLastName.label}}
 								<br>
-								{{ form.lastName }}
+								{{ form.primaryLastName }}
 								</fieldset>
 							</div>
 							</div>
@@ -101,24 +87,24 @@ ul {
 					<div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.telephone.label}}
+                        {{ form.primaryTelephone.label}}
                         <br>
-						{{ form.telephone }}
+						{{ form.primaryTelephone }}
                     </fieldset>
 					</div>
 					<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.email.label}}
+                        {{ form.primaryEmail.label}}
                         <br>
-						{{ form.email }}
+						{{ form.primaryEmail }}
                     </fieldset>
 					</div>
 					</div>
 					<hr>
 						<div class="row">
 						<div class="col-sm">
-						<h2 class="mt-4">Site installation Details</h1>
+						<h2 class="mt-4">Site installation Details</h2>
 						</div>
 						</div>
 					<div class="row">
@@ -130,19 +116,36 @@ ul {
                     </fieldset>
 					</div>
 						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.companyRegistration.label}}
-                        <br>
-						{{ form.companyRegistration }}
-                    </fieldset>
-					</div>
 						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.postcode.label}}
                         <br>
 						{{ form.postcode }}
+                    </fieldset>
+					</div>
+                        <hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.streetName.label}}
+                        <br>
+						{{ form.streetName }}
+                    </fieldset>
+					</div>
+                        <hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.townCity.label}}
+                        <br>
+						{{ form.townCity }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.firstName.label}}
+                        <br>
+						{{ form.firstName }}
                     </fieldset>
 					</div>
 						<hr>
@@ -154,21 +157,6 @@ ul {
                     </fieldset>
 					</div>
 						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.unitBuildingNo.label}}
-                        <br>
-						{{ form.unitBuildingNo }}
-                    </fieldset>
-					</div>
-						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.buildingName.label}}
-                        <br>
-						{{ form.buildingName }}
-                    </fieldset>
-					</div>
 						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
@@ -199,14 +187,6 @@ ul {
                         {{ form.county.label}}
                         <br>
 						{{ form.county }}
-                    </fieldset>
-					</div>
-						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.country.label}}
-                        <br>
-						{{ form.country }}
                     </fieldset>
 					</div>
 						<hr>
@@ -252,14 +232,6 @@ ul {
 						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.siteStatus.label}}
-                        <br>
-						{{ form.siteStatus }}
-                    </fieldset>
-					</div>
-						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
                         {{ form.wasConstructedBefore2000.label}}
                         <br>
 						{{ form.wasConstructedBefore2000 }}
@@ -273,18 +245,27 @@ ul {
 						{{ form.isAsbestosRegisterAvailable }}
                     </fieldset>
 					</div>
+                        						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.siteNotes.label}}
+                        {{ form.areSSRAMSRequired.label}}
                         <br>
-						{{ form.siteNotes }}
+						{{ form.areSSRAMSRequired }}
+                    </fieldset>
+					</div>
+                        				<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.landlordConsentNeeded.label}}
+                        <br>
+						{{ form.landlordConsentNeeded }}
                     </fieldset>
 					</div>
 					</div>
 					<hr>
 					<div class="row">
 						<div class="col-sm">
-						<h2 class="mt-4">Primary NNI details</h1>
+						<h2 class="mt-4">Primary NNI details</h2>
 						</div>
 						<hr>
 					<div class="row">
@@ -322,25 +303,9 @@ ul {
 									<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.nni.label}}
-                        <br>
-						{{ form.nni }}
-                    </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
                         {{ form.taggingMethod.label}}
                         <br>
 						{{ form.taggingMethod }}
-                    </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.requiredVLAN.label}}
-                        <br>
-						{{ form.requiredVLAN }}
                     </fieldset>
 					</div>
 									<hr>
@@ -378,14 +343,6 @@ ul {
 												<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.duplex.label}}
-                        <br>
-						{{ form.duplex }}
-                    </fieldset>
-					</div>
-												<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
                         {{ form.deliveryAddress.label}}
                         <br>
 						{{ form.deliveryAddress }}
@@ -408,115 +365,8 @@ ul {
                     </fieldset>
 					</div>
 												<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryAccess.label}}
-                        <br>
-						{{ form.secondaryAccess }}
-                    </fieldset>
-					</div>
-												<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryHardwareId.label}}
-                        <br>
-						{{ form.secondaryHardwareId }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryAdditionalHardwareOptionIds.label}}
-                        <br>
-						{{ form.secondaryAdditionalHardwareOptionIds }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryNNI.label}}
-                        <br>
-						{{ form.secondaryNNI }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryTaggingMethod.label}}
-                        <br>
-						{{ form.secondaryTaggingMethod }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryRequiredVLAN.label}}
-                        <br>
-						{{ form.secondaryRequiredVLAN }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryDesignType.label}}
-                        <br>
-						{{ form.secondaryDesignType }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryInterfaceType.label}}
-                        <br>
-						{{ form.secondaryInterfaceType }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryAutonegotiation.label}}
-                        <br>
-						{{ form.secondaryAutonegotiation }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryInterfaceSpeed.label}}
-                        <br>
-						{{ form.secondaryInterfaceSpeed }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryDuplex.label}}
-                        <br>
-						{{ form.secondaryDeliveryAddress }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryDeliveryContact.label}}
-                        <br>
-						{{ form.secondaryDeliveryContact }}
-                    </fieldset>
-					</div>
-																	<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.secondaryDeliveryContactNum.label}}
-                        <br>
-						{{ form.secondaryDeliveryContactNum }}
-                    </fieldset>
-					</div>
-					</div>
-					<hr>
-					<div class="row">
-					<input type="submit" value="Submit" class="button">
-					</div>
-				</div>				
+                    </div>
+                    </div>
                 </form>
             </div>
 	    </div>
