@@ -2,7 +2,7 @@ from flask import request, json
 import requests
 import json
 import pandas as pd
-from app.utilities import json_to_panda_v1
+from app.utilities import json_to_panda_v1, btw_api_body, btw_api_body_fttc, add_quote_item
 from app.queries import add_btw_quote
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
@@ -23,19 +23,19 @@ class Provider:
         self.retrieve_quote_url = retrieve_quote_url
         self.order_url = order_url
 
-    # fetch quote API.
+    # fetch quote via provider API.
     def quote_api(self, body):
         api_url = self.url + self.quote_url
         response = requests.post(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
         return response
 
-     # retrieve quote API.
+     # retrieve existing quote using reference via Provider API.
     def retrieve_quote_api(self, quote_reference):
         api_url = self.url + self.retrieve_quote_url + str(quote_reference)
         response = requests.get(api_url, auth=self.auth)
         return response
 
-        # Receive form details and send to API quote and return panda.
+        # Receive form details and run quote_api method and return pricing.
     def get_quote(self, postcode, filters):
         print(filters)
         cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode' and k != 'customer_email' and k != 'customer_name'}
@@ -44,17 +44,37 @@ class Provider:
         product_pricing = json_to_panda_v1(response)
         return product_pricing
 
-        # Fetch quote via API and return as Panda.
+        # take reference and run retrieve_quote_api method  and return pricing.
     def fetch_quote(self, quote_reference):
         response = self.retrieve_quote_api(quote_reference)
         panda_pricing = json_to_panda_v1(response)
         return panda_pricing
 
-        # Create new order.
-    def create_order(self, order_details):
-        response = requests.get(self.order_url, auth=self.basic)
-        panda_pricing = json_to_panda_v1(response)
-        return panda_pricing
+    # Cleanse NewOrder form.
+    def create_order(self, filter):
+        start_cleansed_form = {k: v for k, v in filter.items() if k == 'quoteReference' or k ==
+                         'pricingRequestHardwareId' or k == 'pricingRequestAccessProductId' or k == 'purchaseOrderNumber'}
+        middle_cleansed_form = { k: v for k, v in filter.items() if k == 'FirstName' or
+                         k == 'LastName' or k == 'Telephone' or
+                         k == 'Email'}
+        end_cleansed_form = {k: v for k, v in filter.items() if v != [
+            'Any'] and k != 'csrf_token' and k != 'FirstName' and
+                         k != 'LastName' and k != 'Telephone' and
+                         k != 'Email' and k != 'quoteReference' and k !=
+                         'pricingRequestHardwareId' and k != 'pricingRequestAccessProductId' and k != 'purchaseOrderNumber'}
+        customer_contact = {"primaryProvisioningContact" : middle_cleansed_form}
+        body = {**start_cleansed_form, **customer_contact, **end_cleansed_form}
+        print(body)
+        response = self.send_order(body)
+        product_pricing = json_to_panda_v1(response)
+        return response
+
+    # Send cleansed order to 3rd Party order API.
+    def send_order(self, body):
+        api_url = self.url + self.order_url
+        response = requests.get(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
+        print(response)
+        return response
 
 class BasicProvider(Provider):
     def __init__(self, name, url, quote_url, retrieve_quote_url, order_url, username, password):
@@ -88,23 +108,26 @@ class OAuthProvider(Provider):
         print(headers)
         api_url = self.url + self.quote_url
         response = requests.post(api_url, headers=headers, json = body)
-        print(body)
-        print(api_url)
         return response
-
-    def get_quote(self, postcode, filters):
-        print(filters)
-        cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode' and k != 'customer_email' and k != 'customer_name' and k != 'suppliers'}
-        body = {"quoteItem":[{"action":"add","product":{"@type":"WholesaleEthernetElan","productSpecification":{"id":"WholesaleEthernetElan"},"existingAend" :"True",
-        "place":[{"@type":"PostcodeSite","postcode":postcode}],"product":[{"@type":"EtherwayFibreService","productSpecification":
-{"id":"EtherwayFibreService"},"bandwidth":"1 Gbit/s","resilience":"Standard"},{"@type":"EtherflowDynamicService",
-"productSpecification":{"id":"EtherflowDynamicService"},"bandwidth":"0.2 Mbit/s","cos":"Default CoS (Standard)"}]}}]}
-
-        response = self.quote_api(body)
-        #print(response.content)
-        #product_pricing = json_to_panda_btw(response)
-        #product_pricing = btw_response(response)
-        #return product_pricing
+    #add a decision to check if accessTypes is Fibre or FTTC.
+    def get_quote(self, postcode, bandwidths, filters):
+        quote_list = {"quoteItem": []}
+        #iterate through bandwidths, map to BTW value and add a new quoteItem to JSON
+        for bandwidth in bandwidths:
+            if bandwidth == 'FROM_10_TO_100':
+                bw = '100 Mbit/s'
+                quote_list = add_quote_item(quote_list, postcode, bw)
+            elif bandwidth == 'FROM_100_TO_1000':
+                bw = '100 Mbit/s'
+                quote_list = add_quote_item(quote_list, postcode, bw)
+                bw = '1 Gbit/s'
+                quote_list = add_quote_item(quote_list, postcode, bw)
+            elif bandwidth == 'FROM_1000_TO_10000':
+                bw = '1 Gbit/s'
+                quote_list = add_quote_item(quote_list, postcode, bw)
+                bw = '10 Gbit/s'
+                quote_list = add_quote_item(quote_list, postcode, bw)
+        response = self.quote_api(quote_list)
         return response
 
 v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",

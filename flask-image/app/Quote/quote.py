@@ -8,7 +8,7 @@ class NewQuote:
     def __init__(self):
         pass
 
-    def run(self, postcode, filters, reference, name, email):
+    def run(self, postcode,bandwidths, filters, reference, name, email):
 
         # try V1 API:
         new_quote = add_customer( postcode, reference, "Not ordered", name, email)
@@ -28,14 +28,14 @@ class NewQuote:
         ## Add try/except for future provider Quotation APIs.
         if "BT Wholesale" in filters["suppliers"]:
             try:
-                btw_response = btw_test_api.get_quote(postcode, filters)
+                btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
                 if btw_response.content["code"] == "41:":
                     btw_test_api.fetch_access_token()
                     btw_response = btw_test_api.get_quote(postcode, filters)
                     add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
             except Exception:
                 btw_test_api.fetch_access_token()
-                btw_response = btw_test_api.get_quote(postcode, filters)
+                btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
                 add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
         try:
             net_ref = new_quote[0].net

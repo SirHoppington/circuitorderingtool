@@ -105,23 +105,23 @@ class NewOrder(FlaskForm):
         id='pricingRequestHardwareIdId'
     )
     purchaseOrderNumber = StringField(
-        'Purchase Order Number',
+        'Purchase Orders Number',
         id='purchaseOrderId'
     )
 
-    primaryFirstName = StringField(
+    FirstName = StringField(
         'First Name',
         id ='primaryContactFirstNameId'
     )
-    primaryLastName = StringField(
+    LastName = StringField(
         'Last Name',
         id='primaryContactLastNameId'
     )
-    primaryTelephone = StringField(
+    Telephone = StringField(
         'Telephone',
         id='primaryContactTelephoneId'
     )
-    primaryEmail = StringField(
+    Email = StringField(
         'Email',
         id='primaryContactEmail'
     )

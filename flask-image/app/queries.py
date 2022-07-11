@@ -54,7 +54,7 @@ def get_quotation_products(ref):
 #Search ProviderQuote, Quotation and order table for all results
 def get_all_orders():
     result = db.session.query(ProviderQuote, Quotation, Order).filter(
-        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) & (Order.status == "Order requested")).all()
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) & (Order.status == "Orders requested")).all()
     return result
 
 #Search ProviderQuote and Quotation table for v1 pricing
@@ -108,6 +108,7 @@ def add_v1_quote(panda, supplier_ref, new_quote, new_order, existing_customer):
 
 def add_btw_quote(response,new_quote, new_order, existing_customer):
     dict = response.json()
+    print(dict)
     bt_ref = dict["id"]
     print(bt_ref)
     btw_quote = ProviderQuote(quoteReference=bt_ref, provider="BT Wholesale")
@@ -154,6 +155,6 @@ def remove_product_from_quote(product):
 def send_quote_to_order(product):
     order = search_net_order(product)
     print(order.status)
-    order.status = "Order requested"
+    order.status = "Orders requested"
     db.session.commit()
     return True

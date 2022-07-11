@@ -70,7 +70,7 @@ class ProviderQuote(db.Model):
                            nullable=False)
 
     #quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_associated', lazy="dynamic"))
-    #orders = db.relationship('Order', secondary=quote_table, backref=db.backref('order_associated', lazy="dynamic"))
+    #orders = db.relationship('Orders', secondary=quote_table, backref=db.backref('order_associated', lazy="dynamic"))
 
     def __init__(self, quoteReference, provider):
         self.quoteReference = quoteReference,

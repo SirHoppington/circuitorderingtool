@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
 from app.forms import RetrieveQuote, NewOrder
-from app.Order.order import new_order
+from app.Orders.orders import new_orders
 from app.queries import get_all_orders
 from flask_login import login_required, current_user
 
@@ -22,8 +22,14 @@ def view_orders():
 def place_order():
     form = NewOrder()
     if request.method == 'POST':
-        order_request = new_order.run(form.data)
-        return render_template("order_confirmation.html", html_table=order_request[0], quote_ref=order_request[1])
+        try:
+            order_request = new_orders.run(form.data)
+        except Exception as e:
+            return (str(e))
+        #return render_template("order_confirmation.html", html_table=order_request[0], quote_ref=order_request[1])
+        #return render_template( html_table=order_request)
+        return "success"
+
     else:
         return render_template("place_order.html", form=form)
 
