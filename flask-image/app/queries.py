@@ -26,7 +26,7 @@ def search_products_ref(ref):
 
 def search_net_order(ref):
     result = db.session.query(Order).filter(
-            (Quotation.net == ref) & (NetRef.order_id == Order.id)).first()
+            (Quotation.net == ref) & (NetRef.order_id == Order.id) & (NetRef.quotation_net == ref)).first()
     return result
 
 #Search ProviderQuote and Quotation table for all results
@@ -55,6 +55,7 @@ def get_quotation_products(ref):
 def get_all_orders():
     result = db.session.query(ProviderQuote, Quotation, Order).filter(
         (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) & (Order.status == "Orders requested")).all()
+    print(result)
     return result
 
 #Search ProviderQuote and Quotation table for v1 pricing
@@ -133,7 +134,7 @@ def add_btw_quote(response,new_quote, new_order, existing_customer):
             counter += 1
         for a, b, c in zip(nr_charges, r_charges, terms):
             new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
-                                      installCharges=a, monthlyFees=b, product=product, productReference="NA", term= c, customer_quote="none")
+                                      installCharges=a, monthlyFees=b, product=product, productReference="NA",accessProductId="NA", term= c, customer_quote="none")
             db.session.add(new_product)
             associate_network_ref = NetRef(provider=btw_quote,product=new_product, quotation=new_quote, order=new_order, customer=existing_customer)
             db.session.add(associate_network_ref)
@@ -154,7 +155,12 @@ def remove_product_from_quote(product):
 
 def send_quote_to_order(product):
     order = search_net_order(product)
-    print(order.status)
     order.status = "Orders requested"
     db.session.commit()
     return True
+
+# check if it is a virtual1 quote:
+def check_provider(ref):
+    result = db.session.query(ProviderQuote).filter(
+        (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id)).first()
+    return result

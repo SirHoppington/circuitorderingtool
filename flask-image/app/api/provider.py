@@ -77,9 +77,15 @@ class Provider:
         return response
 
 class BasicProvider(Provider):
-    def __init__(self, name, url, quote_url, retrieve_quote_url, order_url, username, password):
+    def __init__(self, name, url, quote_url, retrieve_quote_url, order_url, address_lookup_url, username, password):
         self.auth = requests.auth.HTTPBasicAuth(username, password)
+        self.address_lookup_url = address_lookup_url
         super().__init__(name, url, quote_url, retrieve_quote_url, order_url)
+
+    def search_address(self, postcode):
+        api_url = self.url + self.address_lookup_url
+        response = requests.get(api_url, headers=self.headers, data={"postcode" : postcode }, auth=self.auth, verify=False)
+        return response
 
 class OAuthProvider(Provider):
     token = "test"
@@ -132,7 +138,7 @@ class OAuthProvider(Provider):
 
 v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
                   "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
-                  "layer2-api/ordering", "apiuser@capita.co.uk", "EyNoe*Vr")
+                  "layer2-api/orderingV2", "address-lookup", "apiuser@capita.co.uk", "EyNoe*Vr")
 
 btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/tmf-api/quoteManagement/v4",
                         "/quote", "/quote", "no_order",

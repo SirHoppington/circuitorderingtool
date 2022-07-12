@@ -52,10 +52,10 @@ ul {
                                               <th>{{ quote[1].net }}</th>
                                               <th>{{ quote[1].name}}</th>
                                           <th>{{ quote[0].provider }}</th>
-                                          <th>{{ quote[0].supplier_ref }}</th>
+                                          <th>{{ quote[0].quoteReference }}</th>
                                           <th>{{ quote[2].status }}</th>
                                       <th>
-                                          <form action="{{ url_for('order.new_order', net=quote[1].net) }}">
+                                          <form action="{{ url_for('order.new_order', ref=quote[0].quoteReference) }}">
                                           <input type="submit" value="View"/>
                                       </form>
                                           {% endfor %}

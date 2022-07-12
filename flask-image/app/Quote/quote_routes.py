@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from app.forms import NewQuote, RetrieveQuote
 from app.Quote.quote import pricing, fetch_pricing
 from app.api.provider import btw_test_api
+from app.api.provider import v1_api
 from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, \
     get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, \
     remove_product_from_quote, send_quote_to_order
@@ -19,6 +20,13 @@ def new_quote():
         return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     else:
         return render_template("new_quote.html", form=form)
+
+# Postcode search, use AJAX to send to prevent form refresh
+@customer_quote.route('/search_address', methods = ['POST'])
+@login_required
+def search_address():
+    result = v1_api.search_address(postcode)
+    return result
 
 @customer_quote.route('/test_quote', methods = ['POST', 'GET'])
 @login_required

@@ -1,0 +1,322 @@
+
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
+    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
+       <style>
+    .codeMirror-scroll{
+        height: 100%;
+        min-height: 60%;
+    }
+	.button {
+		display:block; 
+		width: 100%; 
+} 
+ul {
+  list-style: none;
+}
+</style>
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-wrapper">
+                <h1 class="mt-4">New Circuit Order</h1>
+                <hr>
+                <form method="POST" id="quoteform" action="{{ url_for('order.place_order') }}" >
+                    {{ form.csrf_token }}
+					<div class="row">
+					<div class="col-sm">
+                    <fieldset class="form-field">
+                        {{ form.purchaseOrderNumber.label}}
+						<br>
+                        {{ form.purchaseOrderNumber(size=20) }}
+                    </fieldset>
+					</div>
+					<hr>
+						</div>						
+						<hr>
+						<div class="row">
+						<div class="col-sm">
+						<h2 class="mt-4">Primary Provisioning Contact</h2>
+						</div>
+						</div>
+						<hr>
+						<div class="row">
+						<div class="col-sm">
+							<fieldset class="controls">
+							{{ form.FirstName.label}}
+							<br>
+							{{ form.FirstName }}
+							</fieldset>
+							</div>
+					<hr>
+							<div class="col-sm">
+								<fieldset class="controls">
+								{{ form.LastName.label}}
+								<br>
+								{{ form.LastName }}
+								</fieldset>
+							</div>
+							</div>
+							<hr>
+					<div class="row">
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.Telephone.label}}
+                        <br>
+						{{ form.Telephone }}
+                    </fieldset>
+					</div>
+					<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.Email.label}}
+                        <br>
+						{{ form.Email }}
+                    </fieldset>
+					</div>
+					</div>
+					<hr>
+						<div class="row">
+						<div class="col-sm">
+						<h2 class="mt-4">Site installation Details</h2>
+						</div>
+						</div>
+					<div class="row">
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.endCustomerCompanyName.label}}
+                        <br>
+						{{ form.endCustomerCompanyName }}
+                    </fieldset>
+					</div>
+						<hr>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.postcode.label}}
+                        <br>
+						{{ form.postcode }}
+                    </fieldset>
+					</div>
+                        <hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.streetName.label}}
+                        <br>
+						{{ form.streetName }}
+                    </fieldset>
+					</div>
+                        <hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.townCity.label}}
+                        <br>
+						{{ form.townCity }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.firstName.label}}
+                        <br>
+						{{ form.firstName }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.lastName.label}}
+                        <br>
+						{{ form.lastName }}
+                    </fieldset>
+					</div>
+					<hr>
+					<div class="col-sm">
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.phoneNumber.label}}
+                        <br>
+						{{ form.phoneNumber }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.accessAvailableFrom.label}}
+                        <br>
+						{{ form.accessAvailableFrom }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.siteConstraint.label}}
+                        <br>
+						{{ form.siteConstraint }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.wasConstructedBefore2000.label}}
+                        <br>
+						{{ form.wasConstructedBefore2000 }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.isAsbestosRegisterAvailable.label}}
+                        <br>
+						{{ form.isAsbestosRegisterAvailable }}
+                    </fieldset>
+					</div>
+                        						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.areSSRAMSRequired.label}}
+                        <br>
+						{{ form.areSSRAMSRequired }}
+                    </fieldset>
+					</div>
+                        				<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.landlordConsentNeeded.label}}
+                        <br>
+						{{ form.landlordConsentNeeded }}
+                    </fieldset>
+					</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-sm">
+						<h2 class="mt-4">Primary NNI details</h2>
+						</div>
+						<hr>
+					<div class="row">
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.nni.label}}
+                        <br>
+						{{ form.nni }}
+                    </fieldset>
+					</div>
+							<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.floor.label}}
+                        <br>
+						{{ form.floor }}
+                    </fieldset>
+					</div>
+							<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.room.label}}
+                        <br>
+						{{ form.room }}
+                    </fieldset>
+					</div>
+									<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.rack.label}}
+                        <br>
+						{{ form.rack }}
+                    </fieldset>
+					</div>
+									<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.taggingMethod.label}}
+                        <br>
+						{{ form.taggingMethod }}
+                    </fieldset>
+					</div>
+									<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.designType.label}}
+                        <br>
+						{{ form.designType }}
+                    </fieldset>
+					</div>
+									<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.interfaceType.label}}
+                        <br>
+						{{ form.interfaceType }}
+                    </fieldset>
+					</div>
+									<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.autonegotiation.label}}
+                        <br>
+						{{ form.autonegotiation }}
+                    </fieldset>
+					</div>
+									<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.interfaceSpeed.label}}
+                        <br>
+						{{ form.interfaceSpeed }}
+                    </fieldset>
+					</div>
+												<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.deliveryAddress.label}}
+                        <br>
+						{{ form.deliveryAddress }}
+                    </fieldset>
+					</div>
+												<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.deliveryContact.label}}
+                        <br>
+						{{ form.deliveryContact }}
+                    </fieldset>
+					</div>
+												<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.deliveryContactNumber.label}}
+                        <br>
+						{{ form.deliveryContactNumber }}
+                    </fieldset>
+					</div>
+												<hr>
+                    </div>
+                        					<hr>
+					<div class="row">
+					<input type="submit" value="Submit" class="button">
+					</div>
+                    </div>
+                    </div>
+                </form>
+                </form>
+            </div>
+	    </div>
+         <hr>
+			 <hr>
+             <br>
+             <br>
+             <br>
+             <br>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

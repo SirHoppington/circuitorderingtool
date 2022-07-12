@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
 from app.forms import RetrieveQuote, NewOrder
 from app.Orders.orders import new_orders
-from app.queries import get_all_orders
+from app.queries import get_all_orders, check_provider
 from flask_login import login_required, current_user
 
 order = Blueprint('order', __name__, template_folder='templates')
@@ -33,8 +33,13 @@ def place_order():
     else:
         return render_template("place_order.html", form=form)
 
-@order.route('/new_order/<int:net>', methods = ['GET'])
+@order.route('/new_order/<string:ref>', methods = ['GET'])
 @login_required
-def new_order(net):
-    order_id = new_order.place(net)
-    return render_template("new_order.html", net_ref=order_id)
+def new_order(ref):
+    prov = check_provider(ref)
+    form = NewOrder()
+    if prov.provider == "Virtual 1":
+        form.quoteReference.data = ref
+        return render_template("place_order.html", form=form)
+    else:
+        return render_template("place_order_btw.html", form=form)

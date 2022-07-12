@@ -12,8 +12,6 @@ class NewQuote:
 
         # try V1 API:
         new_quote = add_customer( postcode, reference, "Not ordered", name, email)
-        print(filters)
-        print(filters["suppliers"])
         if ("TalkTalk Business" in filters["suppliers"]) or ("Virtual1" in filters["suppliers"]):
         #for providers in filters:
         #    if
