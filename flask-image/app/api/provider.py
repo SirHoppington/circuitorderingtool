@@ -7,7 +7,7 @@ from app.queries import add_btw_quote
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
-
+from app.config import v1_user, v1_password, btw_secret, btw_client_id
 class Provider:
 
     headers = {
@@ -154,8 +154,8 @@ class OAuthProvider(Provider):
 
 v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
                   "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
-                  "layer2-api/orderingV2", "address-lookup", "apiuser@capita.co.uk", "EyNoe*Vr")
+                  "layer2-api/orderingV2", "address-lookup", v1_user, v1_password)
 
 btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/tmf-api/quoteManagement/v4",
                         "/quote", "/quote", "no_order",
-                        "ErWw3KjIAjvtQVl6ZG3Gn1S3kGEAijpg","YZA99v6Ci9qSHTYY", "https://api-testa.business.bt.com/oauth/accesstoken")
+                        btw_client_id ,btw_secret , "https://api-testa.business.bt.com/oauth/accesstoken")
