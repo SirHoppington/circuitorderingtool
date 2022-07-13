@@ -36,18 +36,20 @@ def test_quote():
         #quote_request = pricing.run(form.postcode.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
         postcode = form.postcode.data
         try:
-            btw_response = btw_test_api.get_quote(postcode, form.data)
-            if btw_response.content["code"]  == "41":
-                btw_test_api.fetch_access_token()
-                btw_response = btw_test_api.get_quote(postcode, form.data)
-            print(btw_response.content)
-        except Exception:
-            btw_test_api.fetch_access_token()
-            btw_response = btw_test_api.get_quote(postcode, form.data)
-            print(btw_response)
+            v1_response = v1_api.get_quote(postcode, form.data)
+            #btw_response = btw_test_api.get_quote(postcode, form.data)
+            #if btw_response.content["code"]  == "41":
+            #    btw_test_api.fetch_access_token()
+            #    btw_response = btw_test_api.get_quote(postcode, form.data)
+            print(v1_response.content)
+        except Exception as e:
+            return (str(e))
+            #btw_test_api.fetch_access_token()
+            #btw_response = btw_test_api.get_quote(postcode, form.data)
+            #print(btw_response)
         #supplier_pricing = get_provider_pricing(quote_request)
         #return btw_response[0].to_html()
-        return btw_response.content
+        return v1_response.content
         #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     else:
         return render_template("test_quote.html", form=form)

@@ -18,9 +18,7 @@ class NewQuote:
             try:
                 # returns v1 response as a Panda Dataframe with correct column headers.
                 v1_response = v1_api.get_quote(postcode, filters)
-                v1_quote = v1_response[1]
-                v1_quote_ref = v1_quote['quoteReference'].iloc[0]
-                add_v1_quote(v1_response, v1_quote_ref, new_quote[0], new_quote[1], new_quote[2])
+                add_v1_quote(v1_response, new_quote[0], new_quote[1], new_quote[2])
             except Exception as e:
                 return (str(e))
         ## Add try/except for future provider Quotation APIs.

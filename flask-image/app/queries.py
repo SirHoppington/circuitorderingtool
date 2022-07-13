@@ -91,20 +91,37 @@ def add_customer(postcode, reference, status, name, email):
     db.session.commit()
     return new_quote, new_order, existing_customer
 
-def add_v1_quote(panda, supplier_ref, new_quote, new_order, existing_customer):
-    try:
-        panda[0].to_sql(name='provider_product', con=db.engine, index=False, if_exists='append', method='multi')
-        panda[1].to_sql(name='provider_pricing', con=db.engine, index=False, if_exists='append', method='multi')
-    ## INSERT API-2 db.session.add and append quotes.
-        v1_quote = search_provider_pricing(supplier_ref)
-        products = panda[0]
-        for x in products['productReference']:
-            v1_pricing = search_provider_products(x)
-            associate_network_ref = NetRef(provider=v1_quote, product=v1_pricing, quotation=new_quote, order=new_order, customer=existing_customer)
-            db.session.add(associate_network_ref)
-            db.session.commit()
-    except Exception as e:
-        print (str(e))
+
+
+def add_v1_quote(response,new_quote, new_order, existing_customer):
+    dict = response.json()
+    v1_ref = dict["quoteReference"]
+    v1_quote = ProviderQuote(quoteReference=v1_ref, provider="Virtual 1")
+    db.session.add(v1_quote)
+    db.session.commit()
+    print(dict["accessProducts"])
+    for item in dict["accessProducts"]:
+        product_ref = item["productReference"]
+        access = item["accessType"]
+        if item["accessType"] == "Copper":
+            bearer = " "
+            bandwidth = " "
+        else:
+            bearer = item["bearer"]
+            bandwidth = item["bandwidth"]
+        carrier = item["carrier"]
+        product = item["product"]
+        term = item["term"]
+        hardware = item["hardwareOptions"][0]["hardwareReference"]
+        print(hardware)
+        install = item["installCharges"]
+        monthly = item["monthlyFees"]
+        new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
+                                      installCharges=install, monthlyFees=monthly, product=product, productReference=product_ref, accessProductId=hardware, term=term, customer_quote="none")
+        db.session.add(new_product)
+        associate_network_ref = NetRef(provider=v1_quote,product=new_product, quotation=new_quote, order=new_order, customer=existing_customer)
+        db.session.add(associate_network_ref)
+        db.session.commit()
     return True
 
 def add_btw_quote(response,new_quote, new_order, existing_customer):
