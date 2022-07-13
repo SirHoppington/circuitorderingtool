@@ -177,9 +177,18 @@ background:#eee;
       <tbody>
               {% for quote in pricing %}
       <tr>
+          {% if quote[0].provider == "Virtual 1" %}
           <td class="image"><img src="/static/imgs/virtual1.jpg" alt=""></td>
-          <td class="provider"><strong>{{ quote[0].provider }}</strong><br>{{ quote[1].product}} {{ quote[1].bandwidth}}MB/
-          {{ quote[1].bearer}}MB {{ quote[1].accessType}}</td>
+          {% endif %}
+          {% if quote[0].provider == "BT Wholesale" %}
+          <td class="image"><img src="/static/imgs/btwholesale.png" alt=""></td>
+          {% endif %}
+          <td class="provider"><strong>{{ quote[0].provider }}</strong><br>{{ quote[1].product}} {% if quote[0].provider == "Virtual 1"  %} {{ quote[1].bandwidth}}MB/
+          {{ quote[1].bearer}}MB {{ quote[1].accessType}}
+          {% endif %}
+          {% if quote[0].provider == "BT Wholesale"  %} {{ quote[1].bandwidth}}
+          {{ quote[1].bearer}} {{ quote[1].accessType }}</td>
+          {% endif %}
           <td class="Term"><strong>Term</strong><br>{{ quote[1].term}} </td>
           <td class="Carrier"><strong>Carrier</strong><br>{{ quote[1].carrier}} </td>
           <td class="price text-right"><strong>Charges</strong><br>£{{ quote[1].installCharges}} install<br>£{{ quote[1].monthlyFees}} P/M </td>

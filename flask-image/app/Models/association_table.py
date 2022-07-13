@@ -100,13 +100,12 @@ class ProviderProduct(db.Model):
     monthlyFees = db.Column(db.Text)
     product = db.Column(db.Text)
     productReference = db.Column(db.Text)
-    accessProductId = db.Column(db.Text)
-    HardwareId = db.Column(db.Text)
+    hardwareId = db.Column(db.Text)
     term = db.Column(db.Text)
     customer_quote = db.Column(db.Text)
 
 
-    def __init__(self, accessType, bandwidth, bearer, carrier, installCharges, monthlyFees, product, productReference, accessProductId, term, customer_quote):
+    def __init__(self, accessType, bandwidth, bearer, carrier, installCharges, monthlyFees, product, productReference, hardwareId, term, customer_quote):
         self.accessType = accessType,
         self.bandwidth = bandwidth,
         self.bearer = bearer,
@@ -115,7 +114,7 @@ class ProviderProduct(db.Model):
         self.monthlyFees = monthlyFees,
         self.product = product,
         self.productReference = productReference,
-        self.accessProductId = accessProductId,
+        self.hardwareId = hardwareId,
         self.term = term,
         self.customer_quote = customer_quote
 
@@ -137,7 +136,7 @@ class ProviderProduct(db.Model):
             'monthlyFees' : self.monthlyFees,
             'product' : self.product,
             'productReference' : self.productReference,
-            'accessProductId' : self.accessProductId,
+            'hardwaredId' : self.hardwareId,
             'term' : self.term,
             'customer_quote': self.customer_quote
         }

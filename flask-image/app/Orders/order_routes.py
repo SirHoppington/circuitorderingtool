@@ -38,8 +38,13 @@ def place_order():
 def new_order(ref):
     prov = check_provider(ref)
     form = NewOrder()
-    if prov.provider == "Virtual 1":
+    if prov[0].provider == "Virtual 1":
         form.quoteReference.data = ref
+        form.pricingRequestAccessProductId.data = prov[1].productReference
+        print(prov[1].hardwareId)
+        form.pricingRequestHardwareId.data = prov[1].hardwareId
         return render_template("place_order.html", form=form)
+
     else:
         return render_template("place_order_btw.html", form=form)
+

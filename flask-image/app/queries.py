@@ -112,11 +112,12 @@ def add_v1_quote(response,new_quote, new_order, existing_customer):
         carrier = item["carrier"]
         product = item["product"]
         term = item["term"]
+        access_prod = item["productReference"]
         hardware = item["hardwareOptions"][0]["hardwareReference"]
         install = item["installCharges"]
         monthly = item["monthlyFees"]
         new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
-                                      installCharges=install, monthlyFees=monthly, product=product, productReference=product_ref, accessProductId=hardware, term=term, customer_quote="none")
+                                      installCharges=install, monthlyFees=monthly, product=product, productReference=access_prod, hardwareId=hardware, term=term, customer_quote="none")
         db.session.add(new_product)
         associate_network_ref = NetRef(provider=v1_quote,product=new_product, quotation=new_quote, order=new_order, customer=existing_customer)
         db.session.add(associate_network_ref)
@@ -153,7 +154,7 @@ def add_btw_quote(response,new_quote, new_order, existing_customer):
                 counter += 1
             for a, b, c in zip(nr_charges, r_charges, terms):
                 new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
-                                      installCharges=a, monthlyFees=b, product=product, productReference="NA",accessProductId="NA", term= c, customer_quote="none")
+                                      installCharges=a, monthlyFees=b, product=product, productReference="NA",hardwareId="NA", term= c, customer_quote="none")
                 db.session.add(new_product)
                 associate_network_ref = NetRef(provider=btw_quote,product=new_product, quotation=new_quote, order=new_order, customer=existing_customer)
                 db.session.add(associate_network_ref)
@@ -180,6 +181,6 @@ def send_quote_to_order(product):
 
 # check if it is a virtual1 quote:
 def check_provider(ref):
-    result = db.session.query(ProviderQuote).filter(
-        (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id)).first()
+    result = db.session.query(ProviderQuote, ProviderProduct).filter(
+        (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.product_id == ProviderProduct.id)).first()
     return result
