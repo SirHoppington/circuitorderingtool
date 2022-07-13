@@ -113,7 +113,6 @@ def add_v1_quote(response,new_quote, new_order, existing_customer):
         product = item["product"]
         term = item["term"]
         hardware = item["hardwareOptions"][0]["hardwareReference"]
-        print(hardware)
         install = item["installCharges"]
         monthly = item["monthlyFees"]
         new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
@@ -133,29 +132,32 @@ def add_btw_quote(response,new_quote, new_order, existing_customer):
     db.session.add(btw_quote)
     db.session.commit()
     for item in dict["quoteItem"]:
-        access = item["product"]["product"][0]["@type"]
-        bearer = item["product"]["product"][0]["bandwidth"]
-        bandwidth = item["product"]["product"][1]["bandwidth"]
-        carrier = item["product"]["product"][0]["productInformation"]["accessProvider"]
-        product = item["product"]["@type"]
-        counter = 0
-        nr_charges = []
-        r_charges = []
-        terms = []
-        for x, y in zip(item["product"]["product"][0] ["productPrice"], item["product"]["product"][1] ["productPrice"]):
-            if (counter % 2) ==0:
-                nr_charges.append(x["price"]["taxIncludedAmount"]["value"] + y["price"]["taxIncludedAmount"]["value"])
-                terms.append(x["name"])
-            else:
-                r_charges.append(x["price"]["taxIncludedAmount"]["value"] + y["price"]["taxIncludedAmount"]["value"])
-            counter += 1
-        for a, b, c in zip(nr_charges, r_charges, terms):
-            new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
+        if "errors" in item["product"]["product"][1]:
+            print(item["product"]["product"][1]["errors"])
+        else:
+            access = item["product"]["product"][0]["@type"]
+            bearer = item["product"]["product"][0]["bandwidth"]
+            bandwidth = item["product"]["product"][1]["bandwidth"]
+            carrier = item["product"]["product"][0]["productInformation"]["accessProvider"]
+            product = item["product"]["@type"]
+            counter = 0
+            nr_charges = []
+            r_charges = []
+            terms = []
+            for x, y in zip(item["product"]["product"][0] ["productPrice"], item["product"]["product"][1] ["productPrice"]):
+                if (counter % 2) ==0:
+                    nr_charges.append(x["price"]["taxIncludedAmount"]["value"] + y["price"]["taxIncludedAmount"]["value"])
+                    terms.append(x["name"])
+                else:
+                    r_charges.append(x["price"]["taxIncludedAmount"]["value"] + y["price"]["taxIncludedAmount"]["value"])
+                counter += 1
+            for a, b, c in zip(nr_charges, r_charges, terms):
+                new_product = ProviderProduct(accessType=access, bandwidth=bandwidth, bearer=bearer, carrier=carrier,
                                       installCharges=a, monthlyFees=b, product=product, productReference="NA",accessProductId="NA", term= c, customer_quote="none")
-            db.session.add(new_product)
-            associate_network_ref = NetRef(provider=btw_quote,product=new_product, quotation=new_quote, order=new_order, customer=existing_customer)
-            db.session.add(associate_network_ref)
-            db.session.commit()
+                db.session.add(new_product)
+                associate_network_ref = NetRef(provider=btw_quote,product=new_product, quotation=new_quote, order=new_order, customer=existing_customer)
+                db.session.add(associate_network_ref)
+                db.session.commit()
     return True
 
 def add_product_to_quote(product):

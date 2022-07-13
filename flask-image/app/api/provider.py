@@ -2,7 +2,7 @@ from flask import request, json
 import requests
 import json
 import pandas as pd
-from app.utilities import json_to_panda_v1, btw_api_body, btw_api_body_fttc, add_quote_item
+from app.utilities import btw_api_body, btw_api_body_fttc, add_quote_item
 from app.queries import add_btw_quote
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
@@ -41,14 +41,15 @@ class Provider:
         cleansed_form = {k: v for k, v in filters.items() if v != ['Any'] and k != 'csrf_token' and k != 'postcode' and k != 'customer_email' and k != 'customer_name'}
         body = {"postcode": postcode, "filter": cleansed_form}
         response = self.quote_api(body)
-        product_pricing = json_to_panda_v1(response)
-        return product_pricing
+        #product_pricing = json_to_panda_v1(response)
+        return response
+        #return product_pricing
 
         # take reference and run retrieve_quote_api method  and return pricing.
-    def fetch_quote(self, quote_reference):
-        response = self.retrieve_quote_api(quote_reference)
-        panda_pricing = json_to_panda_v1(response)
-        return panda_pricing
+    #def fetch_quote(self, quote_reference):
+    #    response = self.retrieve_quote_api(quote_reference)
+    #    panda_pricing = json_to_panda_v1(response)
+    #    return panda_pricing
 
     # Cleanse NewOrder form.
     def create_order(self, filter):
@@ -66,7 +67,6 @@ class Provider:
         body = {**start_cleansed_form, **customer_contact, **end_cleansed_form}
         print(body)
         response = self.send_order(body)
-        product_pricing = json_to_panda_v1(response)
         return response
 
     # Send cleansed order to 3rd Party order API.
@@ -117,22 +117,38 @@ class OAuthProvider(Provider):
         return response
     #add a decision to check if accessTypes is Fibre or FTTC.
     def get_quote(self, postcode, bandwidths, filters):
-        quote_list = {"quoteItem": []}
+        #quote_list = {"quoteItem": []}
         #iterate through bandwidths, map to BTW value and add a new quoteItem to JSON
-        for bandwidth in bandwidths:
-            if bandwidth == 'FROM_10_TO_100':
-                bw = '100 Mbit/s'
-                quote_list = add_quote_item(quote_list, postcode, bw)
-            elif bandwidth == 'FROM_100_TO_1000':
-                bw = '100 Mbit/s'
-                quote_list = add_quote_item(quote_list, postcode, bw)
-                bw = '1 Gbit/s'
-                quote_list = add_quote_item(quote_list, postcode, bw)
-            elif bandwidth == 'FROM_1000_TO_10000':
-                bw = '1 Gbit/s'
-                quote_list = add_quote_item(quote_list, postcode, bw)
-                bw = '10 Gbit/s'
-                quote_list = add_quote_item(quote_list, postcode, bw)
+        # add if bandwidth == [] and if product == FTTC then add new line for FTTC product
+        quote_list = {"quoteItem": []}
+        for type in filters["accessTypes"]:
+            if type == "Fibre":
+                product = "EtherwayFibreService"
+                for bandwidth in filters["bandwidths"]:
+                    if bandwidth == 'FROM_10_TO_100':
+                        bw = '100 Mbit/s'
+                        quote_list = add_quote_item(quote_list, filters, bw, product)
+                    elif bandwidth == 'FROM_100_TO_1000':
+                        bw = '100 Mbit/s'
+                        quote_list = add_quote_item(quote_list, filters, bw, product)
+                        bw = '1 Gbit/s'
+                        quote_list = add_quote_item(quote_list, filters, bw, product)
+                    elif bandwidth == 'FROM_1000_TO_10000':
+                        bw = '1 Gbit/s'
+                        quote_list = add_quote_item(quote_list, filters, bw, product)
+                        bw = '10 Gbit/s'
+                        quote_list = add_quote_item(quote_list, filters, bw, product)
+                else:
+                    product = "EtherwayGEAService"
+                    for bandwidth in filters["bandwidths"]:
+                        if bandwidth == 'FROM_10_TO_100':
+                            bw = 'FTTC 40:10 Mbit/s'
+                            quote_list = add_quote_item(quote_list, filters, bw, product)
+                            bw = 'FTTC 80:20 Mbit/s'
+                            quote_list = add_quote_item(quote_list, filters, bw, product)
+            #else:
+            #   product = "EtherwayGEAService"
+            #    add_bandwidth(filters,bw, product)
         response = self.quote_api(quote_list)
         return response
 
