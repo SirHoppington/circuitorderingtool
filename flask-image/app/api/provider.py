@@ -7,7 +7,7 @@ from app.queries import add_btw_quote
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
-from app.config import v1_user, v1_password, btw_secret, btw_client_id
+from config import v1_user, v1_password, btw_secret, btw_client_id
 class Provider:
 
     headers = {
