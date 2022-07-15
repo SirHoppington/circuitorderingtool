@@ -2,12 +2,12 @@ from flask import request, json
 import requests
 import json
 import pandas as pd
-from app.utilities import btw_api_body, btw_api_body_fttc, add_quote_item
+from app.utilities import add_quote_item
 from app.queries import add_btw_quote
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
-from config import v1_user, v1_password, btw_secret, btw_client_id
+from config import v1_user, v1_password, btw_secret, btw_client_id, btw_sandbox_client_id ,btw_sandbox_secret
 class Provider:
 
     headers = {
@@ -27,6 +27,7 @@ class Provider:
     def quote_api(self, body):
         api_url = self.url + self.quote_url
         response = requests.post(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
+        print(response.content)
         return response
 
      # retrieve existing quote using reference via Provider API.
@@ -55,15 +56,14 @@ class Provider:
     def create_order(self, filter):
         start_cleansed_form = {k: v for k, v in filter.items() if k == 'quoteReference' or k ==
                          'pricingRequestHardwareId' or k == 'pricingRequestAccessProductId' or k == 'purchaseOrderNumber'}
-        middle_cleansed_form = { k: v for k, v in filter.items() if k == 'FirstName' or
-                         k == 'LastName' or k == 'Telephone' or
-                         k == 'Email'}
         end_cleansed_form = {k: v for k, v in filter.items() if v != [
             'Any'] and k != 'csrf_token' and k != 'FirstName' and
                          k != 'LastName' and k != 'Telephone' and
                          k != 'Email' and k != 'quoteReference' and k !=
                          'pricingRequestHardwareId' and k != 'pricingRequestAccessProductId' and k != 'purchaseOrderNumber'}
-        customer_contact = {"primaryProvisioningContact" : middle_cleansed_form}
+        customer_contact = {
+            "primaryProvisioningContact": {"firstName": filter["FirstName"], "lastName": filter["LastName"],
+                                           "telephone": filter["Telephone"], "email": filter["Email"]}}
         body = {**start_cleansed_form, **customer_contact, **end_cleansed_form}
         print(body)
         response = self.send_order(body)
@@ -72,8 +72,9 @@ class Provider:
     # Send cleansed order to 3rd Party order API.
     def send_order(self, body):
         api_url = self.url + self.order_url
-        response = requests.get(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
+        response = requests.post(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
         print(response)
+        print(response.content)
         return response
 
 class BasicProvider(Provider):
@@ -117,9 +118,7 @@ class OAuthProvider(Provider):
         return response
     #add a decision to check if accessTypes is Fibre or FTTC.
     def get_quote(self, postcode, bandwidths, filters):
-        #quote_list = {"quoteItem": []}
         #iterate through bandwidths, map to BTW value and add a new quoteItem to JSON
-        # add if bandwidth == [] and if product == FTTC then add new line for FTTC product
         quote_list = {"quoteItem": []}
         for type in filters["accessTypes"]:
             if type == "Fibre":
@@ -152,6 +151,21 @@ class OAuthProvider(Provider):
         response = self.quote_api(quote_list)
         return response
 
+    # Cleanse NewOrder form.
+    def create_order(self, filter):
+        order_list = add_order(filters)
+        print(body)
+        response = self.send_order(body)
+        return response
+
+    # Send cleansed order to 3rd Party order API.
+    def send_order(self, body):
+        api_url = self.url + self.order_url
+        response = requests.get(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
+        print(response)
+        print(response.content)
+        return response
+
 v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
                   "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
                   "layer2-api/orderingV2", "address-lookup", v1_user, v1_password)
@@ -159,3 +173,6 @@ v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
 btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/tmf-api/quoteManagement/v4",
                         "/quote", "/quote", "no_order",
                         btw_client_id ,btw_secret , "https://api-testa.business.bt.com/oauth/accesstoken")
+btw_sandbox_api = OAuthProvider("BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com/v1",
+                        "/quote", "/retrieveQuote", "/productOrderingManagement/productOrder",
+                        btw_sandbox_client_id ,btw_sandbox_secret , "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")

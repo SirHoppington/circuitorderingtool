@@ -108,6 +108,10 @@ class NewOrder(FlaskForm):
         'Purchase Orders Number',
         id='purchaseOrderId'
     )
+    orderReference = StringField(
+        'Order Reference Number',
+        id='orderReference'
+    )
 
     FirstName = StringField(
         'First Name',
@@ -129,9 +133,17 @@ class NewOrder(FlaskForm):
         'End Customer Company Name',
         id='endCustomerCompanyNameId'
     )
+    companyRegistration = StringField(
+               'Company Registration',
+        id='companyRegistration'
+    )
     postcode = StringField(
         'Postcode',
         id='postcode'
+    )
+    buildingName = StringField(
+        'Building Name',
+        id='buildingName'
     )
     streetNumber = StringField(
         'Street No',
@@ -165,9 +177,23 @@ class NewOrder(FlaskForm):
         'Access Available From',
         id='accessAvailableFromId'
     )
-    siteConstraint = StringField(
+    siteConstraint = SelectField(
         'Site Constraint',
-        id='siteConstraintId'
+        id='siteConstraintId',
+        choices=
+        ['site-not-ready',
+         'new-construction',
+         'complex-access-requirements',
+         'datacentre',
+         'none']
+    )
+    siteStatus = SelectField(
+        'Site Status',
+        id='siteStatus',
+        choices =
+        ['new-site',
+         'office-move',
+         'current-tenant']
     )
     wasConstructedBefore2000 = SelectField(
         'Constructed before 2000',
@@ -184,6 +210,10 @@ class NewOrder(FlaskForm):
         ['YES',
          'NO',
          'DONT_KNOW']
+    )
+    siteHazards = StringField(
+        'Site Hazards',
+        id='siteHazards'
     )
     areSSRAMSRequired = SelectField(
         'Are SSRAMs required',
@@ -217,7 +247,7 @@ class NewOrder(FlaskForm):
     taggingMethod = SelectField(
         'Tagging Required',
         id='taggingMethodId',
-        choices = ['YES','NO']
+        choices = ['Untagged','Tagged']
     )
     designType = StringField(
         'Design Type',
@@ -227,15 +257,15 @@ class NewOrder(FlaskForm):
         'Interface Type',
         id='interfaceTypeId',
         choices = [
-            '100Base-T RJ45',
-        '1000Base-T RJ45',
+            '100Base-T Rj45',
+        '1000Base-T Rj45',
         'LC-Multi Mode',
         'LC-Single Mode']
     )
     autonegotiation = SelectField(
         'Autonegotion',
         id='autonegotiationId',
-        choices = ['Enabled'
+        choices = ['Enabled',
                    'Disabled']
     )
     interfaceSpeed = SelectField(
@@ -243,6 +273,12 @@ class NewOrder(FlaskForm):
         id='interfaceSpeedId',
         choices = ['GigE',
                    'FaE']
+    )
+    duplex = SelectField(
+        'Duplex',
+        id='duplex',
+        choices=['Full',
+                 'Half']
     )
     deliveryAddress = StringField(
         'Delivery Address',

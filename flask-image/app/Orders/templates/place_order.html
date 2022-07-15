@@ -58,6 +58,14 @@ ul {
                     </fieldset>
 					</div>
 					<hr>
+					<div class="col-sm">
+                    <fieldset class="form-field">
+                        {{ form.orderReference.label}}
+						<br>
+                        {{ form.orderReference(size=20) }}
+                    </fieldset>
+					</div>
+					<hr>
 						</div>						
 						<hr>
 						<div class="row">
@@ -116,12 +124,37 @@ ul {
                     </fieldset>
 					</div>
 						<hr>
+
+					<div class="row">
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.companyRegistration.label}}
+                        <br>
+						{{ form.companyRegistration }}
+                    </fieldset>
+					</div>
 						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.postcode.label}}
                         <br>
 						{{ form.postcode }}
+                    </fieldset>
+					</div>
+                        <hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.buildingName.label}}
+                        <br>
+						{{ form.buildingName }}
+                    </fieldset>
+					</div>
+                        <hr>
+                        <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.streetNumber.label}}
+                        <br>
+						{{ form.streetNumber }}
                     </fieldset>
 					</div>
                         <hr>
@@ -138,6 +171,14 @@ ul {
                         {{ form.townCity.label}}
                         <br>
 						{{ form.townCity }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.county.label}}
+                        <br>
+						{{ form.county }}
                     </fieldset>
 					</div>
 						<hr>
@@ -185,6 +226,14 @@ ul {
 						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
+                        {{ form.siteStatus.label}}
+                        <br>
+						{{ form.siteStatus }}
+                    </fieldset>
+					</div>
+						<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
                         {{ form.wasConstructedBefore2000.label}}
                         <br>
 						{{ form.wasConstructedBefore2000 }}
@@ -197,8 +246,15 @@ ul {
                         <br>
 						{{ form.isAsbestosRegisterAvailable }}
                     </fieldset>
+					</div><hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.siteHazards.label}}
+                        <br>
+						{{ form.siteHazards }}
+                    </fieldset>
 					</div>
-                        						<hr>
+                        <hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.areSSRAMSRequired.label}}
@@ -293,7 +349,15 @@ ul {
 						{{ form.interfaceSpeed }}
                     </fieldset>
 					</div>
-												<hr>
+					<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.duplex.label}}
+                        <br>
+						{{ form.duplex }}
+                    </fieldset>
+					</div>
+                        <hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.deliveryAddress.label}}
