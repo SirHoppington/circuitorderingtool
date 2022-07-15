@@ -6,7 +6,7 @@ from app.api.provider import btw_test_api
 from app.api.provider import v1_api
 from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, \
     get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, \
-    remove_product_from_quote, send_quote_to_order
+    remove_product_from_quote, send_quote_to_order, get_all_orders
 
 customer_quote = Blueprint('customer_quote', __name__, template_folder='templates')
 
@@ -62,9 +62,8 @@ def add_quote(net):
     print(product_id)
     for product in product_id:
         add_product_to_quote(product)
-    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
-    return "products added to quote!"
-    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+    quote = get_quotation_products(net)
+    return render_template("view_quotation.html", pricing=quote, net_ref=net)
 
 @customer_quote.route('/remove_quote/<int:net>', methods = ['POST'])
 def remove_quote(net):
@@ -72,17 +71,18 @@ def remove_quote(net):
     print(product_id)
     for product in product_id:
         remove_product_from_quote(product)
-    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
-    return "products removed from quote!"
-    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+    quote = get_quotation_products(net)
+    return render_template("view_quotation.html", pricing=quote, net_ref=net)
 
 @customer_quote.route('/add_to_order/<int:net>', methods = ['POST'])
 @login_required
 def add_to_order(net):
     send_quote_to_order(net)
+    form = RetrieveQuote()
+    # DB query to show orders that have been placed.
+    orders = get_all_orders()
     #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
-    return "product sent to orders team!"
-    #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+    return render_template("view_orders.html", orders=orders, form=form)
 
 @customer_quote.route('/', methods = ['POST', 'GET'])
 @customer_quote.route('/view_quotations', methods = ['POST', 'GET'])

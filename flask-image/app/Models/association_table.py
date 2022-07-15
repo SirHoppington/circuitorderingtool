@@ -45,10 +45,12 @@ class Order(db.Model):
     __tablename__ = 'order_table'
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(20))
+    ref = db.Column(db.Integer)
     #order_to_quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_to_order_associated', lazy="dynamic"))
 
-    def __init__(self, status):
+    def __init__(self, status, ref):
         self.status = status
+        self.ref = ref
 
     def __repr__(self):
         return '{}'.format(self.id)
@@ -57,7 +59,8 @@ class Order(db.Model):
     def serialize(self):
         return {
             'id' : self.id,
-            'status' : self.status
+            'status' : self.status,
+            'ref' : self.ref
         }
 class ProviderQuote(db.Model):
     __tablename__ = "provider_pricing"

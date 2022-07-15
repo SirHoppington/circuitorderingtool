@@ -28,6 +28,11 @@ def search_net_order(ref):
     result = db.session.query(Order).filter(
             (Quotation.net == ref) & (NetRef.order_id == Order.id) & (NetRef.quotation_net == ref)).first()
     return result
+def search_prod_order(product):
+    result = db.session.query(Order).filter(
+            (NetRef.order_id == Order.id) & (NetRef.product_id == ProviderProduct.id) & (ProviderProduct.productReference == product)).first()
+    return result
+
 
 #Search ProviderQuote and Quotation table for all results
 def get_all_pricing():
@@ -54,7 +59,7 @@ def get_quotation_products(ref):
 #Search ProviderQuote, Quotation and order table for all results
 def get_all_orders():
     result = db.session.query(ProviderQuote, Quotation, Order).filter(
-        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) & (Order.status == "Orders requested")).all()
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) & (Order.status != "Not ordered")).all()
     print(result)
     return result
 
@@ -82,7 +87,7 @@ def search_customer(email):
 def add_customer(postcode, reference, status, name, email):
     new_quote = Quotation(name=postcode, net=reference)
     db.session.add(new_quote)
-    new_order = Order(status=status)
+    new_order = Order(status=status, ref=None)
     db.session.add(new_order)
     existing_customer = search_customer(email)
     if not existing_customer:
@@ -91,6 +96,11 @@ def add_customer(postcode, reference, status, name, email):
     db.session.commit()
     return new_quote, new_order, existing_customer
 
+def add_v1_order(response, product):
+    dict = response.json()
+    order_ref = dict["resultOrderNumber"]
+    set_order_ref(product, order_ref)
+    return order_ref, "Virtual 1"
 
 
 def add_v1_quote(response,new_quote, new_order, existing_customer):
@@ -176,6 +186,13 @@ def remove_product_from_quote(product):
 def send_quote_to_order(product):
     order = search_net_order(product)
     order.status = "Orders requested"
+    db.session.commit()
+    return True
+
+def set_order_ref(product, order_ref):
+    order = search_prod_order(product)
+    order.ref = order_ref
+    order.status = "Order sent"
     db.session.commit()
     return True
 

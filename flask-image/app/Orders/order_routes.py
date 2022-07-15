@@ -24,11 +24,13 @@ def place_order():
     if request.method == 'POST':
         try:
             order_request = new_orders.run(form.data)
+            print(order_request)
         except Exception as e:
             return (str(e))
         #return render_template("order_confirmation.html", html_table=order_request[0], quote_ref=order_request[1])
         #return render_template( html_table=order_request)
-        return "success"
+        #return "success"
+        return render_template("order_confirmation.html", order_ref = order_request[0], provider = order_request[1])
 
     else:
         return render_template("place_order.html", form=form)
@@ -41,8 +43,9 @@ def new_order(ref):
     if prov[0].provider == "Virtual 1":
         form.quoteReference.data = ref
         form.pricingRequestAccessProductId.data = prov[1].productReference
-        print(prov[1].hardwareId)
         form.pricingRequestHardwareId.data = prov[1].hardwareId
+        form.nni.data = "V1C45349 - TestingDC"
+        form.designType.data = "PBT Partner Connect Design"
         return render_template("place_order.html", form=form)
 
     else:
