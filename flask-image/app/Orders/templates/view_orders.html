@@ -44,15 +44,17 @@ ul {
                                       <th>Net Ref</th>
                                       <th>Postcode</th>
                                       <th>Suppliers</th>
-                                      <th>Supplier Ref</th>
+                                      <th>Quotation Ref</th>
+                                      <th>Order Ref</th>
                                       <th>Order Status</th>
                                   </tr>
                                   {% for quote in orders %}
                                       <tr>
-                                              <th>{{ quote[1].net }}</th>
-                                              <th>{{ quote[1].name}}</th>
+                                          <th>{{ quote[1].net }}</th>
+                                          <th>{{ quote[1].name}}</th>
                                           <th>{{ quote[0].provider }}</th>
                                           <th>{{ quote[0].quoteReference }}</th>
+                                          <th>{{ quote[2].ref }}</th>
                                           <th>{{ quote[2].status }}</th>
                                       <th>
                                           <form action="{{ url_for('order.new_order', ref=quote[0].quoteReference) }}">

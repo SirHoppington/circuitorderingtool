@@ -176,8 +176,8 @@ background:#eee;
       <tr>
           <td class="Net_Ref"><strong>NET Ref</strong><br> {{ quote[0].net }}</td>
           <td class="Customer"><strong>Customer</strong><br> {{ quote[2].name}}<br> {{ quote[0].name}}</td>
-          <td class="Suppler_Ref"><strong>Supplier Ref</strong><br>{{ quote[1].quoteReference}} </td>
-          <td class="Suppler_Ref"><strong>Order status</strong><br>{{ quote[3].status}} </td>
+          <td class="Suppler_Ref"><strong>Supplier Ref</strong><br><a href="{{ url_for('provider_pricing.get_pricing', net=quote[0].net)}}"> {{ quote[1].quoteReference}} </a></td>
+          <td class="Order_Ref"><strong>Order status</strong><br>{{ quote[3].status}} </td>
           <td class="Suppler_Pricing"><strong>Supplier Pricing</strong><br><form action="{{ url_for('provider_pricing.get_pricing', net=quote[0].net) }}">
                                                   <button type="submit" class="btn btn-secondary"> View </button></form> </td>
 		   <td class="view_quote"><strong>Quotation</strong><br><form action="{{ url_for('customer_quote.get_quotation', net=quote[0].net) }}">
