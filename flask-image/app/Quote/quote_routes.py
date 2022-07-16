@@ -17,7 +17,10 @@ def new_quote():
     if request.method == 'POST':
         quote_request = pricing.run(form.postcode.data, form.bandwidths.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
         supplier_pricing = get_provider_pricing(quote_request)
-        return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+        if not supplier_pricing:
+            return render_template("no_pricing_available.html")
+        else:
+            return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     else:
         return render_template("new_quote.html", form=form)
 

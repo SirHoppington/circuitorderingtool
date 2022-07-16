@@ -65,13 +65,8 @@ class NewQuote(FlaskForm):
         'Suppliers',
         choices=
         [('BT Wholesale', 'BT Wholesale'),
-         ('Colt', 'Colt'),
-         ('Level 3 Communications', 'Level 3'),
-         ('SSE Telecoms', 'SSE Telecoms'),
          ('TalkTalk Business', 'TalkTalk Business'),
-         ('Virgin Media Business', 'Virgin Media Business'),
-         ('Virtual1', 'Virtual1'),
-         ('Vodafone', 'Vodafone')],
+         ('Virtual1', 'Virtual1')],
         id='suppliers'
     )
     terms = MultiCheckboxField(

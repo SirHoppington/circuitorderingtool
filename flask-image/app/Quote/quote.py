@@ -12,6 +12,23 @@ class NewQuote:
 
         # try V1 API:
         new_quote = add_customer( postcode, reference, "Not ordered", name, email)
+        if not filters["suppliers"]:
+            try:
+                v1_response = v1_api.get_quote(postcode, filters)
+                add_v1_quote(v1_response, new_quote[0], new_quote[1], new_quote[2])
+            except Exception as e:
+                return (str(e))
+            try:
+                btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
+                if btw_response.content["code"] == "41:":
+                    btw_test_api.fetch_access_token()
+                    btw_response = btw_test_api.get_quote(postcode, filters)
+                    add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
+            except Exception:
+                btw_test_api.fetch_access_token()
+                btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
+                add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
+
         if ("TalkTalk Business" in filters["suppliers"]) or ("Virtual1" in filters["suppliers"]):
         #for providers in filters:
         #    if
@@ -23,16 +40,17 @@ class NewQuote:
                 return (str(e))
         ## Add try/except for future provider Quotation APIs.
         if "BT Wholesale" in filters["suppliers"]:
-            try:
-                btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
-                if btw_response.content["code"] == "41:":
+            if ("Fibre" in filters["accessTypes"]) or ("FTTC" in filters["accessTypes"]):
+                try:
+                    btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
+                    if btw_response.content["code"] == "41:":
+                        btw_test_api.fetch_access_token()
+                        btw_response = btw_test_api.get_quote(postcode, filters)
+                        add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
+                except Exception:
                     btw_test_api.fetch_access_token()
-                    btw_response = btw_test_api.get_quote(postcode, filters)
+                    btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
                     add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
-            except Exception:
-                btw_test_api.fetch_access_token()
-                btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
-                add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
         try:
             net_ref = new_quote[0].net
             return net_ref
