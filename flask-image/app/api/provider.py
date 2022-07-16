@@ -123,22 +123,31 @@ class OAuthProvider(Provider):
         for type in filters["accessTypes"]:
             if type == "Fibre":
                 product = "EtherwayFibreService"
-                for bandwidth in filters["bandwidths"]:
-                    if bandwidth == 'FROM_10_TO_100':
-                        bw = '100 Mbit/s'
-                        quote_list = add_quote_item(quote_list, filters, bw, product)
-                    elif bandwidth == 'FROM_100_TO_1000':
-                        bw = '100 Mbit/s'
-                        quote_list = add_quote_item(quote_list, filters, bw, product)
-                        bw = '1 Gbit/s'
-                        quote_list = add_quote_item(quote_list, filters, bw, product)
-                    elif bandwidth == 'FROM_1000_TO_10000':
-                        bw = '1 Gbit/s'
-                        quote_list = add_quote_item(quote_list, filters, bw, product)
-                        bw = '10 Gbit/s'
-                        quote_list = add_quote_item(quote_list, filters, bw, product)
+                if not filters["bandwidths"]:
+                    quote_list = add_quote_item(quote_list, filters, '100 Mbit/s', product)
+                    quote_list = add_quote_item(quote_list, filters, '1 Gbit/s', product)
+                    quote_list = add_quote_item(quote_list, filters, '10 Gbit/s', product)
                 else:
-                    product = "EtherwayGEAService"
+                    for bandwidth in filters["bandwidths"]:
+                        if bandwidth == 'FROM_10_TO_100':
+                            bw = '100 Mbit/s'
+                            quote_list = add_quote_item(quote_list, filters, bw, product)
+                        elif bandwidth == 'FROM_100_TO_1000':
+                            bw = '100 Mbit/s'
+                            quote_list = add_quote_item(quote_list, filters, bw, product)
+                            bw = '1 Gbit/s'
+                            quote_list = add_quote_item(quote_list, filters, bw, product)
+                        elif bandwidth == 'FROM_1000_TO_10000':
+                            bw = '1 Gbit/s'
+                            quote_list = add_quote_item(quote_list, filters, bw, product)
+                            bw = '10 Gbit/s'
+                            quote_list = add_quote_item(quote_list, filters, bw, product)
+            elif type == "FTTC":
+                product = "EtherwayGEAService"
+                if not filters["bandwidths"]:
+                    quote_list = add_quote_item(quote_list, filters, 'FTTC 40:10 Mbit/s', product)
+                    quote_list = add_quote_item(quote_list, filters, 'FTTC 80:20 Mbit/s', product)
+                else:
                     for bandwidth in filters["bandwidths"]:
                         if bandwidth == 'FROM_10_TO_100':
                             bw = 'FTTC 40:10 Mbit/s'

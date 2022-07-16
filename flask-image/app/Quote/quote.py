@@ -12,6 +12,7 @@ class NewQuote:
 
         # try V1 API:
         new_quote = add_customer( postcode, reference, "Not ordered", name, email)
+        print(filters)
         if not filters["suppliers"]:
             try:
                 v1_response = v1_api.get_quote(postcode, filters)
@@ -19,11 +20,12 @@ class NewQuote:
             except Exception as e:
                 return (str(e))
             try:
-                btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
-                if btw_response.content["code"] == "41:":
-                    btw_test_api.fetch_access_token()
-                    btw_response = btw_test_api.get_quote(postcode, filters)
-                    add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
+                if "Copper" not in filters["accessTypes"]:
+                    btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
+                    if btw_response.content["code"] == "41:":
+                        btw_test_api.fetch_access_token()
+                        btw_response = btw_test_api.get_quote(postcode, filters)
+                        add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
             except Exception:
                 btw_test_api.fetch_access_token()
                 btw_response = btw_test_api.get_quote(postcode, bandwidths, filters)
