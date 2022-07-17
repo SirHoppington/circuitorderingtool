@@ -47,6 +47,24 @@ ul {
                     <hr>
 					<div class="container">
 						<div class="row">
+                            <div class="col-sm">
+                                <fieldset class="controls">
+                                    {{ form.suppliers.label}}
+                                    <br>
+                                    {{ form.suppliers(**{"onchange":"supplierFunction()"}) }}
+                                </fieldset>
+                            </div>
+                            <script>
+					function supplierFunction() {
+                        if (document.getElementById("suppliers-0").checked) {
+                            document.getElementById("btw_bandwidths_div").style.display = "block";
+                        }
+                        else {
+                            document.getElementById("btw_bandwidths_div").style.display = "none";
+                        }
+                    }
+					</script>
+                            <hr>
 						<div class="col-sm">
 							<fieldset class="form-field">
 							{{ form.accessTypes.label}}
@@ -60,24 +78,23 @@ ul {
 							{{ form.bandwidths }}
 							</fieldset>
 						</div>
-						<div class="col-sm">
+                        <div class="col-sm">
+							<fieldset class="controls" id="btw_bandwidths_div" style="display: none">
+							{{ form.btw_bandwidths.label}}
+							<br>
+							{{ form.btw_bandwidths }}
+							</fieldset>
+						</div>
+						</div>
+					<hr>
+						<div class="row">
+                            	<div class="col-sm">
 							<fieldset class="controls">
 							{{ form.bearers.label}}
 							<br>
 							{{ form.bearers }}
 							</fieldset>
 						</div>
-						</div>
-					<hr>
-						<div class="row">
-							<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.suppliers.label}}
-                        <br>
-						{{ form.suppliers }}
-                    </fieldset>
-					</div>
-					<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.terms.label}}

@@ -45,6 +45,10 @@ class NewQuote(FlaskForm):
          ('FROM_1000_TO_10000', '1Gb to 10Gb')],
         id='bandwidths'
     )
+    btw_bandwidths = StringField(
+        'BTW Etherflow Bandwidths',
+        id='btw_bandwidths'
+    )
     bearers = MultiCheckboxField(
         'Bearers',
         choices=
