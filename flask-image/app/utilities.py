@@ -7,8 +7,11 @@ def add_quote_item(existing_list, filters, bearer, product):
     return existing_list
 
 def btw_api_body(filters,bearer, product):
-
-        body = {"action": "add", "product": {"@type": "WholesaleEthernetElan",
+  if not filters["btw_bandwidths"] and not filters["btw_bw_type"]:
+    bandwidth = bearer
+  else:
+    bandwidth = filters["btw_bandwidths"] + " " + filters["btw_bw_type"][0]
+  body = {"action": "add", "product": {"@type": "WholesaleEthernetElan",
                                                                     "productSpecification": {
                                                                         "id": "WholesaleEthernetElan"},
                                                                     "existingAend": "True",
@@ -17,9 +20,10 @@ def btw_api_body(filters,bearer, product):
                         {"@type": product, "productSpecification":
                             {"id": product}, "bandwidth": bearer, "resilience": "Standard"},
                         {"@type": "EtherflowDynamicService",
-                         "productSpecification": {"id": "EtherflowDynamicService"}, "bandwidth": "0.2 Mbit/s",
+                         "productSpecification": {"id": "EtherflowDynamicService"}, "bandwidth": bandwidth ,
                          "cos": "Default CoS (Standard)"}]}}
-        return body
+
+  return body
 
 def btw_order_api_body(filters):
 

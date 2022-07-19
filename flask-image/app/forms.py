@@ -49,6 +49,14 @@ class NewQuote(FlaskForm):
         'BTW Etherflow Bandwidths',
         id='btw_bandwidths'
     )
+    btw_bw_type = MultiCheckboxField(
+        'Btw_Bandwidth_Type',
+        choices=
+        [('Mbit/s', 'Mbit/s'),
+         ('Gbit/s', 'Gbit/s')],
+        id='btw_bw_type'
+    )
+
     bearers = MultiCheckboxField(
         'Bearers',
         choices=

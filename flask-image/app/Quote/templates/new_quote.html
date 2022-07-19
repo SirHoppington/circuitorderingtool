@@ -56,11 +56,21 @@ ul {
                             </div>
                             <script>
 					function supplierFunction() {
-                        if (document.getElementById("suppliers-0").checked) {
+                        if (document.getElementById("suppliers-0").checked && (document.getElementById("suppliers-1").checked || document.getElementById("suppliers-2").checked))  {
                             document.getElementById("btw_bandwidths_div").style.display = "block";
+                            document.getElementById("bandwidths_div").style.display = "block";
+                        }
+                        else if (document.getElementById("suppliers-1").checked || document.getElementById("suppliers-2").checked)  {
+                            document.getElementById("bandwidths_div").style.display = "block";
+                            document.getElementById("btw_bandwidths_div").style.display = "none";
+                        }
+                        else if (document.getElementById("suppliers-0").checked) {
+                            document.getElementById("btw_bandwidths_div").style.display = "block";
+                            document.getElementById("bandwidths_div").style.display = "none";
                         }
                         else {
                             document.getElementById("btw_bandwidths_div").style.display = "none";
+                            document.getElementById("bandwidths_div").style.display = "none";
                         }
                     }
 					</script>
@@ -72,7 +82,7 @@ ul {
 							</fieldset>
 						</div>	
 						<div class="col-sm">
-							<fieldset class="controls">
+							<fieldset class="controls" id="bandwidths_div" style="display: none">
 							{{ form.bandwidths.label}}
 							<br>
 							{{ form.bandwidths }}
@@ -83,6 +93,7 @@ ul {
 							{{ form.btw_bandwidths.label}}
 							<br>
 							{{ form.btw_bandwidths }}
+                            {{ form.btw_bw_type }}
 							</fieldset>
 						</div>
 						</div>
