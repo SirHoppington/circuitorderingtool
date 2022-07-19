@@ -117,46 +117,50 @@ class OAuthProvider(Provider):
         response = requests.post(api_url, headers=headers, json = body)
         return response
     #add a decision to check if accessTypes is Fibre or FTTC.
-    def get_quote(self, postcode, bandwidths, filters):
+    def get_quote(self, postcode, filters):
         #iterate through bandwidths, map to BTW value and add a new quoteItem to JSON
         quote_list = {"quoteItem": []}
-        for type in filters["accessTypes"]:
-            if type == "Fibre":
-                product = "EtherwayFibreService"
-                if not filters["bandwidths"]:
-                    quote_list = add_quote_item(quote_list, filters, '100 Mbit/s', product)
-                    quote_list = add_quote_item(quote_list, filters, '1 Gbit/s', product)
-                    quote_list = add_quote_item(quote_list, filters, '10 Gbit/s', product)
-                else:
-                    for bandwidth in filters["bandwidths"]:
-                        if bandwidth == 'FROM_10_TO_100':
-                            bw = '100 Mbit/s'
-                            quote_list = add_quote_item(quote_list, filters, bw, product)
-                        elif bandwidth == 'FROM_100_TO_1000':
-                            bw = '100 Mbit/s'
-                            quote_list = add_quote_item(quote_list, filters, bw, product)
-                            bw = '1 Gbit/s'
-                            quote_list = add_quote_item(quote_list, filters, bw, product)
-                        elif bandwidth == 'FROM_1000_TO_10000':
-                            bw = '1 Gbit/s'
-                            quote_list = add_quote_item(quote_list, filters, bw, product)
-                            bw = '10 Gbit/s'
-                            quote_list = add_quote_item(quote_list, filters, bw, product)
-            elif type == "FTTC":
-                product = "EtherwayGEAService"
-                if not filters["bandwidths"]:
-                    quote_list = add_quote_item(quote_list, filters, 'FTTC 40:10 Mbit/s', product)
-                    quote_list = add_quote_item(quote_list, filters, 'FTTC 80:20 Mbit/s', product)
-                else:
-                    for bandwidth in filters["bandwidths"]:
-                        if bandwidth == 'FROM_10_TO_100':
-                            bw = 'FTTC 40:10 Mbit/s'
-                            quote_list = add_quote_item(quote_list, filters, bw, product)
-                            bw = 'FTTC 80:20 Mbit/s'
-                            quote_list = add_quote_item(quote_list, filters, bw, product)
-            #else:
-            #   product = "EtherwayGEAService"
-            #    add_bandwidth(filters,bw, product)
+        print("test")
+        print(filters)
+        print("test")
+        print(filters["accessTypes"])
+        if not filters["accessTypes"]:
+            quote_list = add_quote_item(quote_list, filters, '100 Mbit/s', "EtherwayFibreService")
+            quote_list = add_quote_item(quote_list, filters, '1 Gbit/s', "EtherwayFibreService")
+            quote_list = add_quote_item(quote_list, filters, '10 Gbit/s', "EtherwayFibreService")
+            quote_list = add_quote_item(quote_list, filters, 'FTTC 40:10 Mbit/s', "EtherwayGEAService")
+            quote_list = add_quote_item(quote_list, filters, 'FTTC 80:20 Mbit/s', "EtherwayGEAService")
+        else:
+            for type in filters["accessTypes"]:
+                if type == "Fibre":
+                    product = "EtherwayFibreService"
+                    if not filters["bearers"]:
+                        quote_list = add_quote_item(quote_list, filters, '100 Mbit/s', product)
+                        quote_list = add_quote_item(quote_list, filters, '1 Gbit/s', product)
+                        quote_list = add_quote_item(quote_list, filters, '10 Gbit/s', product)
+                    else:
+                        for bearer in filters["bearers"]:
+                            if bearer == 'BEARER_100':
+                                bw = '100 Mbit/s'
+                                quote_list = add_quote_item(quote_list, filters, bw, product)
+                            elif bearer == 'BEARER_1000':
+                                bw = '1 Gbit/s'
+                                quote_list = add_quote_item(quote_list, filters, bw, product)
+                            elif bearer == 'BEARER_10000':
+                                bw = '10 Gbit/s'
+                                quote_list = add_quote_item(quote_list, filters, bw, product)
+                elif type == "FTTC":
+                    product = "EtherwayGEAService"
+                    if not filters["bearers"]:
+                        quote_list = add_quote_item(quote_list, filters, 'FTTC 40:10 Mbit/s', product)
+                        quote_list = add_quote_item(quote_list, filters, 'FTTC 80:20 Mbit/s', product)
+                    else:
+                        for bearer in filters["bearers"]:
+                            if bearer == 'BEARER_100':
+                                bw = 'FTTC 40:10 Mbit/s'
+                                quote_list = add_quote_item(quote_list, filters, bw, product)
+                                bw = 'FTTC 80:20 Mbit/s'
+                                quote_list = add_quote_item(quote_list, filters, bw, product)
         response = self.quote_api(quote_list)
         return response
 

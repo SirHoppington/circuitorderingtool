@@ -1,11 +1,12 @@
 import datetime
 
-def add_quote_item(existing_list, filters, bw, product):
-    new_item = btw_api_body(filters, bw, product)
+def add_quote_item(existing_list, filters, bearer, product):
+    print(bearer)
+    new_item = btw_api_body(filters, bearer, product)
     existing_list["quoteItem"].append(new_item)
     return existing_list
 
-def btw_api_body(filters,bandwidth, product):
+def btw_api_body(filters,bearer, product):
 
         body = {"action": "add", "product": {"@type": "WholesaleEthernetElan",
                                                                     "productSpecification": {
@@ -14,7 +15,7 @@ def btw_api_body(filters,bandwidth, product):
                                                                     "place": [{"@type": "PostcodeSite",
                                                                                "postcode": filters["postcode"]}], "product": [
                         {"@type": product, "productSpecification":
-                            {"id": product}, "bandwidth": bandwidth , "resilience": "Standard"},
+                            {"id": product}, "bandwidth": bearer, "resilience": "Standard"},
                         {"@type": "EtherflowDynamicService",
                          "productSpecification": {"id": "EtherflowDynamicService"}, "bandwidth": "0.2 Mbit/s",
                          "cos": "Default CoS (Standard)"}]}}

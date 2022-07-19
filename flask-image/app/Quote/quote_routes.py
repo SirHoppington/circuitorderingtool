@@ -15,7 +15,7 @@ customer_quote = Blueprint('customer_quote', __name__, template_folder='template
 def new_quote():
     form = NewQuote()
     if request.method == 'POST':
-        quote_request = pricing.run(form.postcode.data, form.bandwidths.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
+        quote_request = pricing.run(form.postcode.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
         supplier_pricing = get_provider_pricing(quote_request)
         if not supplier_pricing:
             return render_template("no_pricing_available.html")

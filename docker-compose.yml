@@ -9,7 +9,18 @@ services:
 #    command: echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
     volumes:
      - pgdata:/var/libpostgresql/data/
-
+     
+  test_postgres:
+    image: "postgres"
+    container_name: test_database
+    env_file:
+     - test_database.env
+    expose:
+     - "5433"
+    ports:
+     - "5433:5433"
+    command: -p 5433 
+     
   flask:
     build: ./
     container_name: hopnets_app

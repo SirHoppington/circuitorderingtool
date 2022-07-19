@@ -52,9 +52,9 @@ class NewQuote(FlaskForm):
     bearers = MultiCheckboxField(
         'Bearers',
         choices=
-        [('100', '100Mb'),
-         ('1000', '1Gb'),
-         ('10000', '10Gb')],
+        [('BEARER_100', '100Mb'),
+         ('BEARER_1000', '1Gb'),
+         ('BEARER_10000', '10Gb')],
         id='bandwidths'
     )
     productGroups = MultiCheckboxField(
