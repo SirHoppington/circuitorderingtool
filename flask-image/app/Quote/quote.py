@@ -22,14 +22,11 @@ class NewQuote:
             try:
                 if "Copper" not in filters["accessTypes"]:
                     btw_response = btw_test_api.get_quote(postcode, filters)
-                    if btw_response.content["code"] == "41:":
-                        btw_test_api.fetch_access_token()
-                        btw_response = btw_test_api.get_quote(postcode, filters)
-                        add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
-            except Exception:
-                btw_test_api.fetch_access_token()
-                btw_response = btw_test_api.get_quote(postcode, filters)
-                add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
+                    add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
+            except:
+                    btw_test_api.fetch_access_token()
+                    btw_response = btw_test_api.get_quote(postcode, filters)
+                    add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
 
         if ("TalkTalk Business" in filters["suppliers"]) or ("Virtual1" in filters["suppliers"]):
         #for providers in filters:
@@ -45,11 +42,8 @@ class NewQuote:
             if ("Fibre" in filters["accessTypes"]) or ("FTTC" in filters["accessTypes"] or not filters["accessTypes"]):
                 try:
                     btw_response = btw_test_api.get_quote(postcode, filters)
-                    if btw_response.content["code"] == "41:":
-                        btw_test_api.fetch_access_token()
-                        btw_response = btw_test_api.get_quote(postcode, filters)
-                        add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
-                except Exception:
+                    add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
+                except:
                     btw_test_api.fetch_access_token()
                     btw_response = btw_test_api.get_quote(postcode, filters)
                     add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])

@@ -90,9 +90,12 @@ class BasicProvider(Provider):
 
 class OAuthProvider(Provider):
     token = "test"
-    def __init__(self,name, url , quote_url, retrieve_quote_url, order_url, client_id, client_secret, authorization_url):
+    # don't repeat and move this to top of class.
+    def __init__(self,name, url , quote_url, retrieve_quote_url, address_url, qual_url, order_url, client_id, client_secret, authorization_url):
         self.client_id = client_id
         self.client_secret = client_secret
+        self.address_url = address_url
+        self.qual_url = qual_url
         self.authorization_url = authorization_url
         super().__init__(name, url, quote_url, retrieve_quote_url, order_url)
 
@@ -105,14 +108,22 @@ class OAuthProvider(Provider):
         self.token = token['access_token']
         print(self.token)
 
-    def quote_api(self, body):
-
+    def address_lookup(self, postcode):
         headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + self.token,
             "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15"
         }
-        print(headers)
+        api_url = self.url + self.address_url + "?postcode=" + postcode
+        response = requests.get(api_url, headers=headers)
+        return response
+
+    def quote_api(self, body):
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + self.token,
+            "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15"
+        }
         api_url = self.url + self.quote_url
         response = requests.post(api_url, headers=headers, json = body)
         return response
@@ -184,8 +195,9 @@ v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
                   "layer2-api/orderingV2", "address-lookup", v1_user, v1_password)
 
 btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/tmf-api/quoteManagement/v4",
-                        "/quote", "/quote", "no_order",
+                        "/quote", "/quote", "no_address_mgmt", "no_qual", "no_order",
                         btw_client_id ,btw_secret , "https://api-testa.business.bt.com/oauth/accesstoken")
+
 btw_sandbox_api = OAuthProvider("BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com/v1",
-                        "/quote", "/retrieveQuote", "/productOrderingManagement/productOrder",
+                        "/quote", "/retrieveQuote","/common/geographicAddressManagement/v1/geographicAddress", "/bt-wholesale/v1/product-qualification/ethernet", "/productOrderingManagement/productOrder",
                         btw_sandbox_client_id ,btw_sandbox_secret , "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
