@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template
 from flask_login import login_required, current_user
 from app.forms import NewQuote, RetrieveQuote
 from app.Quote.quote import pricing, fetch_pricing
-from app.api.provider import btw_test_api
+from app.api.provider import btw_test_api, btw_sandbox_api
 from app.api.provider import v1_api
 from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, \
     get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, \
@@ -25,11 +25,20 @@ def new_quote():
         return render_template("new_quote.html", form=form)
 
 # Postcode search, use AJAX to send to prevent form refresh
-@customer_quote.route('/search_address', methods = ['POST'])
-@login_required
+@customer_quote.route('/search_address', methods = ['POST', 'GET'])
 def search_address():
-    result = v1_api.search_address(postcode)
-    return result
+    if request.method =='POST':
+        postcode = request.json['postcode']
+        try:
+            result = btw_sandbox_api.address_lookup(postcode)
+            if result.content["code"] == "41":
+                btw_sandbox_api.fetch_access_token()
+                result = btw_sandbox_api.address_lookup(postcode)
+        except:
+            btw_sandbox_api.fetch_access_token()
+            result = btw_sandbox_api.address_lookup(postcode)
+        print(result.content)
+        return "yes"
 
 @customer_quote.route('/test_quote', methods = ['POST', 'GET'])
 @login_required

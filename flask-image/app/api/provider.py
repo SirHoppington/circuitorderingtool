@@ -110,11 +110,12 @@ class OAuthProvider(Provider):
 
     def address_lookup(self, postcode):
         headers = {
-            "Content-Type": "application/json",
             "Authorization": "Bearer " + self.token,
-            "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15"
+            "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15",
+            "productFamily" : "ethernet"
         }
-        api_url = self.url + self.address_url + "?postcode=" + postcode
+        api_url = self.url + self.address_url + "?postcode=" + postcode + "&isSpatialRefBng=true"
+        print(api_url)
         response = requests.get(api_url, headers=headers)
         return response
 
@@ -198,6 +199,6 @@ btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/
                         "/quote", "/quote", "no_address_mgmt", "no_qual", "no_order",
                         btw_client_id ,btw_secret , "https://api-testa.business.bt.com/oauth/accesstoken")
 
-btw_sandbox_api = OAuthProvider("BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com/v1",
+btw_sandbox_api = OAuthProvider("BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com",
                         "/quote", "/retrieveQuote","/common/geographicAddressManagement/v1/geographicAddress", "/bt-wholesale/v1/product-qualification/ethernet", "/productOrderingManagement/productOrder",
                         btw_sandbox_client_id ,btw_sandbox_secret , "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
