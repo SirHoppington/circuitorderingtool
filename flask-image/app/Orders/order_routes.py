@@ -35,19 +35,37 @@ def place_order():
     else:
         return render_template("place_order.html", form=form)
 
-@order.route('/new_order/<string:ref>', methods = ['GET'])
+@order.route('/new_order/<string:ref>', methods = ['POST', 'GET'])
 @login_required
 def new_order(ref):
     prov = check_provider(ref)
     form = NewOrder()
-    if prov[0].provider == "Virtual 1":
-        form.quoteReference.data = ref
-        form.pricingRequestAccessProductId.data = prov[1].productReference
-        form.pricingRequestHardwareId.data = prov[1].hardwareId
-        form.nni.data = "V1C45349 - TestingDC"
-        form.designType.data = "PBT Partner Connect Design"
-        return render_template("place_order.html", form=form)
+    if request.method == "POST":
+        if prov[0].provider == "Virtual 1":
+            try:
+                order_request = new_orders.run(form.data, prov[0].provider)
+                print(order_request)
+            except Exception as e:
+                return (str(e))
 
+            return render_template("order_confirmation.html", order_ref=order_request[0], provider=order_request[1])
+
+        else:
+            try:
+                order_request = new_orders.run(form.data, prov[0].provider)
+            except Exception as e:
+                return (str(e))
+            return render_template("order_confirmation_btw.html", form=form, provider=order_request[1] )
     else:
-        return render_template("place_order_btw.html", form=form)
+        if prov[0].provider == "Virtual 1":
+            form.quoteReference.data = ref
+            form.pricingRequestAccessProductId.data = prov[1].productReference
+            form.pricingRequestHardwareId.data = prov[1].hardwareId
+            form.nni.data = "V1C45349 - TestingDC"
+            form.designType.data = "PBT Partner Connect Design"
+            return render_template("place_order.html", form=form, net=ref)
+
+        else:
+            return render_template("place_order_btw.html", form=form, net=ref)
+
 

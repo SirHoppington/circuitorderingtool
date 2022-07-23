@@ -14,7 +14,9 @@ customer_quote = Blueprint('customer_quote', __name__, template_folder='template
 @login_required
 def new_quote():
     form = NewQuote()
+    #form.postcode.data = "AB15 207XY"
     if request.method == 'POST':
+        print(form.data)
         quote_request = pricing.run(form.postcode.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
         supplier_pricing = get_provider_pricing(quote_request)
         if not supplier_pricing:
@@ -29,16 +31,18 @@ def new_quote():
 def search_address():
     if request.method =='POST':
         postcode = request.json['postcode']
+        cleansed = postcode.replace(" ", "%")
         try:
-            result = btw_sandbox_api.address_lookup(postcode)
+            result = btw_sandbox_api.address_lookup(cleansed)
             if result.content["code"] == "41":
                 btw_sandbox_api.fetch_access_token()
-                result = btw_sandbox_api.address_lookup(postcode)
+                result = btw_sandbox_api.address_lookup(cleansed)
         except:
             btw_sandbox_api.fetch_access_token()
-            result = btw_sandbox_api.address_lookup(postcode)
-        print(result.content)
-        return "yes"
+            result = btw_sandbox_api.address_lookup(cleansed)
+        result = result.json()
+        print(result)
+        return result
 
 @customer_quote.route('/test_quote', methods = ['POST', 'GET'])
 @login_required
@@ -98,7 +102,6 @@ def add_to_order(net):
 
 @customer_quote.route('/', methods = ['POST', 'GET'])
 @customer_quote.route('/view_quotations', methods = ['POST', 'GET'])
-@login_required
 def view_quotations():
     form = RetrieveQuote()
     if request.method == 'POST':

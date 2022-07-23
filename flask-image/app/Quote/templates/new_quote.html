@@ -42,7 +42,7 @@ ul {
                     </fieldset>
 					  <fieldset class="form-field">
                         {{ form.postcode.label}}
-                        {{ form.postcode(size=20) }}
+                        {{ form.postcode(size=20,**{"onchange":"postcodeChecker()"}) }}
                     </fieldset>
                     <hr>
 					<div class="container">
@@ -72,6 +72,18 @@ ul {
                             document.getElementById("btw_bandwidths_div").style.display = "none";
                             document.getElementById("bandwidths_div").style.display = "none";
                         }
+                    }
+                    function postcodeChecker() {
+                        var postcode = document.getElementById('postcode').value;
+                        var url = "{{url_for('customer_quote.search_address')}}";
+                        var json = "application/json";
+
+                        function onSuccess(data) {
+                            var addresskey = JSON.parse(data);
+                            document.getElementbyId("address_key").innerHTML = addresskey;
+                        }
+                        $.ajax({ type:"POST",url:url,contentType:json, data :JSON.stringify({postcode : postcode})});
+
                     }
 					</script>
                             <hr>

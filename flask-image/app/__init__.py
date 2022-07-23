@@ -36,6 +36,9 @@ def create_app(config_name=None):
     from app.Login.login_routes import login
     app.register_blueprint(login)
 
+    from app.callback.callback_routes import callback
+    app.register_blueprint(callback)
+
     from app.Models.association_table import User
 
     @login_manager.user_loader

@@ -27,7 +27,7 @@ ul {
             <div class="form-wrapper">
                 <h1 class="mt-4">New Circuit Order</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('order.place_order') }}" >
+                <form method="POST" id="quoteform" action="{{ url_for('order.new_order', ref=net) }}" >
                     {{ form.csrf_token }}
 					<div class="row">
 					<div class="col-sm">

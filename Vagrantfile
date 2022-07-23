@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     docker-compose -f /vagrant/docker-compose.yml up -d
 	SHELL
-  config.vm.network "forwarded_port", host:5000, guest:5000
+  config.vm.network "public_network", ip: "10.0.0.43"
   
   
 

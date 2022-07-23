@@ -114,7 +114,7 @@ class OAuthProvider(Provider):
             "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15",
             "productFamily" : "ethernet"
         }
-        api_url = self.url + self.address_url + "?postcode=" + postcode + "&isSpatialRefBng=true"
+        api_url = self.url + self.address_url + "?postcode=" + postcode + "&streetNr=10"
         print(api_url)
         response = requests.get(api_url, headers=headers)
         return response
