@@ -201,3 +201,8 @@ def check_provider(ref):
     result = db.session.query(ProviderQuote, ProviderProduct).filter(
         (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.product_id == ProviderProduct.id)).first()
     return result
+
+#check DB if net ref exists:
+def check_net_ref(ref):
+    result = db.session.query(Quotation).filter(Quotation.net == ref).first()
+    return result

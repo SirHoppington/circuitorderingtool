@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, flash
 from flask_login import login_required, current_user
 from app.forms import NewQuote, RetrieveQuote
 from app.Quote.quote import pricing, fetch_pricing
@@ -6,7 +6,7 @@ from app.api.provider import btw_test_api, btw_sandbox_api
 from app.api.provider import v1_api
 from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, \
     get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, \
-    remove_product_from_quote, send_quote_to_order, get_all_orders
+    remove_product_from_quote, send_quote_to_order, get_all_orders, check_net_ref
 
 customer_quote = Blueprint('customer_quote', __name__, template_folder='templates')
 
@@ -16,13 +16,18 @@ def new_quote():
     form = NewQuote()
     #form.postcode.data = "AB15 207XY"
     if request.method == 'POST':
+        net = check_net_ref(form.net.data)
         print(form.data)
-        quote_request = pricing.run(form.postcode.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
-        supplier_pricing = get_provider_pricing(quote_request)
-        if not supplier_pricing:
-            return render_template("no_pricing_available.html")
+        if net:
+            error = "Net reference already exists"
+            return render_template("new_quote.html", form=form, error=error)
         else:
-            return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
+            quote_request = pricing.run(form.postcode.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
+            supplier_pricing = get_provider_pricing(quote_request)
+            if not supplier_pricing:
+                return render_template("no_pricing_available.html")
+            else:
+                return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     else:
         return render_template("new_quote.html", form=form)
 
