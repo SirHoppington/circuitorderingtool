@@ -1,6 +1,6 @@
-from app.api.provider import v1_api, btw_test_api
+from app.api.provider import v1_api, btw_test_api, btw_sandbox_api
 import pandas as pd
-from app.queries import search_v1_quote_by_id, add_v1_quote, add_btw_quote, add_customer, add_v1_order
+from app.queries import search_v1_quote_by_id, add_v1_quote, add_btw_quote, add_customer, add_v1_order, add_btw_order
 
 # Use case class to request a new quotation.
 
@@ -22,11 +22,17 @@ class NewOrder:
         else:
             try:
                 #manipulate form to gather required data
+                print("here")
                 btw_response = btw_sandbox_api.create_order(filters)
+                print(btw_response)
                 #create function
-                order_ref = add_btw_order(btw_response)
-            except Exception as e:
-                return (str(e))
+                order_ref = add_btw_order(btw_response, "Product reference")
+            except:
+                btw_sandbox_api.fetch_access_token()
+                btw_response = btw_sandbox_api.create_order(filters)
+                print(btw_response)
+                # create function
+                order_ref = add_btw_order(btw_response, "Product reference")
 
         ## Add try/except for future provider Quotation APIs.
         try:

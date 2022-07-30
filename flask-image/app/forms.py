@@ -168,6 +168,18 @@ class NewOrder(FlaskForm):
         'County',
         id='countyId'
     )
+    bandwidth = StringField(
+        'Bearer',
+        id='bandwidth'
+    )
+    term = StringField(
+        'Term',
+        id='term'
+    )
+    etherflow = StringField(
+        'Etherflow Bandwidth',
+        id='etherflow'
+    )
     firstName = StringField(
         'First Name',
         id='firstNameId'

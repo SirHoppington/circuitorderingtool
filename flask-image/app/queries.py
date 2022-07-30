@@ -102,6 +102,12 @@ def add_v1_order(response, product):
     set_order_ref(product, order_ref)
     return order_ref, "Virtual 1"
 
+def add_btw_order(response, product):
+    dict = response.json()
+    order_ref = dict["resultOrderNumber"]
+    set_order_ref(product, order_ref)
+    return order_ref, "BT Wholesale"
+
 
 def add_v1_quote(response,new_quote, new_order, existing_customer):
     dict = response.json()
@@ -138,7 +144,7 @@ def add_btw_quote(response,new_quote, new_order, existing_customer):
     dict = response.json()
     print(dict)
     bt_ref = dict["id"]
-    print(bt_ref)
+    print(dict)
     btw_quote = ProviderQuote(quoteReference=bt_ref, provider="BT Wholesale")
     db.session.add(btw_quote)
     db.session.commit()
