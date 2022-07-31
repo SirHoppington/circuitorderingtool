@@ -66,6 +66,7 @@ def new_order(ref):
             return render_template("place_order.html", form=form, net=ref)
 
         else:
+            form.btwProductId.data = prov[0].quoteReference
             return render_template("place_order_btw.html", form=form, net=ref)
 
 

@@ -33,6 +33,10 @@ def search_prod_order(product):
             (NetRef.order_id == Order.id) & (NetRef.product_id == ProviderProduct.id) & (ProviderProduct.productReference == product)).first()
     return result
 
+def search_btw_prod_order(quote):
+    result = db.session.query(Order).filter(
+            (NetRef.order_id == Order.id) & (NetRef.product_id == ProviderProduct.id) & (ProviderQuote.quoteReference == quote)).first()
+    return result
 
 #Search ProviderQuote and Quotation table for all results
 def get_all_pricing():
@@ -104,8 +108,8 @@ def add_v1_order(response, product):
 
 def add_btw_order(response, product):
     dict = response.json()
-    order_ref = dict["resultOrderNumber"]
-    set_order_ref(product, order_ref)
+    order_ref = dict[0]["id"]
+    set_btw_order_ref(product,order_ref)
     return order_ref, "BT Wholesale"
 
 
@@ -196,7 +200,19 @@ def send_quote_to_order(product):
     return True
 
 def set_order_ref(product, order_ref):
+    print(product)
     order = search_prod_order(product)
+    print("heeeeeeeeeeeeere")
+    print(order)
+    order.ref = order_ref
+    order.status = "Order sent"
+    db.session.commit()
+    return True
+#Used to search BTW orders:
+def set_btw_order_ref(quote, order_ref):
+    order = search_btw_prod_order(quote)
+    print("heeeeeeeeeeeeere")
+    print(order)
     order.ref = order_ref
     order.status = "Order sent"
     db.session.commit()

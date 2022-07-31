@@ -2,7 +2,7 @@ from flask import request, json
 import requests
 import json
 import pandas as pd
-from app.utilities import add_quote_item
+from app.utilities import add_quote_item, btw_order_api_body
 from app.queries import add_btw_quote
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
@@ -178,15 +178,22 @@ class OAuthProvider(Provider):
 
     # Cleanse NewOrder form.
     def create_order(self, filter):
-        order_list = add_order(filters)
+        body = btw_order_api_body(filter)
         print(body)
         response = self.send_order(body)
         return response
 
     # Send cleansed order to 3rd Party order API.
     def send_order(self, body):
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + self.token,
+            "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15",
+            "productFamily" : "ethernet"
+        }
         api_url = self.url + self.order_url
-        response = requests.get(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
+        print(api_url)
+        response = requests.get(api_url, headers=headers, json = body)
         print(response)
         print(response.content)
         return response
@@ -200,5 +207,5 @@ btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/
                         btw_client_id ,btw_secret , "https://api-testa.business.bt.com/oauth/accesstoken")
 
 btw_sandbox_api = OAuthProvider("BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com",
-                        "/quote", "/retrieveQuote","/common/geographicAddressManagement/v1/geographicAddress", "/bt-wholesale/v1/product-qualification/ethernet", "/productOrderingManagement/productOrder",
-                        btw_sandbox_client_id ,btw_sandbox_secret , "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
+                        "/quote", "/retrieveQuote","/common/geographicAddressManagement/v1/geographicAddress", "/bt-wholesale/v1/product-qualification/ethernet", "/v1/productOrderingManagement/productOrder",
+                        btw_sandbox_client_id, btw_sandbox_secret, "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
