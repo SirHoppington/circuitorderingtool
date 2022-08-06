@@ -22,17 +22,15 @@ class NewOrder:
         else:
             try:
                 #manipulate form to gather required data
-                print("here")
                 btw_response = btw_sandbox_api.create_order(filters)
-                print(btw_response)
                 #create function
-                order_ref = add_btw_order(btw_response, filters["btwProductId"])
+                # Change to set the btw order status
+                order_ref = add_btw_order(filters["btwProductId"])
             except:
                 btw_sandbox_api.fetch_access_token()
                 btw_response = btw_sandbox_api.create_order(filters)
-                print(btw_response)
                 # create function
-                order_ref = add_btw_order(btw_response, filters["btwProductId"])
+                order_ref = add_btw_order(filters["btwProductId"])
 
         ## Add try/except for future provider Quotation APIs.
         try:

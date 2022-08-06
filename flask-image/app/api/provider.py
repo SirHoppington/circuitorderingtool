@@ -193,7 +193,7 @@ class OAuthProvider(Provider):
         }
         api_url = self.url + self.order_url
         print(api_url)
-        response = requests.get(api_url, headers=headers, json = body)
+        response = requests.post(api_url, headers=headers, json = body)
         print(response)
         print(response.content)
         return response

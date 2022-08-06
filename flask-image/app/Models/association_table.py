@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 from flask_login import UserMixin
+from config import admin_password
 
 
 class Customer(db.Model):
@@ -45,7 +46,7 @@ class Order(db.Model):
     __tablename__ = 'order_table'
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(20))
-    ref = db.Column(db.Integer)
+    ref = db.Column(db.String(30))
     #order_to_quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_to_order_associated', lazy="dynamic"))
 
     def __init__(self, status, ref):
@@ -169,6 +170,8 @@ class NetRef(db.Model):
         return '{}'.format(self.provider_id)
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'user_accounts'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
+    role = db.Column(db.String(20))

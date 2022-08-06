@@ -106,11 +106,11 @@ def add_v1_order(response, product):
     set_order_ref(product, order_ref)
     return order_ref, "Virtual 1"
 
-def add_btw_order(response, product):
+def add_btw_order(response):
     dict = response.json()
     order_ref = dict[0]["id"]
     set_btw_order_ref(product,order_ref)
-    return order_ref, "BT Wholesale"
+    return "BT Wholesale"
 
 
 def add_v1_quote(response,new_quote, new_order, existing_customer):
@@ -200,16 +200,13 @@ def send_quote_to_order(product):
     return True
 
 def set_order_ref(product, order_ref):
-    print(product)
     order = search_prod_order(product)
-    print("heeeeeeeeeeeeere")
-    print(order)
     order.ref = order_ref
     order.status = "Order sent"
     db.session.commit()
     return True
 #Used to search BTW orders:
-def set_btw_order_ref(quote, order_ref):
+def set_btw_status(quote, order_ref):
     order = search_btw_prod_order(quote)
     print("heeeeeeeeeeeeere")
     print(order)

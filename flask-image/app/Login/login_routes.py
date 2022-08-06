@@ -1,18 +1,21 @@
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash, current_app
 from flask_login import login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.Models.association_table import User
-from app import db
+from app import db, admin_permission
+from flask_principal import Identity, identity_changed
 
 login = Blueprint('login', __name__, template_folder='templates')
 
 @login.route('/signup', methods=['POST',"GET", "POST"])
+@admin_permission.require()
 def signup_post():
 
     if request.method == 'POST':
 
         email = request.form.get('email')
         password = request.form.get('password')
+        role = request.form.get('role')
 
         user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
 
@@ -21,7 +24,7 @@ def signup_post():
             return redirect(url_for('login.signup_post'))
 
         # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-        new_user = User(email=email, password=generate_password_hash(password, method='sha256'))
+        new_user = User(email=email, password=generate_password_hash(password, method='sha256'), role=role)
 
         # add the new user to the database
         db.session.add(new_user)
@@ -49,6 +52,7 @@ def log_in():
 
     # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
+        identity_changed.send(current_app._get_current_object(), identity=Identity(user.role))
         return redirect(url_for('customer_quote.view_quotations'))
 
     return render_template('login.html')

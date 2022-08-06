@@ -103,6 +103,10 @@ class NewOrder(FlaskForm):
         'Supplier Quote Reference',
         id='quoteReferenceId'
     )
+    btwProductId = StringField(
+        'Product Id',
+        id='btwProductId'
+    )
     pricingRequestAccessProductId = StringField(
         'Pricing Request Product ID',
         id='pricingRequestAccessProductIdId'
