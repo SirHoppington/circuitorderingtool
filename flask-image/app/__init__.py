@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from config import config, admin_password
-from flask_principal import Principal, Permission, RoleNeed
+from flask_principal import Principal, Permission, RoleNeed, identity_loaded
 from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
@@ -59,6 +59,14 @@ def create_app(config_name=None):
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    @identity_loaded.connect_via(app)
+    def on_identity_loaded(sender, identity):
+        # Set the identity user object
+        identity.user = current_user
+
+        if hasattr(current_user, 'role'):
+                identity.provides.add(RoleNeed(current_user.role))
 
     return app
 
