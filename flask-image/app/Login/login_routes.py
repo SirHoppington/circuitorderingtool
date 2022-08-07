@@ -8,30 +8,33 @@ from flask_principal import Identity, identity_changed
 login = Blueprint('login', __name__, template_folder='templates')
 
 @login.route('/signup', methods=['POST',"GET", "POST"])
-@admin_permission.require()
 def signup_post():
+    try:
+        with admin_permission.require():
 
-    if request.method == 'POST':
+            if request.method == 'POST':
 
-        email = request.form.get('email')
-        password = request.form.get('password')
-        role = request.form.get('role')
+                email = request.form.get('email')
+                password = request.form.get('password')
+                role = request.form.get('role')
 
-        user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
+                user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
 
-        if user: # if a user is found, we want to redirect back to signup page so user can try again
-            flash('Email address signed up.')
-            return redirect(url_for('login.signup_post'))
+                if user: # if a user is found, we want to redirect back to signup page so user can try again
+                    flash('Email address signed up.')
+                    return redirect(url_for('login.signup_post'))
 
-        # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-        new_user = User(email=email, password=generate_password_hash(password, method='sha256'), role=role)
+                # create a new user with the form data. Hash the password so the plaintext version isn't saved.
+                new_user = User(email=email, password=generate_password_hash(password, method='sha256'), role=role)
 
-        # add the new user to the database
-        db.session.add(new_user)
-        db.session.commit()
+                # add the new user to the database
+                db.session.add(new_user)
+                db.session.commit()
 
-        return redirect(url_for('login.log_in'))
-    return render_template('signup.html')
+                return redirect(url_for('login.log_in'))
+            return render_template('signup.html')
+    except:
+        return"You are not authorised to view this resource"
 
 @login.route('/login', methods=["GET", "POST"])
 def log_in():
