@@ -88,14 +88,14 @@ def search_customer(email):
         (Customer.email == email)).first()
     return result
 
-def add_customer(postcode, reference, status, name, email):
+def add_customer(postcode, reference, status, name, email,lastName, telephone):
     new_quote = Quotation(postcode=postcode, net=reference)
     db.session.add(new_quote)
     new_order = Order(status=status, ref=None)
     db.session.add(new_order)
     existing_customer = search_customer(email)
     if not existing_customer:
-        existing_customer = Customer(name=name, email=email)
+        existing_customer = Customer(name=name, email=email, lastName=lastName, telephone=telephone)
         db.session.add(existing_customer)
     db.session.commit()
     return new_quote, new_order, existing_customer
@@ -217,8 +217,8 @@ def set_btw_status(quote, order_ref):
 
 # check if it is a virtual1 quote:
 def check_provider(ref):
-    result = db.session.query(ProviderQuote, ProviderProduct, Quotation).filter(
-        (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.product_id == ProviderProduct.id) & (NetRef.quotation_net == Quotation.net)).first()
+    result = db.session.query(ProviderQuote, ProviderProduct, Quotation, Customer).filter(
+        (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.product_id == ProviderProduct.id) & (NetRef.quotation_net == Quotation.net) & (NetRef.customer_id == Customer.id)).first()
     return result
 
 #check DB if net ref exists:

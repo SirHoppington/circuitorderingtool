@@ -8,10 +8,10 @@ class NewQuote:
     def __init__(self):
         pass
 
-    def run(self, postcode, filters, reference, name, email):
+    def run(self, postcode, filters, reference, name, email, customer_lastName, customer_telephone):
 
         # try V1 API:
-        new_quote = add_customer( postcode, reference, "Not ordered", name, email)
+        new_quote = add_customer( postcode, reference, "Not ordered", name, email, customer_lastName, customer_telephone)
         print(filters)
         if not filters["suppliers"]:
             try:

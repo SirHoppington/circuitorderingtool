@@ -23,30 +23,44 @@ ul {
 <div class="container">
     <div class="row">
         <div class="col-lg-8">
+
             <div class="form-wrapper">
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
                 <form method="POST" id="quoteform" action="{{ url_for('customer_quote.new_quote') }}" >
                     {{ form.csrf_token }}
-                    <fieldset class="form-field">
+                    <div class="form-group">
                         {{ form.customer_name.label}}
-                        {{ form.customer_name(size=40) }}
-                    </fieldset>
-                    <fieldset class="form-field">
+                        {{ form.customer_name(class_="form-control") }}
+                    </div>
+                <hr>
+                            <div class="form-group">
+                        {{ form.customer_lastName.label}}
+                        {{ form.customer_lastName(class_="form-control") }}
+                    </div>
+                <hr>
+                    <div class="form-group">
                         {{ form.customer_email.label}}
-                        {{ form.customer_email(size=40) }}
-                    </fieldset>
-                    <fieldset class="form-field">
+                        {{ form.customer_email(class_="form-control") }}
+                    </div>
+                <hr>
+                    <div class="form-group">
+                        {{ form.customer_telephone.label}}
+                        {{ form.customer_telephone(class_="form-control") }}
+                    </div>
+                <hr>
+                    <div class="form-group">
                         {{ form.net.label}}
-                        {{ form.net(size=20) }}
+                        {{ form.net(class_="form-control")  }}
                         {% if error %}
     <p class=error><strong>Error:</strong> {{ error }}
   {% endif %}
-                    </fieldset>
-					  <fieldset class="form-field">
+                    </div>
+                    <hr>
+					  <div class="form-group">
                         {{ form.postcode.label}}
-                        {{ form.postcode(size=20,**{"onchange":"postcodeChecker()"}) }}
-                    </fieldset>
+                        {{ form.postcode(class_="form-control",**{"onchange":"postcodeChecker()"}) }}
+                    </div>
                     <hr>
 					<div class="container">
 						<div class="row">

@@ -9,16 +9,23 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(40))
     name = db.Column(db.String(40))
+    lastName = db.Column(db.String(20))
+    telephone = db.Column(db.String(20))
+
     @property
     def serialize(self):
         return {
             'email' : self.email,
-            'name' : self.name
+            'name' : self.name,
+            'lastName' : self.lastName,
+            'telephone' : self.telephone
         }
 
-    def __init__(self, name, email):
+    def __init__(self, name, email, lastName, telephone):
         self.name = name,
-        self.email = email
+        self.email = email,
+        self.lastName = lastName,
+        self.telephone = telephone
 
     def __repr__(self):
         return repr(self.name)

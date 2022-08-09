@@ -22,7 +22,9 @@ def new_quote():
             error = "Net reference already exists"
             return render_template("new_quote.html", form=form, error=error)
         else:
-            quote_request = pricing.run(form.postcode.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
+            quote_request = pricing.run(form.postcode.data, form.data, form.net.data,
+                                        form.customer_name.data, form.customer_email.data,
+                                        form.customer_lastName.data, form.customer_telephone.data)
             supplier_pricing = get_provider_pricing(quote_request)
             if not supplier_pricing:
                 return render_template("no_pricing_available.html")

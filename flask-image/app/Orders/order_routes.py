@@ -59,6 +59,10 @@ def new_order(ref):
     else:
         # update db query to return Quotation table postcode
         form.postcode.data = prov[2].postcode
+        form.Telephone.data = prov[3].telephone
+        form.FirstName.data = prov[3].name
+        form.LastName.data = prov[3].lastName
+        form.Email.data = prov[3].email
         if prov[0].provider == "Virtual 1":
             form.quoteReference.data = ref
             form.pricingRequestAccessProductId.data = prov[1].productReference
