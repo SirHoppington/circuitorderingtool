@@ -25,18 +25,18 @@ class Customer(db.Model):
 
 class Quotation(db.Model):
     __tablename__ = 'quotation_table'
-    name = db.Column(db.String(20))
+    postcode = db.Column(db.String(20))
     net = db.Column(db.Integer, primary_key=True)
     @property
     def serialize(self):
         return {
             'id': self.id,
-            'name' : self.name,
+            'postcode' : self.postcode,
             'net' : self.net
         }
 
-    def __init__(self, name, net):
-        self.name = name,
+    def __init__(self, postcode, net):
+        self.postcode = postcode,
         self.net = net
 
     def __repr__(self):

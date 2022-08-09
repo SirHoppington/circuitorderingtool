@@ -57,6 +57,8 @@ def new_order(ref):
                 return (str(e))
             return render_template("order_confirmation_btw.html", form=form, provider=order_request[1] )
     else:
+        # update db query to return Quotation table postcode
+        form.postcode.data = prov[2].postcode
         if prov[0].provider == "Virtual 1":
             form.quoteReference.data = ref
             form.pricingRequestAccessProductId.data = prov[1].productReference

@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
-from config import config, admin_password
+from config import config,default_admin, admin_password
 from flask_principal import Principal, Permission, RoleNeed, identity_loaded
 from werkzeug.security import generate_password_hash
 
@@ -30,9 +30,9 @@ def create_app(config_name=None):
     @app.before_first_request
     def create_admin():
 
-        if not User.query.filter_by(email="admin").first(): # if this returns a user, then the email already exists in database
+        if not User.query.filter_by(email=default_admin).first(): # if this returns a user, then the email already exists in database
             # Generate default admin user account:
-            new_user = User(email="admin", password=generate_password_hash(admin_password, method='sha256'), role="admin")
+            new_user = User(email=default_admin, password=generate_password_hash(admin_password, method='sha256'), role="admin")
 
             # add the new user to the database
             db.session.add(new_user)
