@@ -20,7 +20,8 @@ class NewQuote:
             except Exception as e:
                 return (str(e))
             try:
-                if "Copper" not in filters["accessTypes"]:
+                #if "Copper" not in filters["accessTypes"]:
+                 if not filters["accessTypes"]:
                     btw_response = btw_test_api.get_quote(postcode, filters)
                     add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])
             except:

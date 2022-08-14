@@ -132,15 +132,15 @@ class OAuthProvider(Provider):
     def get_quote(self, postcode, filters):
         #iterate through bandwidths, map to BTW value and add a new quoteItem to JSON
         quote_list = {"quoteItem": []}
-        print("test")
         print(filters)
-        print("test")
         print(filters["accessTypes"])
         if not filters["accessTypes"]:
             quote_list = add_quote_item(quote_list, filters, '100 Mbit/s', "EtherwayFibreService")
+            print(quote_list)
             quote_list = add_quote_item(quote_list, filters, '1 Gbit/s', "EtherwayFibreService")
             quote_list = add_quote_item(quote_list, filters, '10 Gbit/s', "EtherwayFibreService")
             quote_list = add_quote_item(quote_list, filters, 'FTTC 40:10 Mbit/s', "EtherwayGEAService")
+            print(quote_list)
             quote_list = add_quote_item(quote_list, filters, 'FTTC 80:20 Mbit/s', "EtherwayGEAService")
         else:
             for type in filters["accessTypes"]:

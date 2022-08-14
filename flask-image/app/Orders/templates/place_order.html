@@ -134,7 +134,7 @@ ul {
 					<fieldset class="controls">
                         {{ form.postcode.label}}
                         <br>
-						{{ form.postcode }}
+						{{ form.postcode(class_="form-control", pattern="[Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2}", title="Enter a valid postcode") }}
                     </fieldset>
 					</div>
                         <hr>
@@ -203,7 +203,6 @@ ul {
 						{{ form.phoneNumber }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.accessAvailableFrom.label}}
@@ -211,7 +210,6 @@ ul {
 						{{ form.accessAvailableFrom }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.siteConstraint.label}}
@@ -227,7 +225,6 @@ ul {
 						{{ form.siteStatus }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.wasConstructedBefore2000.label}}
@@ -235,14 +232,13 @@ ul {
 						{{ form.wasConstructedBefore2000 }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.isAsbestosRegisterAvailable.label}}
                         <br>
 						{{ form.isAsbestosRegisterAvailable }}
                     </fieldset>
-					</div><hr>
+					</div>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.siteHazards.label}}
@@ -250,7 +246,6 @@ ul {
 						{{ form.siteHazards }}
                     </fieldset>
 					</div>
-                        <hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.areSSRAMSRequired.label}}
@@ -258,7 +253,6 @@ ul {
 						{{ form.areSSRAMSRequired }}
                     </fieldset>
 					</div>
-                        				<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.landlordConsentNeeded.label}}

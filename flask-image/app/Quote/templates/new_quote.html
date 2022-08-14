@@ -41,17 +41,17 @@ ul {
                 <hr>
                     <div class="form-group">
                         {{ form.customer_email.label}}
-                        {{ form.customer_email(class_="form-control") }}
+                        {{ form.customer_email(class_="form-control", type="email") }}
                     </div>
                 <hr>
                     <div class="form-group">
                         {{ form.customer_telephone.label}}
-                        {{ form.customer_telephone(class_="form-control") }}
+                        {{ form.customer_telephone(class_="form-control", pattern="[0-9]{11}", title="Enter 11 digit telephone number") }}
                     </div>
                 <hr>
                     <div class="form-group">
                         {{ form.net.label}}
-                        {{ form.net(class_="form-control")  }}
+                        {{ form.net(class_="form-control", type="number", max="999999999")  }}
                         {% if error %}
     <p class=error><strong>Error:</strong> {{ error }}
   {% endif %}
@@ -59,8 +59,8 @@ ul {
                     <hr>
 					  <div class="form-group">
                         {{ form.postcode.label}}
-                        {{ form.postcode(class_="form-control",**{"onchange":"postcodeChecker()"}) }}
-                    </div>
+                        {{ form.postcode(class_="form-control", pattern="[Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2}", title="Enter a valid postcode", **{"onchange":"postcodeChecker()"}) }}
+                      </div>
                     <hr>
 					<div class="container">
 						<div class="row">

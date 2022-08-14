@@ -7,7 +7,11 @@ def add_quote_item(existing_list, filters, bearer, product):
     return existing_list
 
 def btw_api_body(filters,bearer, product):
-  if not filters["btw_bandwidths"] and not filters["btw_bw_type"]:
+  if product == "EtherwayGEAService" and not filters["btw_bandwidths"] and bearer == "FTTC 40:10 Mbit/s":
+    bandwidth = "10 Mbit/s"
+  elif product == "EtherwayGEAService" and not filters["btw_bandwidths"] and bearer == "FTTC 80:20 Mbit/s":
+    bandwidth = "20 Mbit/s"
+  elif not filters["btw_bandwidths"] and not filters["btw_bw_type"]:
     bandwidth = bearer
   else:
     bandwidth = filters["btw_bandwidths"] + " " + filters["btw_bw_type"][0]

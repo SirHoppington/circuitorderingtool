@@ -109,7 +109,7 @@ ul {
 					<fieldset class="controls">
                         {{ form.postcode.label}}
                         <br>
-						{{ form.postcode }}
+						{{ form.postcode(class_="form-control", pattern="[Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2}", title="Enter a valid postcode") }}
                     </fieldset>
 					</div>
                         <hr>
@@ -170,15 +170,12 @@ ul {
 					</div>
 					<hr>
 					<div class="col-sm">
-						<hr>
-					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.phoneNumber.label}}
                         <br>
 						{{ form.phoneNumber }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.accessAvailableFrom.label}}
@@ -186,7 +183,6 @@ ul {
 						{{ form.accessAvailableFrom }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.siteConstraint.label}}
@@ -194,7 +190,6 @@ ul {
 						{{ form.siteConstraint }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.wasConstructedBefore2000.label}}
@@ -202,7 +197,6 @@ ul {
 						{{ form.wasConstructedBefore2000 }}
                     </fieldset>
 					</div>
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.isAsbestosRegisterAvailable.label}}
@@ -210,7 +204,6 @@ ul {
 						{{ form.isAsbestosRegisterAvailable }}
                     </fieldset>
 					</div>
-                        						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.areSSRAMSRequired.label}}
@@ -218,14 +211,12 @@ ul {
 						{{ form.areSSRAMSRequired }}
                     </fieldset>
 					</div>
-                        				<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.landlordConsentNeeded.label}}
                         <br>
 						{{ form.landlordConsentNeeded }}
                     </fieldset>
-					</div>
 					</div>
 					<hr>
 					<div class="row">
@@ -268,41 +259,9 @@ ul {
 									<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.taggingMethod.label}}
-                        <br>
-						{{ form.taggingMethod }}
-                    </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
                         {{ form.designType.label}}
                         <br>
 						{{ form.designType }}
-                    </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.interfaceType.label}}
-                        <br>
-						{{ form.interfaceType }}
-                    </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.autonegotiation.label}}
-                        <br>
-						{{ form.autonegotiation }}
-                    </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.interfaceSpeed.label}}
-                        <br>
-						{{ form.interfaceSpeed }}
                     </fieldset>
 					</div>
 												<hr>
@@ -329,7 +288,38 @@ ul {
 						{{ form.deliveryContactNumber }}
                     </fieldset>
 					</div>
-												<hr>
+                        <hr>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.taggingMethod.label}}
+                        <br>
+						{{ form.taggingMethod }}
+                    </fieldset>
+					</div>
+                        <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.interfaceType.label}}
+                        <br>
+						{{ form.interfaceType }}
+                    </fieldset>
+					</div>
+                        <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.autonegotiation.label}}
+                        <br>
+						{{ form.autonegotiation }}
+                    </fieldset>
+					</div>
+									<hr>
+					<div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.interfaceSpeed.label}}
+                        <br>
+						{{ form.interfaceSpeed }}
+                    </fieldset>
+					</div>
                     </div>
                         					<hr>
 					<div class="row">
