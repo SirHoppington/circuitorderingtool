@@ -6,7 +6,8 @@ from app.api.provider import btw_test_api, btw_sandbox_api
 from app.api.provider import v1_api
 from app.queries import search_quotation_ref, get_all_pricing, get_provider_pricing, \
     get_net_ref, search_products_ref, add_product_to_quote, get_quotation_products, \
-    remove_product_from_quote, send_quote_to_order, get_all_orders, check_net_ref
+    remove_product_from_quote, send_quote_to_order, get_all_orders, check_net_ref, get_all_quotations, \
+    get_suppliers_in_quotation
 
 customer_quote = Blueprint('customer_quote', __name__, template_folder='templates')
 
@@ -89,8 +90,8 @@ def view_quotations():
         fetch_quote = fetch_pricing.run(net_ref.id)
         return render_template("view_quotation.html", pricing=pricing, net_ref=fetch_quote[1])
     else:
-        quotes = get_all_pricing()
-        return render_template("view_all_quotations.html", form=form, quotes=quotes)
+        quotes = get_all_quotations()
+        return render_template("view_all_quotations.html", form=form, quotes=quotes, suppliers = get_suppliers_in_quotation)
 
 @customer_quote.route('/view_quotation/<int:net>', methods = ['GET'])
 @login_required

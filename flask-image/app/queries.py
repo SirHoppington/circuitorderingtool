@@ -44,6 +44,17 @@ def get_all_pricing():
         (NetRef.quotation_net == Quotation.net) & (NetRef.order_id == Order.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.customer_id == Customer.id)).all()
     return result
 
+# Return all created Quotations
+def get_all_quotations():
+    result = db.session.query(Quotation, Customer, Order).filter(
+        (NetRef.quotation_net == Quotation.net) & (NetRef.order_id == Order.id) & (NetRef.customer_id == Customer.id)).all()
+    return result
+
+def get_suppliers_in_quotation(net):
+    result = db.session.query(ProviderQuote).filter(
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id ==ProviderQuote.id) & (Quotation.net == net)).all()
+    return result
+
 #Search ProviderQuote and Quotation table for all results
 def get_net_ref(ref):
     result = db.session.query(Quotation).filter(
