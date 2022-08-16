@@ -22,8 +22,9 @@ ul {
 <div class="container">
     <div class="row">
         <div class="col-lg-8">
+            <div class="grid search">
+                <div class="grid-body">
             <div class="form-wrapper">
-                <hr>
                 <h1 class="mt-4">New Circuit Order</h1>
                 <hr>
                 <form method="POST" id="quoteform" action="{{ url_for('order.new_order', ref=net) }}" >
@@ -312,9 +313,7 @@ ul {
                     </div>
                     <hr>
 					<div class="row">
-                        <div class="col-sm">
-					<input type="submit" value="Submit" class="button">
-					</div>
+                            <button type="submit" class="btn btn-secondary"> Submit </button>
                     </div>
                 </form>
                 </form>
@@ -323,6 +322,6 @@ ul {
          <hr>
         </div>
     </div>
-
+    </div>
 </div>
 {% endblock %}

@@ -1,29 +1,15 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
-    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
-       <style>
-    .codeMirror-scroll{
-        height: 100%;
-        min-height: 60%;
-    }
-	.button {
-		display:block; 
-		width: 100%; 
-} 
-ul {
-  list-style: none;
-}
-</style>
- 
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-lg-8">
-
+        <div class="grid search">
+      <div class="grid-body">
+        <div class="row">
             <div class="form-wrapper">
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
@@ -145,7 +131,7 @@ ul {
 					</div>
 					<hr>
 					<div class="row">
-					<input type="submit" value="Submit" class="button">
+					<button type="submit" class="btn btn-secondary"> Submit </button>
 					</div>
 				</div>					
                 </form>
@@ -154,6 +140,8 @@ ul {
          <hr>
         </div>
     </div>
+    </div>
+</div>
 
 </div>
 {% endblock %}

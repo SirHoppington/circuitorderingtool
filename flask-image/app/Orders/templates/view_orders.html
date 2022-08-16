@@ -15,62 +15,124 @@ ul {
 
 {% block content %}
 <div class="container">
+<div class="row">
+  <!-- BEGIN SEARCH RESULT -->
+  <div class="col-md-13">
+    <div class="grid search">
+      <div class="grid-body">
     <div class="row">
-        <div class="col-lg-8">
-            <div class="form-wrapper">
-                <h1 class="mt-4">View Orders</h1>
-                <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('order.view_orders') }}" >
+    <div class="col-md-3">
+              <h2 class="grid-title"> <div class="float-left">Filters</div></h2>
+              <br>
+              <br>
+            <hr>
+              <h4> By reference: </h4>
+              <form method="POST" id="quoteform" action="{{ url_for('order.view_orders') }}" >
                     {{ form.csrf_token }}
-                    <hr>
-					<div class="container">
-						<div class="row">
-						  <div class="col-sm">
 							<fieldset class="form-field">
-							{{ form.net.label}}
 							{{ form.net }}
-							</fieldset>
-						  </div>
-					    </div>
-					</div>
-					<hr>
-					<input type="submit" value="Submit" class="button">		
+
+					<button type="submit" class="btn btn-secondary"> search </button></fieldset>
                 </form>
-                     <div class="container">
-                      <div class="row">
-                          <div class="col-sm">
-                              <table class="table">
-                                  <tr>
-                                      <th>Net Ref</th>
-                                      <th>Postcode</th>
-                                      <th>Suppliers</th>
-                                      <th>Quotation Ref</th>
-                                      <th>Order Ref</th>
-                                      <th>Order Status</th>
-                                      <th>Product Ref</th>
-                                  </tr>
-                                  {% for quote in orders %}
-                                      <tr>
-                                          <th>{{ quote[1].net }}</th>
-                                          <th>{{ quote[1].name}}</th>
-                                          <th>{{ quote[0].provider }}</th>
-                                          <th>{{ quote[0].quoteReference }}</th>
-                                          <th>{{ quote[2].ref }}</th>
-                                          <th>{{ quote[2].status }}</th>
-                                        <th>{{ quote[3].productReference }}</th>
-                                      <th>
-                                          <form action="{{ url_for('order.new_order', ref=quote[0].quoteReference) }}">
-                                          <input type="submit" value="View"/>
-                                      </form>
-                                          {% endfor %}
-                                      </th>
-                                      </tr>
-                              </table>
-                          </div>
-                      </div>
-                  </div>
+            <!-- BEGIN FILTER BY CATEGORY, change to loop through customers -->
+            <h4>By Customer:</h4>
+            <div class="checkbox">
+              <label><input type="checkbox" class="icheck"> customer1</label>
             </div>
-        </div>
+            <div class="checkbox">
+              <label><input type="checkbox" class="icheck"> customer2</label>
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" class="icheck"> customer3</label>
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" class="icheck"> customer4</label>
+            </div>
+            <!-- END FILTER BY CATEGORY -->
+
+            <div class="padding"></div>
+
+            <!-- BEGIN FILTER BY DATE -->
+            <h4>By date:</h4>
+            From
+            <div class="input-group date form_date" data-date="2014-06-14T05:25:07Z" data-date-format="dd-mm-yyyy" data-link-field="dtp_input1">
+              <input type="text" class="form-control">
+              <span class="input-group-addon bg-blue"><i class="fa fa-th"></i></span>
+            </div>
+            <input type="hidden" id="dtp_input1" value="">
+
+            To
+            <div class="input-group date form_date" data-date="2014-06-14T05:25:07Z" data-date-format="dd-mm-yyyy" data-link-field="dtp_input2">
+              <input type="text" class="form-control">
+              <span class="input-group-addon bg-blue"><i class="fa fa-th"></i></span>
+            </div>
+            <input type="hidden" id="dtp_input2" value="">
+            <!-- END FILTER BY DATE -->
+
+            <div class="padding"></div>
+
+            <!-- BEGIN FILTER BY PRICE -->
+            <h4>By User:</h4>
+            <div class="checkbox">
+              <label><input type="checkbox" class="icheck"> user1</label>
+            </div>
+              <div class="checkbox">
+              <label><input type="checkbox" class="icheck"> user2</label>
+            </div>
+            <!-- END FILTER BY PRICE -->
+          </div>
+          <!-- END FILTERS -->
+          <!-- BEGIN RESULT -->
+          <div class="col-md-9">
+              <h2 class="grid-title"><div class="float-left">View Orders</div></h2>
+            <br>
+            <br>
+            <hr>
+            <div class="padding"></div>
+            <div class="row">
+              <!-- BEGIN ORDER RESULT -->
+              <div class="col-sm-6">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Order by <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Customer</a></li>
+                    <li><a href="#">Most recent</a></li>
+                  </ul>
+                </div>
+              </div>
+              <!-- END ORDER RESULT -->
+
+            </div>
+    <div class="table-responsive"></div>
+              <table class="table table-hover">
+      <tbody>
+      {% for quote in orders %}
+      <tr>
+          <td class="Net_Ref"><strong>NET Ref</strong><br> {{ quote[1].net }}</td>
+          <td class="Postcode"><strong>Postcode</strong><br> {{ quote[1].postcode }}</td>
+          <td class="Supplier"><strong>Supplier</strong><br> {{ quote[0].provider }}</td>
+          <td class="Quotation_Ref"><strong>Quote Ref</strong><br>{{ quote[0].quoteReference}} </td>
+          <td class="Order_Ref"><strong>Order Ref</strong><br>{{ quote[2].ref}} </td>
+          <td class="Order_Status"><strong>Order Status</strong><br>{{ quote[2].status}} </td>
+          <td class="Product_Reference"><strong>Product Reference</strong><br>{{ quote[3].productReference}} </td>
+          <td class="Place_Order"><form action="{{ url_for('order.new_order', ref=quote[0].quoteReference) }}">
+                                                  <button type="submit" class="btn btn-secondary"> Place Order </button></form> </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+          </table>
+          </div>
     </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+</div>
 </div>
 {% endblock %}
