@@ -26,7 +26,7 @@ def search_products_ref(ref):
 
 def search_net_order(ref):
     result = db.session.query(Order).filter(
-            (Quotation.net == ref) & (NetRef.order_id == Order.id) & (NetRef.quotation_net == ref)).first()
+            (Quotation.net == ref) & (NetRef.order_id == Order.id) & (NetRef.quotation_net == ref)).all()
     return result
 def search_prod_order(product):
     result = db.session.query(Order).filter(
@@ -62,8 +62,8 @@ def get_quotation_products(ref):
 
 #Search ProviderQuote, Quotation and order table for all results
 def get_all_orders():
-    result = db.session.query(ProviderQuote, Quotation, Order).filter(
-        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) & (Order.status != "Not ordered")).all()
+    result = db.session.query(ProviderQuote, Quotation, Order,ProviderProduct).filter(
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) &(NetRef.product_id == ProviderProduct.id) & (Order.status != "Not ordered") & (ProviderProduct.customer_quote == "Added")).all()
     print(result)
     return result
 
@@ -195,8 +195,11 @@ def remove_product_from_quote(product):
 
 def send_quote_to_order(product):
     order = search_net_order(product)
-    order.status = "Orders requested"
-    db.session.commit()
+    for x in order:
+        print(x.status)
+        x.status = "Orders requested"
+        print(x.status)
+        db.session.commit()
     return True
 
 def set_order_ref(product, order_ref):

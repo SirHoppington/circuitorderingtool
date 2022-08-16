@@ -47,6 +47,7 @@ ul {
                                       <th>Quotation Ref</th>
                                       <th>Order Ref</th>
                                       <th>Order Status</th>
+                                      <th>Product Ref</th>
                                   </tr>
                                   {% for quote in orders %}
                                       <tr>
@@ -56,6 +57,7 @@ ul {
                                           <th>{{ quote[0].quoteReference }}</th>
                                           <th>{{ quote[2].ref }}</th>
                                           <th>{{ quote[2].status }}</th>
+                                        <th>{{ quote[3].productReference }}</th>
                                       <th>
                                           <form action="{{ url_for('order.new_order', ref=quote[0].quoteReference) }}">
                                           <input type="submit" value="View"/>

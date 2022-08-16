@@ -51,33 +51,6 @@ def search_address():
         print(result)
         return result
 
-@customer_quote.route('/test_quote', methods = ['POST', 'GET'])
-@login_required
-def test_quote():
-    form = NewQuote()
-    if request.method == 'POST':
-        #quote_request = pricing.run(form.postcode.data, form.data, form.net.data, form.customer_name.data, form.customer_email.data)
-        postcode = form.postcode.data
-        try:
-            v1_response = v1_api.get_quote(postcode, form.data)
-            #btw_response = btw_test_api.get_quote(postcode, form.data)
-            #if btw_response.content["code"]  == "41":
-            #    btw_test_api.fetch_access_token()
-            #    btw_response = btw_test_api.get_quote(postcode, form.data)
-            print(v1_response.content)
-        except Exception as e:
-            return (str(e))
-            #btw_test_api.fetch_access_token()
-            #btw_response = btw_test_api.get_quote(postcode, form.data)
-            #print(btw_response)
-        #supplier_pricing = get_provider_pricing(quote_request)
-        #return btw_response[0].to_html()
-        return v1_response.content
-        #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
-    else:
-        return render_template("test_quote.html", form=form)
-
-
 @customer_quote.route('/add_quote/<int:net>', methods = ['POST'])
 @login_required
 def add_quote(net):

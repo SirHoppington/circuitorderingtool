@@ -122,11 +122,11 @@ class NewOrder(FlaskForm):
         id='pricingRequestAccessProductIdId'
     )
     pricingRequestHardwareId = StringField(
-        'pricing request hardware ID',
+        'Pricing Request Hardware ID',
         id='pricingRequestHardwareIdId'
     )
     purchaseOrderNumber = StringField(
-        'Purchase Orders Number',
+        'Purchase Order Number',
         id='purchaseOrderId'
     )
     orderReference = StringField(

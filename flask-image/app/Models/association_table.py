@@ -127,7 +127,7 @@ class ProviderProduct(db.Model):
         self.productReference = productReference,
         self.hardwareId = hardwareId,
         self.term = term,
-        self.customer_quote = customer_quote
+        self.customer_quote = customer_quote,
 
     def __repr__(self):
         return repr(self.productReference)
