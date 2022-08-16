@@ -1,4 +1,4 @@
-from app.Models.association_table import Quotation, Order, NetRef, ProviderQuote, ProviderProduct, Customer
+from app.Models.association_table import Quotation, Order, NetRef, ProviderQuote, ProviderProduct, Customer, User
 import pytest
 from app import create_app, db
 
@@ -14,27 +14,33 @@ def test_provider_quote():
 
 @pytest.fixture(scope='module')
 def test_order():
-    order = Order("Not Ordered")
+    order = Order("Not Ordered", ref="12345")
     return order
 
 @pytest.fixture(scope='module')
 def test_customer():
-    customer = Customer("John Smith", "johnsmith@gmail.com")
+    customer = Customer("John", "johnsmith@gmail.com","Smith", "01234567891")
     return customer
 
 
 @pytest.fixture(scope='module')
 def test_provider_product():
-    provider_product = ProviderProduct('fibre', '100', '1000', 'BT', '250', '100.50', 'fibre everywhere', '1234567', '36', 'None')
+    provider_product = ProviderProduct('fibre', '100', '1000', 'BT', '250', '100.50', 'fibre everywhere', '1234567', '777777', '36', 'None')
     return provider_product
+
+@pytest.fixture(scope='module')
+def test_user():
+    test_admin = User(email="testadmin@unittest.com", password="testpassword", role="admin")
+    return test_admin
+
 
 
 @pytest.fixture(scope='module')
 def test_association():
     test_provider_pricing = ProviderQuote("Virtual1", "12345")
-    test_order = Order("Not Ordered")
-    test_customer = Customer("johnsmith@gmail.com", 'John Smith')
-    test_provider_product = ProviderProduct('fibre', '100', '1000', 'BT', '250', '100.50', 'fibre everywhere', '1234567',
+    test_order = Order("Not Ordered", ref="12345")
+    test_customer = Customer("John", "johnsmith@gmail.com","Smith", "01234567891")
+    test_provider_product = ProviderProduct('fibre', '100', '1000', 'BT', '250', '100.50', 'fibre everywhere', '1234567','777777',
                                        '36', 'None')
     test_quote = Quotation("BT234AG", "12345")
     assoc = NetRef(test_pricing, test_quote, test_order, test_customer,test_provider_pricing, test_provider_product)

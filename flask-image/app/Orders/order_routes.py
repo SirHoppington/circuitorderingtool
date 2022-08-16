@@ -17,24 +17,6 @@ def view_orders():
     else:
         return render_template("view_orders.html", orders=orders, form=form)
 
-@order.route('/place_order', methods = ['POST', 'GET'])
-@login_required
-def place_order():
-    form = NewOrder()
-    if request.method == 'POST':
-        try:
-            order_request = new_orders.run(form.data)
-            print(order_request)
-        except Exception as e:
-            return (str(e))
-        #return render_template("order_confirmation.html", html_table=order_request[0], quote_ref=order_request[1])
-        #return render_template( html_table=order_request)
-        #return "success"
-        return render_template("order_confirmation.html", order_ref = order_request[0], provider = order_request[1])
-
-    else:
-        return render_template("place_order.html", form=form)
-
 @order.route('/new_order/<string:ref>', methods = ['POST', 'GET'])
 @login_required
 def new_order(ref):
