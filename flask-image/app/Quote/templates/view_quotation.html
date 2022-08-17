@@ -197,8 +197,14 @@ background:#eee;
       {% endfor %}
       </tbody>
           </table>
-                    <div class="float-right"><input type="submit" value="Remove from Quote"/></div>
-                    <div class="float-right"><input type="submit" value="Send to Orders" formaction="{{ url_for('customer_quote.add_to_order', net=net_ref) }}"/></div>
+          <div class="row">
+              <div class="col-sm">
+                            <button type="submit" class="btn btn-secondary"> Remove from Quote </button>
+              </div>
+              <div class="col-sm">
+                            <button type="submit" class="btn btn-secondary" formaction="{{ url_for('customer_quote.add_to_order', net=net_ref) }}"> Send to Orders </button>
+              </div>
+          </div>
               </form>
           </div>
         </div>

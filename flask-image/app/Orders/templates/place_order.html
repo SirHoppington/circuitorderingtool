@@ -11,7 +11,7 @@
             <div class="form-wrapper">
                 <h1 class="mt-4">New Circuit Order</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('order.new_order', ref=net) }}" >
+                <form method="POST" id="quoteform" class="row g-3 needs-validation" action="{{ url_for('order.new_order', ref=net) }}" novalidate>
                     {{ form.csrf_token }}
 					<div class="row">
 					<div class="col-sm">
@@ -85,7 +85,6 @@
 						{{ form.Telephone(class_="form-control", pattern="[0-9]{11}", title="Enter 11 digit telephone number")  }}
                     </fieldset>
 					</div>
-					<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.Email.label}}
@@ -396,4 +395,25 @@
     </div>
 </div>
 </div>
+    <script>
+        (function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+    </script>
 {% endblock %}
