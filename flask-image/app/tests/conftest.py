@@ -1,6 +1,7 @@
 from app.Models.association_table import Quotation, Order, NetRef, ProviderQuote, ProviderProduct, Customer, User
 import pytest
 from app import create_app, db
+from werkzeug.security import generate_password_hash
 
 @pytest.fixture(scope='module')
 def test_quote():
@@ -45,7 +46,7 @@ def test_association():
     test_quote = Quotation("BT234AG", "12345")
     assoc = NetRef(test_pricing, test_quote, test_order, test_customer,test_provider_pricing, test_provider_product)
     return assoc
-
+# fixture to create a test application using "testing" config
 @pytest.fixture(scope='module')
 def test_client():
     flask_app = create_app('testing')
@@ -64,6 +65,21 @@ def test_db():
         db.session.remove()
         db.drop_all()
 
+# Fixture to create a test user account, log the user in and yield test client and destroy DB after test.
+@pytest.fixture(scope='module')
+def test_authentication():
+    flask_app = create_app('testing')
+    with flask_app.test_client() as test_client:
+        with flask_app.app_context():
+            db.create_all()
+            test_admin = User(email="testadmin@unittest.com",
+                              password=generate_password_hash("testpassword", method='sha256'), role="admin")
+            db.session.add(test_admin)
+            db.session.commit()
+            test_client.post('/login', data=dict(email='testadmin@unittest.com', password="testpassword"))
+            yield test_client
+            db.session.remove()
+            db.drop_all()
 
 
 @pytest.fixture(scope='module')

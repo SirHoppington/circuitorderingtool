@@ -5,6 +5,7 @@ from flask_login import LoginManager, current_user
 from config import config,default_admin, admin_password
 from flask_principal import Principal, Permission, RoleNeed, identity_loaded
 from werkzeug.security import generate_password_hash
+from http import HTTPStatus
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -59,6 +60,10 @@ def create_app(config_name=None):
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    @login_manager.unauthorized_handler
+    def unauthorized_handler():
+        return ("Unauthorised",HTTPStatus.UNAUTHORIZED)
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):

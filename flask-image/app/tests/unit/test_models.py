@@ -55,30 +55,36 @@ def test_new_provider_quote(test_db, test_provider_quote):
     THEN add to DB and check the provider and quote Reference has been asserted correctly
     """
     with test_db.app_context():
-        db.session.add(test_order)
+        db.session.add(test_provider_quote)
         db.session.commit()
-        query = db.session.query(Order).filter(Order.ref == test_order.ref).first()
+        query = db.session.query(ProviderQuote).filter(ProviderQuote.provider == test_provider_quote.provider).first()
 
-        assert test_provider_quote.provider == 'Virtual 1'
-        assert test_provider_quote.quoteReference == ('1234567' ,)
+        assert query.provider == 'Virtual 1'
+        assert query.quoteReference == '1234567'
 
-def test_new_provider_product(test_provider_product):
+def test_new_provider_product(test_db, test_provider_product):
     """
-    GIVEN a Quotation model
-    WHEN a new Quotation is created
-    THEN check the name and net has been asserted correctly
+    GIVEN a ProviderProduct model
+    WHEN a new Product is created
+    THEN check the attributes have been asserted correctly
+
     """
-    assert test_provider_product.accessType == ('fibre' ,)
-    assert test_provider_product.bandwidth == ('100' ,)
-    assert test_provider_product.bearer == ('1000' ,)
-    assert test_provider_product.carrier == ('BT' ,)
-    assert test_provider_product.installCharges == ('250' ,)
-    assert test_provider_product.monthlyFees == ('100.50' ,)
-    assert test_provider_product.product == ('fibre everywhere' ,)
-    assert test_provider_product.productReference == ('1234567' ,)
-    assert test_provider_product.hardwareId == ('777777',)
-    assert test_provider_product.term == ('36' ,)
-    assert test_provider_product.customer_quote == ('None' ,)
+    with test_db.app_context():
+        db.session.add(test_provider_product)
+        db.session.commit()
+        query = db.session.query(ProviderProduct).filter(ProviderProduct.accessType == test_provider_product.accessType).first()
+
+    assert query.accessType == 'fibre'
+    assert query.bandwidth == '100'
+    assert query.bearer == '1000'
+    assert query.carrier == 'BT'
+    assert query.installCharges == '250'
+    assert query.monthlyFees == '100.50'
+    assert query.product == 'fibre everywhere'
+    assert query.productReference == '1234567'
+    assert query.hardwareId == '777777'
+    assert query.term == '36'
+    assert query.customer_quote == 'None'
 
 def test_new_user(test_db, test_user):
     """
