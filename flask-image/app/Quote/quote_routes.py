@@ -81,8 +81,8 @@ def add_to_order(net):
     #return render_template("view_provider_pricing.html",pricing=supplier_pricing, net_ref=quote_request)
     return render_template("view_orders.html", orders=orders, form=form)
 
-@customer_quote.route('/', methods = ['POST', 'GET'])
 @customer_quote.route('/view_quotations', methods = ['POST', 'GET'])
+@login_required
 def view_quotations():
     form = RetrieveQuote()
     if request.method == 'POST':

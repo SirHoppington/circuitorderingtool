@@ -1,3 +1,12 @@
+def test_view_orders(test_authentication):
+    """
+    GIVEN an HTTP GET to /
+    WHEN a response is received
+    THEN check the response code and initial html response
+    """
+    response = test_authentication.get('/view_orders')
+    assert response.status_code == 200
+    #assert b"Search existing quote" in response.data
 
 
 def view_order(test_db, test_client):

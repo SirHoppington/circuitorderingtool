@@ -39,6 +39,7 @@ def signup_post():
     except:
         return"You are not authorised to view this resource"
 
+@login.route('/', methods = ['POST', 'GET'])
 @login.route('/login', methods=["GET", "POST"])
 def log_in():
 

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
@@ -12,9 +12,6 @@ migrate = Migrate()
 login_manager = LoginManager()
 admin_permission = Permission(RoleNeed('admin'))
 
-#def create_app(config_name):
-#    app = Flask(__name__, instance_path='/usr/var/src/app')
-#    app.config.from_object(config.get(config_name or 'default'))
 def create_app(config_name=None):
     if config_name is None:
         app = Flask(__name__, instance_path='/usr/var/src/app')
@@ -63,7 +60,8 @@ def create_app(config_name=None):
 
     @login_manager.unauthorized_handler
     def unauthorized_handler():
-        return ("Unauthorised",HTTPStatus.UNAUTHORIZED)
+        return redirect('/login?next=' + request.path)
+
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):

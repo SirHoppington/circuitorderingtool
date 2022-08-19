@@ -67,7 +67,7 @@ def test_db():
 
 # Fixture to create a test user account, log the user in and yield test client and destroy DB after test.
 @pytest.fixture(scope='module')
-def test_authentication():
+def test_authenticated_user():
     flask_app = create_app('testing')
     with flask_app.test_client() as test_client:
         with flask_app.app_context():
@@ -81,8 +81,27 @@ def test_authentication():
             db.session.remove()
             db.drop_all()
 
+# Fixture to test unauthenticated user access.
+@pytest.fixture(scope='module')
+def test_unauthenticated_user():
+    flask_app = create_app('testing')
+    with flask_app.test_client() as test_client:
+        with flask_app.app_context():
+            db.create_all()
+            yield test_client
+            db.session.remove()
+            db.drop_all()
 
 @pytest.fixture(scope='module')
 def test_provider():
     filters = {'fibre', '100', '1000', 'BT', '250', '100.50', 'fibre everywhere', '1234567', '36', 'None'}
     return filters
+
+@pytest.fixture(scope='function')
+def mock_response():
+    test_url ='https://testadddress'
+    test_json = {'customer_name': 'Nicholas', 'customer_lastName': 'Hopgood', 'customer_email': 'nickhopgood@gmail.com', 'customer_telephone': '07947253903', 'net': '12345666', 'postcode': 'Rh1 2hb', 'accessTypes': [], 'bandwidths': [], 'btw_bandwidths': '', 'btw_bw_type': [], 'bearers': [], 'productGroups': [], 'suppliers': [], 'terms': []}
+    request_object = requests_mock.get(test_url, json=test_json, status_code=200)
+    res = requests.get(test_url)
+
+    return res
