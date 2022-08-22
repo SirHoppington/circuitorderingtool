@@ -2,6 +2,8 @@ from app.Models.association_table import Quotation, Order, NetRef, ProviderQuote
 import pytest
 from app import create_app, db
 from werkzeug.security import generate_password_hash
+import requests
+import requests_mock
 
 @pytest.fixture(scope='module')
 def test_quote():
@@ -97,11 +99,24 @@ def test_provider():
     filters = {'fibre', '100', '1000', 'BT', '250', '100.50', 'fibre everywhere', '1234567', '36', 'None'}
     return filters
 
-@pytest.fixture(scope='function')
-def mock_response():
-    test_url ='https://testadddress'
-    test_json = {'customer_name': 'Nicholas', 'customer_lastName': 'Hopgood', 'customer_email': 'nickhopgood@gmail.com', 'customer_telephone': '07947253903', 'net': '12345666', 'postcode': 'Rh1 2hb', 'accessTypes': [], 'bandwidths': [], 'btw_bandwidths': '', 'btw_bw_type': [], 'bearers': [], 'productGroups': [], 'suppliers': [], 'terms': []}
-    request_object = requests_mock.get(test_url, json=test_json, status_code=200)
-    res = requests.get(test_url)
+match_data = {"customer_name":'Joe', "customer_lastName":"Bloggs",
+                "customer_email":"joebloggs@gmail.com", "customer_telephone":"07949594950",
+                "net":"12345", "postcode":"BT22 1ST"}
 
-    return res
+@pytest.fixture(scope='function')
+def mock_post_v1_quote():
+    with requests_mock.Mocker() as requests_mocker:
+        def match_data(request):
+            """
+            This is just optional. Remove if not needed. This will check if the request contains the expected body.
+            """
+            return request.json() == {"customer_name":'Joe', "customer_lastName":"Bloggs",
+                "customer_email":"joebloggs@gmail.com", "customer_telephone":"07949594950",
+                "net":"12345", "postcode":"BT22 1ST"}
+
+        requests_mocker.post(
+            "https://apitest.virtual1.com/layer2-api/quoting",
+            status_code=200,
+            #additional_matcher=match_data,
+            json={ "quoteReference":"123456789","accessProducts":[{"accessType":"Fibre","availableWithoutHardware":"false","bandwidth":"10","bearer":"100","carrier":"Level 3 Communications","hardwareOptions":[{"hardwareOption":"FCM9005 Dual Power","hardwareReference":"278316372"},{"hardwareOption":"FCM9005","hardwareReference":"278316373"}],"indicative":"false","installCharges":"0.0000","leadTime":"55","monthlyFees":"441.7800","product":"Ethernet Everywhere\xe2\x84\xa2","productReference":"278316398","secondaryOptions":[],"term":"36"}]},)
+        yield
