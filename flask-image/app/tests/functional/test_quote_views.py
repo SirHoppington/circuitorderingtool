@@ -3,7 +3,7 @@
 
 def test_view_quotations_authenticated(test_authenticated_user):
     """
-    GIVEN an HTTP GET to /view_quotations
+    GIVEN an HTTP GET to /view_quotations logged in as a test user account.
     WHEN a response is received
     THEN check the response code and initial html response contains
     """
@@ -53,10 +53,10 @@ def test_new_quote_authenticated_post(test_authenticated_user):
     """
     response = test_authenticated_user.post('/new_quote', data=dict(customer_name='Joe', customer_lastName="Bloggs",
                                          customer_email="joebloggs@gmail.com", customer_telephone="07949594950" ,
-                                         net="12345", postcode="BT22 1ST"))
+                                         net="12345", postcode="BT22 1ST", suppliers=["Virtual 1"]))
     assert response.status_code == 200
     print(response.data)
-    assert b"Pricing results NET" in response.data
+    assert b"Your search criteria returned no available results, please try selecting different filters." in response.data
 
 def test_new_quotation_unauthenticated_post(test_unauthenticated_user):
     """

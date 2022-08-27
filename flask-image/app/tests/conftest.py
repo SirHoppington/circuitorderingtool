@@ -58,7 +58,7 @@ def test_client():
             yield test_client
 
 # Fixture to create new database tables in the test database, yield results for unit test and once run to drop tables.
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def test_db():
     flask_app = create_app('testing')
     with flask_app.app_context():
@@ -79,6 +79,22 @@ def test_authenticated_user():
             db.session.add(test_admin)
             db.session.commit()
             test_client.post('/login', data=dict(email='testadmin@unittest.com', password="testpassword"))
+            yield test_client
+            db.session.remove()
+            db.drop_all()
+
+# Fixture to create a test user account, log the user in and yield test client and destroy DB after test.
+@pytest.fixture(scope='module')
+def test_authenticated_standard_user():
+    flask_app = create_app('testing')
+    with flask_app.test_client() as test_client:
+        with flask_app.app_context():
+            db.create_all()
+            test_user = User(email="testuser@unittest.com",
+                              password=generate_password_hash("testpassword", method='sha256'), role="user")
+            db.session.add(test_user)
+            db.session.commit()
+            test_client.post('/login', data=dict(email='testuser@unittest.com', password="testpassword"))
             yield test_client
             db.session.remove()
             db.drop_all()

@@ -8,6 +8,7 @@ from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
 from config import v1_user, v1_password, btw_secret, btw_client_id, btw_sandbox_client_id ,btw_sandbox_secret
+from datetime import datetime
 class Provider:
 
     headers = {
@@ -54,17 +55,18 @@ class Provider:
 
     # Cleanse NewOrder form.
     def create_order(self, filter):
+        access = datetime.strptime(filter["accessAvailableFrom"], "%Y-%m-%d").strftime("%Y/%m/%d")
         start_cleansed_form = {k: v for k, v in filter.items() if k == 'quoteReference' or k ==
                          'pricingRequestHardwareId' or k == 'pricingRequestAccessProductId' or k == 'purchaseOrderNumber'}
         end_cleansed_form = {k: v for k, v in filter.items() if v != [
-            'Any'] and k != 'csrf_token' and k != 'FirstName' and
+            'Any'] and k != 'csrf_token' and k != 'FirstName' and k != 'accessAvailableFrom' and
                          k != 'LastName' and k != 'Telephone' and
                          k != 'Email' and k != 'quoteReference' and k !=
                          'pricingRequestHardwareId' and k != 'pricingRequestAccessProductId' and k != 'purchaseOrderNumber'}
         customer_contact = {
             "primaryProvisioningContact": {"firstName": filter["FirstName"], "lastName": filter["LastName"],
                                            "telephone": filter["Telephone"], "email": filter["Email"]}}
-        body = {**start_cleansed_form, **customer_contact, **end_cleansed_form}
+        body = {**start_cleansed_form, **customer_contact, "accessAvailableFrom":access, **end_cleansed_form }
         print(body)
         response = self.send_order(body)
         return response

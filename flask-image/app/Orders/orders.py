@@ -1,6 +1,6 @@
 from app.api.provider import v1_api, btw_test_api, btw_sandbox_api
 import pandas as pd
-from app.queries import search_v1_quote_by_id, add_v1_quote, add_btw_quote, add_customer, add_v1_order, add_btw_order
+from app.queries import search_v1_quote_by_id, add_v1_quote, add_btw_quote, add_customer, add_v1_order, set_btw_status
 
 # Use case class to request a new quotation.
 
@@ -25,12 +25,14 @@ class NewOrder:
                 btw_response = btw_sandbox_api.create_order(filters)
                 #create function
                 # Change to set the btw order status
-                order_ref = add_btw_order(filters["btwProductId"])
+                order_ref = set_btw_status(filters["btwProductId"])
             except:
                 btw_sandbox_api.fetch_access_token()
                 btw_response = btw_sandbox_api.create_order(filters)
                 # create function
-                order_ref = add_btw_order(filters["btwProductId"])
+                print("here")
+                order_ref = set_btw_status(filters["btwProductId"])
+                print("here")
 
         ## Add try/except for future provider Quotation APIs.
         try:

@@ -220,12 +220,12 @@ def set_order_ref(product, order_ref):
     db.session.commit()
     return True
 #Used to search BTW orders:
-def set_btw_status(quote, order_ref):
+def set_btw_status(quote):
     order = search_btw_prod_order(quote)
     print("heeeeeeeeeeeeere")
     print(order)
-    order.ref = order_ref
     order.status = "Order sent"
+    print(order.status)
     db.session.commit()
     return True
 

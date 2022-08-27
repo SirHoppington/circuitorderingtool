@@ -1,10 +1,36 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, widgets
+from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, PasswordField, EmailField, widgets
 from wtforms.validators import DataRequired, Length
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
+
+class SignUp(FlaskForm):
+    """Add new user form."""
+    email = EmailField(
+        'Email',
+        [DataRequired()],
+        id='email'
+    )
+
+    password = PasswordField(
+        'Password',
+        [DataRequired()],
+        id='password'
+    )
+
+    role = SelectField(
+        'Role',
+        id='role',
+        choices =
+        [
+            'Admin',
+            'User'
+        ]
+    )
+
+
 
 class NewQuote(FlaskForm):
     """Add new quote form."""

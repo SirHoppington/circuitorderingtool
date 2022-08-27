@@ -3,6 +3,7 @@ from flask_login import login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.Models.association_table import User
 from app import db, admin_permission
+from app.forms import SignUp
 from flask_principal import Identity, identity_changed
 from http import HTTPStatus
 
@@ -12,14 +13,15 @@ login = Blueprint('login', __name__, template_folder='templates')
 
 @login.route('/signup', methods=['POST',"GET", "POST"])
 def signup_post():
+    form = SignUp()
     try:
-        with admin_permission.require():
+        #with admin_permission.require():
 
             if request.method == 'POST':
 
-                email = request.form.get('email')
-                password = request.form.get('password')
-                role = request.form.get('role')
+                email = form.email.data
+                password = form.password.data
+                role = form.role.data
 
                 user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
 
@@ -35,9 +37,10 @@ def signup_post():
                 db.session.commit()
 
                 return redirect(url_for('login.log_in'))
-            return render_template('signup.html')
+            return render_template('signup.html', form=form)
     except:
-        return"You are not authorised to view this resource"
+        flash('You are not authorised to view this page.')
+        return redirect(url_for('customer_quote.view_quotations'))
 
 @login.route('/', methods = ['POST', 'GET'])
 @login.route('/login', methods=["GET", "POST"])

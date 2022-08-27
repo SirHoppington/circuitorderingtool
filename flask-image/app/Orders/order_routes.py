@@ -35,9 +35,10 @@ def new_order(ref):
         else:
             try:
                 order_request = new_orders.run(form.data, prov[0].provider)
+                print(order_request)
             except Exception as e:
                 return (str(e))
-            return render_template("order_confirmation_btw.html", form=form, provider=order_request[1] )
+            return render_template("order_confirmation_btw.html", form=form, provider=prov[0].provider)
     else:
         # update db query to return Quotation table postcode
         form.postcode.data = prov[2].postcode
