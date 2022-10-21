@@ -1,5 +1,9 @@
 pipeline {
 agent { label 'gcp' }
+environment {
+        /
+        dev_database = credentials('database.env')
+    }
 stages {
 	stage('Build Docker Image') {
 	steps {
