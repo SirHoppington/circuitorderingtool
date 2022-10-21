@@ -3,6 +3,9 @@ agent { label 'gcp' }
 environment {
         /
         dev_database = credentials('database.env')
+		POSTGRES_DB = credentials('POSTGRES_DB')
+		POSTGRES_USER = credentials('POSTGRES_USER')
+		POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
     }
 stages {
 	stage('Build Docker Image') {
