@@ -1,8 +1,7 @@
 pipeline {
-agent any
+agent { label 'gcp' }
 stages {
 	stage('Build') {
-	parallel {
 		stage('Build Docker Image') {
 		steps {
 			sh 'docker-compose -f /vagrant/docker-compose.yml up -d'
@@ -12,11 +11,10 @@ stages {
 		steps {
 			sh '''
 			    export FLASK_APP="app:create_app('development')"
-				flask run --host=0.0.0.0'
+				flask run --host=0.0.0.0
 			'''
 		}
 		}
-	}
 	}
 
 	stage('Test') {
