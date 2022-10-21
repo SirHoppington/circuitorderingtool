@@ -1,22 +1,58 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, widgets
+from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, PasswordField, EmailField, widgets
 from wtforms.validators import DataRequired, Length
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
+class SignUp(FlaskForm):
+    """Add new user form."""
+    email = EmailField(
+        'Email',
+        [DataRequired()],
+        id='email'
+    )
+
+    password = PasswordField(
+        'Password',
+        [DataRequired()],
+        id='password'
+    )
+
+    role = SelectField(
+        'Role',
+        id='role',
+        choices =
+        [
+            'Admin',
+            'User'
+        ]
+    )
+
+
+
 class NewQuote(FlaskForm):
     """Add new quote form."""
     customer_name = StringField(
-        'Customer Name',
+        'Customer First Name',
         [DataRequired()],
-        id='net'
+        id='name'
+    )
+    customer_lastName = StringField(
+        'Customer Last Name',
+        [DataRequired()],
+        id='lastName'
     )
     customer_email = StringField(
         'Customer email',
         [DataRequired()],
-        id='net'
+        id='customerEmail'
+    )
+    customer_telephone = StringField(
+        'Customer Telephone',
+        [DataRequired()],
+        id='telephone'
     )
     net = StringField(
         'NET reference',
@@ -63,7 +99,7 @@ class NewQuote(FlaskForm):
         [('BEARER_100', '100Mb'),
          ('BEARER_1000', '1Gb'),
          ('BEARER_10000', '10Gb')],
-        id='bandwidths'
+        id='bearers'
     )
     productGroups = MultiCheckboxField(
         'ProductGroups',
@@ -103,16 +139,20 @@ class NewOrder(FlaskForm):
         'Supplier Quote Reference',
         id='quoteReferenceId'
     )
+    btwProductId = StringField(
+        'Product Id',
+        id='btwProductId'
+    )
     pricingRequestAccessProductId = StringField(
         'Pricing Request Product ID',
         id='pricingRequestAccessProductIdId'
     )
     pricingRequestHardwareId = StringField(
-        'pricing request hardware ID',
+        'Pricing Request Hardware ID',
         id='pricingRequestHardwareIdId'
     )
     purchaseOrderNumber = StringField(
-        'Purchase Orders Number',
+        'Purchase Order Number',
         id='purchaseOrderId'
     )
     orderReference = StringField(
@@ -167,6 +207,18 @@ class NewOrder(FlaskForm):
     county = StringField(
         'County',
         id='countyId'
+    )
+    bandwidth = StringField(
+        'Bearer',
+        id='bandwidth'
+    )
+    term = StringField(
+        'Term',
+        id='term'
+    )
+    etherflow = StringField(
+        'Etherflow Bandwidth',
+        id='etherflow'
     )
     firstName = StringField(
         'First Name',

@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-	<div class="row">
-	  <div class="col-lg-8">
+   <div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="grid search">
+                <div class="grid-body">
+            <div class="form-wrapper">
 	    <h1 class="mt-4"> Signup </h1>
           {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -11,20 +14,64 @@
     </div>
 {% endif %}
 {% endwith %}
-          <form method="POST" action="/signup">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
-                </div>
-            </div>
-			<div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
-                </div>
-            </div>
-            <button class="button is-block is-info is-large is-fullwidth">Signup</button>
+      <hr>
+      <form method="POST" id="signup" class="row g-3 needs-validation" action="{{ url_for('login.signup_post') }}" novalidate>
+                    {{ form.csrf_token }}
+                    <div class="row">
+					<div class="col-sm">
+                    <fieldset class="form-field">
+                        {{ form.email.label}}
+						<br>
+                        {{ form.email(class_="form-control", placeholder="Your Email", maxlength=40) }}
+                    </fieldset>
+					</div>
+                    </div>
+          <div class="row">
+                    <div class="col-sm">
+                    <fieldset class="form-field">
+                        {{ form.password.label}}
+						<br>
+                        {{ form.password(class_="form-control", placeholder="Your password", pattern="(?=.*\d)(?=.*[\W_]).{8,}", title="Minimum of 8 characters. Should have at least one special character and one number.") }}
+                    </fieldset>
+					</div>
+          </div>
+          <div class="row">
+          <div class="col-sm">
+                    <fieldset class="form-field">
+                        {{ form.role.label}}
+						<br>
+                        {{ form.role(class_="form-control")}}
+                    </fieldset>
+					</div>
+          </div>
+          <button type="submit" class="btn btn-secondary"> Signup </button>
+
         </form>
+            </div>
+            </div>
+            </div>
 	  </div>
 	</div>
 </div>
+      <script>
+        (function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+    </script>
 {% endblock content %}

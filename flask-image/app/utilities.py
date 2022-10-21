@@ -7,7 +7,11 @@ def add_quote_item(existing_list, filters, bearer, product):
     return existing_list
 
 def btw_api_body(filters,bearer, product):
-  if not filters["btw_bandwidths"] and not filters["btw_bw_type"]:
+  if product == "EtherwayGEAService" and not filters["btw_bandwidths"] and bearer == "FTTC 40:10 Mbit/s":
+    bandwidth = "10 Mbit/s"
+  elif product == "EtherwayGEAService" and not filters["btw_bandwidths"] and bearer == "FTTC 80:20 Mbit/s":
+    bandwidth = "20 Mbit/s"
+  elif not filters["btw_bandwidths"] and not filters["btw_bw_type"]:
     bandwidth = bearer
   else:
     bandwidth = filters["btw_bandwidths"] + " " + filters["btw_bw_type"][0]
@@ -28,16 +32,16 @@ def btw_api_body(filters,bearer, product):
 def btw_order_api_body(filters):
 
     body = {
-  "externalId": filters["purchaseOrderNumber"],
+  "externalId": filters["orderReference"],
   "submittedDate": datetime.datetime.now().strftime(' %Y-%m-%d %H:%M:%S'),
   "billingAccount": {
-    "id": "0455821113"
+    "id": "0455821502"
   },
   "relatedParty": [
     {
-      "role": "Primary Contact",
+      "role": "KciContact",
       "@referredType": "individualParty",
-      "title": filters["title"],
+      "title": "Miss.",
       "givenName": filters["FirstName"],
       "familyName": filters["LastName"],
       "contactMedium": [
@@ -61,127 +65,86 @@ def btw_order_api_body(filters):
   "@type": "btProductOrder",
   "orderItem": [
     {
-      "id": "E7W002-Test03",
+      "id": "MADHUBBB412",
       "action": "add",
       "@baseType": "productOrderItem",
       "@type": "btProductOrderItem",
-      "requiredByDate": "2021-05-24T10:42:08.534Z",
+      "requiredByDate": "2021-08-11T15:42:08.534Z",
       "billingAccount": {
-        "id": "0455821113"
+        "id": "0455821502"
       },
-      "productOrderItemRelationship": [
-        {
-          "id": "ETHA00555666",
-          "relationshipType": "reliesOn",
-          "@baseType": "OrderItemRelationship",
-          "@type": "btServiceRelationship",
-          "btType": "FromNode"
-        },
-        {
-          "id": "ETHA00555664",
-          "relationshipType": "reliesOn",
-          "@baseType": "OrderItemRelationship",
-          "@type": "btServiceRelationship",
-          "btType": "ToNode"
-        },
-        {
-          "id": "ETHN00555665",
-          "relationshipType": "reliesOn",
-          "@baseType": "OrderItemRelationship",
-          "@type": "btServiceRelationship",
-          "btType": "Network"
-        }
-      ],
       "product": {
-        "id": "Etherflow - Connected",
+        "id": "Etherway",
         "productSpecification": {
-          "id": "Etherflow - Connected"
+          "id": "Etherway"
         },
         "@baseType": "product",
         "@type": "btProduct",
-        "characteristic": [
-          {
-            "@baseType": "productCharacteristic",
-            "@type": "btProductCharacteristic",
-            "name": "Bandwidth",
-            "value": "1Mbit/s"
-          },
-          {
-            "@baseType": "productCharacteristic",
-            "@type": "btProductCharacteristic",
-            "name": "Contention",
-            "value": "Standard"
-          },
-          {
-            "@baseType": "productCharacteristic",
-            "@type": "btProductCharacteristic",
-            "name": "FromAccessShared",
-            "value": "No"
-          },
-          {
-            "@baseType": "productCharacteristic",
-            "@type": "btProductCharacteristic",
-            "name": "ToAccessShared",
-            "value": "No"
-          },
-          {
-            "@baseType": "productCharacteristic",
-            "@type": "btProductCharacteristic",
-            "name": "OutageSlot",
-            "value": "Not Applicable"
-          }
-        ],
+        "btSiteDetails": {
+          "HSHazards": filters["siteHazards"],
+          "CompanyName": filters["endCustomerCompanyName"],
+		  "Room": filters["room"],
+		  "floor": filters["floor"],
+          "characteristics": [
+            {
+              "@baseType": "siteCharacteristic",
+              "name": "Site Constraint",
+              "value": filters["siteConstraint"]
+            }
+          ]
+        },
+		"characteristic":[
+		{
+			"@baseType":"productCharacteristic",
+			"@type": "btProductCharacteristic",
+			"name": "Bandwidth",
+			"value": filters["bandwidth"]
+		  },
+			{
+			"@baseType":"productCharacteristic",
+			"@type": "btProductCharacteristic",
+			"name": "accessPricingPeriod",
+			"value": filters["term"]
+			},
+			{
+			"@baseType":"productCharacteristic",
+			"@type": "btProductCharacteristic",
+			"name": "InterfaceType",
+			"value": filters["interfaceType"]
+			},
+			{
+			"@baseType":"productCharacteristic",
+			"@type": "btProductCharacteristic",
+			"name": "AutoNegotiateCustomerEnd",
+			"value": filters["autonegotiation"]
+			},
+			{
+			"@baseType":"productCharacteristic",
+			"@type": "btProductCharacteristic",
+			"name": "EtherflowBandwidthRange",
+			"value": filters["etherflow"]
+			}
+		],
         "relatedParty": [
           {
             "role": "ServiceContact",
-            "title": "Mr.",
-            "givenName": "Raj",
-            "familyName": "S",
+            "@referredType": "individualParty",
+            "title": "Miss.",
+            "givenName": filters["firstName"],
+            "familyName": filters["lastName"],
             "contactMedium": [
               {
                 "type": "TelephoneNumber",
                 "medium": {
                   "type": "business",
-                  "number": "9611644499"
-                }
-              },
-              {
-                "type": "TelephoneNumber",
-                "medium": {
-                  "type": "Mobile",
-                  "number": "08040417620"
-                }
-              },
-              {
-                "type": "Email",
-                "medium": {
-                  "emailAddress": "ks0064588@techmahindra.com"
+                  "number": filters["phoneNumber"]
                 }
               }
             ]
           }
         ]
-      },
-      "orderItem": [
-        {
-          "id": "E7W002_1-Test923",
-          "action": "add",
-          "requiredByDate": "2021-05-24T10:42:08.534Z",
-          "billingAccount": {
-            "id": "0455821113"
-          },
-          "product": {
-            "id": "Maintenance Category 3",
-            "productSpecification": {
-              "id": "Maintenance Category 3"
-            },
-            "baseType": "product",
-            "type": "btProduct"
-          },
-          "@baseType": "productOrderItem",
-          "@type": "btProductOrderItem"
-        }
-      ]
+      }
     }
   ]
 }
+    return body

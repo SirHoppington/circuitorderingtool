@@ -1,35 +1,48 @@
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash, current_app
 from flask_login import login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.Models.association_table import User
-from app import db
+from app import db, admin_permission
+from app.forms import SignUp
+from flask_principal import Identity, identity_changed
+from http import HTTPStatus
 
 login = Blueprint('login', __name__, template_folder='templates')
 
+
+
 @login.route('/signup', methods=['POST',"GET", "POST"])
 def signup_post():
+    form = SignUp()
+    try:
+        with admin_permission.require():
 
-    if request.method == 'POST':
+            if request.method == 'POST':
 
-        email = request.form.get('email')
-        password = request.form.get('password')
+                email = form.email.data
+                password = form.password.data
+                role = form.role.data
 
-        user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
+                user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
 
-        if user: # if a user is found, we want to redirect back to signup page so user can try again
-            flash('Email address signed up.')
-            return redirect(url_for('login.signup_post'))
+                if user: # if a user is found, we want to redirect back to signup page so user can try again
+                    flash('Email address signed up.')
+                    return redirect(url_for('login.signup_post'))
 
-        # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-        new_user = User(email=email, password=generate_password_hash(password, method='sha256'))
+                # create a new user with the form data. Hash the password so the plaintext version isn't saved.
+                new_user = User(email=email, password=generate_password_hash(password, method='sha256'), role=role)
 
-        # add the new user to the database
-        db.session.add(new_user)
-        db.session.commit()
+                # add the new user to the database
+                db.session.add(new_user)
+                db.session.commit()
 
-        return redirect(url_for('login.log_in'))
-    return render_template('signup.html')
+                return redirect(url_for('login.log_in'))
+            return render_template('signup.html', form=form)
+    except:
+        flash('You are not authorised to view this page.')
+        return redirect(url_for('customer_quote.view_quotations'))
 
+@login.route('/', methods = ['POST', 'GET'])
 @login.route('/login', methods=["GET", "POST"])
 def log_in():
 
@@ -42,13 +55,16 @@ def log_in():
         user = User.query.filter_by(email=email).first()
 
         # check if the user actually exists
-        # take the user-supplied password, hash it, and compare it to the hashed password in the database
+        # take the user-supplied password, hash it, and compare
+        # it to the hashed password in the database
         if not user or not check_password_hash(user.password, password):
             flash('Please check your login details and try again.')
-            return redirect(url_for('login.log_in')) # if the user doesn't exist or password is wrong, reload the page
+            # if the user doesn't exist or password is wrong, reload the page
+            return redirect(url_for('login.log_in'))
 
     # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
+        identity_changed.send(current_app._get_current_object(), identity=Identity(user.role))
         return redirect(url_for('customer_quote.view_quotations'))
 
     return render_template('login.html')

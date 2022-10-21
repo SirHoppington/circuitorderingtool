@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 from flask_login import UserMixin
+from config import admin_password
 
 
 class Customer(db.Model):
@@ -8,34 +9,41 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(40))
     name = db.Column(db.String(40))
+    lastName = db.Column(db.String(20))
+    telephone = db.Column(db.String(20))
+
     @property
     def serialize(self):
         return {
             'email' : self.email,
-            'name' : self.name
+            'name' : self.name,
+            'lastName' : self.lastName,
+            'telephone' : self.telephone
         }
 
-    def __init__(self, name, email):
+    def __init__(self, name, email, lastName, telephone):
         self.name = name,
-        self.email = email
+        self.email = email,
+        self.lastName = lastName,
+        self.telephone = telephone
 
     def __repr__(self):
         return repr(self.name)
 
 class Quotation(db.Model):
     __tablename__ = 'quotation_table'
-    name = db.Column(db.String(20))
+    postcode = db.Column(db.String(20))
     net = db.Column(db.Integer, primary_key=True)
     @property
     def serialize(self):
         return {
             'id': self.id,
-            'name' : self.name,
+            'postcode' : self.postcode,
             'net' : self.net
         }
 
-    def __init__(self, name, net):
-        self.name = name,
+    def __init__(self, postcode, net):
+        self.postcode = postcode,
         self.net = net
 
     def __repr__(self):
@@ -45,7 +53,7 @@ class Order(db.Model):
     __tablename__ = 'order_table'
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(20))
-    ref = db.Column(db.Integer)
+    ref = db.Column(db.String(30))
     #order_to_quotes = db.relationship('Quotation', secondary=quote_table, backref=db.backref('quote_to_order_associated', lazy="dynamic"))
 
     def __init__(self, status, ref):
@@ -119,7 +127,7 @@ class ProviderProduct(db.Model):
         self.productReference = productReference,
         self.hardwareId = hardwareId,
         self.term = term,
-        self.customer_quote = customer_quote
+        self.customer_quote = customer_quote,
 
     def __repr__(self):
         return repr(self.productReference)
@@ -169,6 +177,8 @@ class NetRef(db.Model):
         return '{}'.format(self.provider_id)
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'user_accounts'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
+    role = db.Column(db.String(20))

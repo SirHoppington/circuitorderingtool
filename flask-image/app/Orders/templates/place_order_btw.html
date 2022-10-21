@@ -2,8 +2,6 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
-    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
        <style>
     .codeMirror-scroll{
         height: 100%;
@@ -21,24 +19,32 @@ ul {
 {% endblock %}
 
 {% block content %}
-<div class="container">
+    <div class="container">
     <div class="row">
         <div class="col-lg-8">
+            <div class="grid search">
+                <div class="grid-body">
             <div class="form-wrapper">
                 <h1 class="mt-4">New Circuit Order</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('order.place_order') }}" >
+                <form method="POST" id="quoteform" class="row g-3 needs-validation" action="{{ url_for('order.new_order', ref=net) }}" novalidate >
                     {{ form.csrf_token }}
 					<div class="row">
 					<div class="col-sm">
-                    <fieldset class="form-field">
+                      <fieldset class="form-field">
                         {{ form.purchaseOrderNumber.label}}
 						<br>
-                        {{ form.purchaseOrderNumber(size=20) }}
+                        {{ form.purchaseOrderNumber(class_="form-control",type="number", max=999999) }}
                     </fieldset>
 					</div>
-					<hr>
-						</div>						
+                        <div class="col-sm">
+                    <fieldset class="form-field">
+                        {{ form.btwProductId.label}}
+						<br>
+                        {{ form.btwProductId(class_="form-control",maxlength=20) }}
+                    </fieldset>
+					</div>
+                    </div>
 						<hr>
 						<div class="row">
 						<div class="col-sm">
@@ -51,33 +57,30 @@ ul {
 							<fieldset class="controls">
 							{{ form.FirstName.label}}
 							<br>
-							{{ form.FirstName }}
+							{{ form.FirstName(class_="form-control", maxlength="50") }}
 							</fieldset>
 							</div>
-					<hr>
 							<div class="col-sm">
 								<fieldset class="controls">
 								{{ form.LastName.label}}
 								<br>
-								{{ form.LastName }}
+								{{ form.LastName(class_="form-control", maxlength="50") }}
 								</fieldset>
 							</div>
 							</div>
-							<hr>
 					<div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.Telephone.label}}
                         <br>
-						{{ form.Telephone }}
+						{{ form.Telephone(class_="form-control", pattern="[0-9]{11}", title="Enter 11 digit telephone number")  }}
                     </fieldset>
 					</div>
-					<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.Email.label}}
                         <br>
-						{{ form.Email }}
+						{{ form.Email(class_="form-control", type="email", maxlength="70") }}
                     </fieldset>
 					</div>
 					</div>
@@ -87,236 +90,255 @@ ul {
 						<h2 class="mt-4">Site installation Details</h2>
 						</div>
 						</div>
+                    <hr>
 					<div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.endCustomerCompanyName.label}}
                         <br>
-						{{ form.endCustomerCompanyName }}
+						{{ form.endCustomerCompanyName(class_="form-control", maxlength="30") }}
                     </fieldset>
 					</div>
-						<hr>
-						<hr>
+
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.postcode.label}}
                         <br>
-						{{ form.postcode }}
+						{{ form.postcode(class_="form-control", pattern="[Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2}", title="Enter a valid postcode") }}
                     </fieldset>
 					</div>
-                        <hr>
+                    </div>
+                    <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.streetName.label}}
                         <br>
-						{{ form.streetName }}
+						{{ form.streetName(class_="form-control", maxlength="80") }}
                     </fieldset>
 					</div>
-                        <hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.townCity.label}}
                         <br>
-						{{ form.townCity }}
+						{{ form.townCity(class_="form-control", maxlength="58") }}
                     </fieldset>
 					</div>
-						<hr>
+                    </div>
+                    <div class="row">
+                    <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.bandwidth.label}}
+                        <br>
+						{{ form.bandwidth(class_="form-control", maxlength="40") }}
+                    </fieldset>
+					</div>
+                    <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.term.label}}
+                        <br>
+						{{ form.term(class_="form-control", type="number", max="48") }}
+                    </fieldset>
+					</div>
+                    </div>
+                    <div class="row">
+                         <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.etherflow.label}}
+                        <br>
+						{{ form.etherflow(class_="form-control") }}
+                    </fieldset>
+					</div>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.firstName.label}}
                         <br>
-						{{ form.firstName }}
+						{{ form.firstName(class_="form-control", maxlength="50") }}
                     </fieldset>
 					</div>
-						<hr>
+                    </div>
+                    <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.lastName.label}}
                         <br>
-						{{ form.lastName }}
+						{{ form.lastName(class_="form-control", maxlength="50") }}
                     </fieldset>
 					</div>
-					<hr>
-					<div class="col-sm">
-						<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.phoneNumber.label}}
                         <br>
-						{{ form.phoneNumber }}
+						{{ form.phoneNumber(class_="form-control", pattern="[0-9]{11}", title="Enter 11 digit telephone number") }}
                     </fieldset>
 					</div>
-						<hr>
+                    </div>
+                    <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.accessAvailableFrom.label}}
                         <br>
-						{{ form.accessAvailableFrom }}
+						{{ form.accessAvailableFrom(class_="form-control", type="date", min="") }}
                     </fieldset>
 					</div>
-						<hr>
+                    <script>
+                        var tomorrow = new Date();
+                        var dd = tomorrow.getDate()+1;
+                        var mm = tomorrow.getMonth()+1; //January is 0 so need to add 1 to make it 1!
+                         var yyyy = tomorrow.getFullYear();
+                         if(dd<10){
+                             dd='0'+dd
+                         }
+                         if(mm<10){
+                             mm='0'+mm
+                         }
+                         tomorrow = yyyy+'-'+mm+'-'+dd;
+                         document.getElementById("accessAvailableFromId").setAttribute("min", tomorrow);
+                        </script>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.siteConstraint.label}}
                         <br>
-						{{ form.siteConstraint }}
+						{{ form.siteConstraint(class_="form-control") }}
                     </fieldset>
 					</div>
-						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.wasConstructedBefore2000.label}}
-                        <br>
-						{{ form.wasConstructedBefore2000 }}
-                    </fieldset>
-					</div>
-						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.isAsbestosRegisterAvailable.label}}
-                        <br>
-						{{ form.isAsbestosRegisterAvailable }}
-                    </fieldset>
-					</div>
-                        						<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.areSSRAMSRequired.label}}
-                        <br>
-						{{ form.areSSRAMSRequired }}
-                    </fieldset>
-					</div>
-                        				<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.landlordConsentNeeded.label}}
-                        <br>
-						{{ form.landlordConsentNeeded }}
-                    </fieldset>
-					</div>
-					</div>
-					<hr>
+                    </div>
+                    <hr>
 					<div class="row">
 						<div class="col-sm">
 						<h2 class="mt-4">Primary NNI details</h2>
 						</div>
+                        </div>
 						<hr>
 					<div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.nni.label}}
                         <br>
-						{{ form.nni }}
+						{{ form.nni(class_="form-control", maxlength="40") }}
                     </fieldset>
-					</div>
-							<hr>
+                    </div>
+                    </div>
+                    <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.floor.label}}
                         <br>
-						{{ form.floor }}
+						{{ form.floor(class_="form-control", maxlength="10") }}
                     </fieldset>
 					</div>
-							<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.room.label}}
                         <br>
-						{{ form.room }}
+						{{ form.room(class_="form-control", maxlength="20") }}
                     </fieldset>
 					</div>
-									<hr>
+                    </div>
+                    <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.rack.label}}
                         <br>
-						{{ form.rack }}
+						{{ form.rack(class_="form-control", maxlength="20") }}
                     </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
+                    </div>
+                        <div class="col-sm">
 					<fieldset class="controls">
                         {{ form.taggingMethod.label}}
                         <br>
-						{{ form.taggingMethod }}
+						{{ form.taggingMethod(class_="form-control") }}
                     </fieldset>
 					</div>
-									<hr>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.designType.label}}
-                        <br>
-						{{ form.designType }}
-                    </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
 					<fieldset class="controls">
                         {{ form.interfaceType.label}}
                         <br>
-						{{ form.interfaceType }}
+						{{ form.interfaceType(class_="form-control") }}
                     </fieldset>
-					</div>
-									<hr>
-					<div class="col-sm">
+                    </div>
+                        <div class="col-sm">
 					<fieldset class="controls">
                         {{ form.autonegotiation.label}}
                         <br>
-						{{ form.autonegotiation }}
+						{{ form.autonegotiation(class_="form-control") }}
                     </fieldset>
 					</div>
-									<hr>
+                    </div>
+                    <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.interfaceSpeed.label}}
                         <br>
-						{{ form.interfaceSpeed }}
+						{{ form.interfaceSpeed(class_="form-control") }}
+                    </fieldset>
+                    </div>
+                        <div class="col-sm">
+					<fieldset class="controls">
+                        {{ form.duplex.label}}
+                        <br>
+						{{ form.duplex(class_="form-control") }}
                     </fieldset>
 					</div>
-												<hr>
+					</div>
+                         <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.deliveryAddress.label}}
                         <br>
-						{{ form.deliveryAddress }}
+						{{ form.deliveryAddress(class_="form-control", maxlength="80") }}
                     </fieldset>
 					</div>
-												<hr>
+                    </div>
+                    <div class="row">
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.deliveryContact.label}}
                         <br>
-						{{ form.deliveryContact }}
+						{{ form.deliveryContact(class_="form-control", maxlength="50") }}
                     </fieldset>
 					</div>
-												<hr>
 					<div class="col-sm">
 					<fieldset class="controls">
                         {{ form.deliveryContactNumber.label}}
                         <br>
-						{{ form.deliveryContactNumber }}
+						{{ form.deliveryContactNumber(class_="form-control", pattern="[0-9]{11}", title="Enter 11 digit telephone number") }}
                     </fieldset>
 					</div>
-												<hr>
                     </div>
-                        					<hr>
+                    <hr>
 					<div class="row">
-					<input type="submit" value="Submit" class="button">
-					</div>
-                    </div>
+                            <button type="submit" class="btn btn-secondary"> Submit </button>
                     </div>
                 </form>
                 </form>
             </div>
-	    </div>
+                    </div>
          <hr>
-			 <hr>
-             <br>
-             <br>
-             <br>
-             <br>
         </div>
     </div>
-
 </div>
+</div>
+    <script>
+        (function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+    </script>
 {% endblock %}

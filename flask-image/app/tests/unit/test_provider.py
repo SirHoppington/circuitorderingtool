@@ -1,24 +1,52 @@
-from app.api.provider import v1_api
+from app.api.provider import BasicProvider, OAuthProvider
+from app.utilities import btw_api_body
 
-def test_get_quote():
-    """
-    GIVEN an HTTP GET to /new_quote
-    WHEN a response is received
-    THEN check the response code and initial html response
-    """
-    v1_api.get_quote("BT23 4AJ", )
-    response = test_client.get('/new_quote')
-    assert response.status_code == 200
-    assert b"Request New Quote" in response.data
+# Unit test to verify BasicProvider object initialisation
+def test_basic_provider():
+    basic_provider = BasicProvider("Test Provider", "https://testapi.com/",
+                  "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
+                  "layer2-api/orderingV2", "address-lookup", "testusername", "testpassword")
+    assert basic_provider.name == "Test Provider"
+    assert basic_provider.url == "https://testapi.com/"
+    assert basic_provider.quote_url == "layer2-api/quoting"
+    assert basic_provider.retrieve_quote_url == "layer2-api/retrieveQuote?quoteReference="
+    assert basic_provider.order_url == "layer2-api/orderingV2"
+    assert basic_provider.address_lookup_url == "address-lookup"
 
-def get_quote(self, postcode, filters):
-    cleansed_form = {k: v for k, v in filters.items() if v !=
-        ['Any'] and k != 'csrf_token' and k != 'postcode' and k != 'customer_email' and k != 'customer_name'}
-    body = {"postcode": postcode, "filter": cleansed_form}
-    response = self.quote_api(body)
-    # quote_pricing = quote_to_panda_v1(response)
-    # product_pricing = product_to_panda_v1(response)
-    product_pricing = json_to_panda_v1(response)
-    # will save all panda to database table, likely best to only save quotation reference.
-    # panda.to_sql(name='provider_pricing', con=db.engine, index=False)
-    return product_pricing
+# Unit test to verify OAuth Provider object initialisation
+def test_oauth_provider():
+    oauth_provider = OAuthProvider("Test OAuth Provider", "https://testapi.com/",
+                  "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
+                   "layer2-api/address", "layer2-api/qual",
+                  "layer2-api/orderingV2", "client_id","client_secret", "https://testapi-testa.com/oauth/accesstoken")
+    assert oauth_provider.name == "Test OAuth Provider"
+    assert oauth_provider.url == "https://testapi.com/"
+    assert oauth_provider.quote_url == "layer2-api/quoting"
+    assert oauth_provider.retrieve_quote_url == "layer2-api/retrieveQuote?quoteReference="
+    assert oauth_provider.address_url == "layer2-api/address"
+    assert oauth_provider.qual_url == "layer2-api/qual"
+    assert oauth_provider.order_url == "layer2-api/orderingV2"
+    assert oauth_provider.client_id == "client_id"
+    assert oauth_provider.client_secret == "client_secret"
+    assert oauth_provider.authorization_url == "https://testapi-testa.com/oauth/accesstoken"
+
+
+# Unit test to confirm btw_api_body function
+def test_btw_api_body():
+    filters = {"customer_name":'Joe', "customer_lastName":"Bloggs",
+                "customer_email":"joebloggs@gmail.com", "customer_telephone":"07949594950",
+                "net":"12346", "postcode":"BT22 1ST","accessTypes": [],"bandwidths":[],"btw_bandwidths":[],
+                         "btw_bw_type":[], "bearers": [], "suppliers" :["Virtual1"], "terms":[]}
+    query = btw_api_body(filters, "FTTC 40:10 Mbit/s", "EtherwayGEAService")
+
+    assert query == {"action": "add", "product": {"@type": "WholesaleEthernetElan",
+                                                                    "productSpecification": {
+                                                                        "id": "WholesaleEthernetElan"},
+                                                                    "existingAend": "True",
+                                                                    "place": [{"@type": "PostcodeSite",
+                                                                               "postcode": "BT22 1ST"}], "product": [
+                        {"@type": "EtherwayGEAService", "productSpecification":
+                            {"id": "EtherwayGEAService"}, "bandwidth": "FTTC 40:10 Mbit/s", "resilience": "Standard"},
+                        {"@type": "EtherflowDynamicService",
+                         "productSpecification": {"id": "EtherflowDynamicService"}, "bandwidth": "10 Mbit/s" ,
+                         "cos": "Default CoS (Standard)"}]}}

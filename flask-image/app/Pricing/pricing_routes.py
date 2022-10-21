@@ -23,3 +23,4 @@ def view_pricing():
 def get_pricing(net):
     pricing = get_provider_pricing(net)
     return render_template("view_provider_pricing.html", pricing=pricing, net_ref=net)
+

@@ -1,52 +1,44 @@
-from app.Models.association_table import Quotation, Customer, Order, ProviderQuote, ProviderProduct
-from app import db
+from app.Models.association_table import Quotation, Customer, Order, ProviderQuote, ProviderProduct, User
 
-def test_new_quote(test_db, test_quote):
+def test_new_quote(test_quote):
     """
-    GIVEN a Quotation model
+    GIVEN a Quotation object
     WHEN a new Quotation is created
-    THEN check the name and net has been asserted correctly
+    THEN check the net has been asserted correctly
     """
-    with test_db.app_context():
-       db.session.add(test_quote)
-       db.session.commit()
+    assert test_quote.net == '12345'
 
-       assert test_quote.net == 12345
-
-def test_new_customer(test_db, test_customer):
+def test_new_customer(test_customer):
     """
-    GIVEN a Quotation model
+    GIVEN a Customer object
     WHEN a new Quotation is created
-    THEN check the name and net has been asserted correctly
+    THEN check the name and email has been asserted correctly
     """
-    with test_db.app_context():
-        db.session.add(test_customer)
-        db.session.commit()
-        assert test_customer.email == 'johnsmith@gmail.com'
-        assert test_customer.name == ('John Smith')
+    assert test_customer.email == ('johnsmith@gmail.com' ,)
+    assert test_customer.name == ('John',)
 
 def test_new_order(test_order):
     """
-    GIVEN a Quotation model
-    WHEN a new Quotation is created
-    THEN check the name and net has been asserted correctly
+    GIVEN a order object
+    WHEN a new Object is created
+    THEN check the status has been asserted correctly
     """
     assert test_order.status == 'Not Ordered'
 
 def test_new_provider_quote(test_provider_quote):
     """
-    GIVEN a Quotation model
-    WHEN a new Quotation is created
-    THEN check the name and net has been asserted correctly
+    GIVEN a provider object
+    WHEN a new Provider is created
+    THEN check the provider and quote ref has been asserted correctly
     """
     assert test_provider_quote.provider == 'Virtual 1'
     assert test_provider_quote.quoteReference == ('1234567' ,)
 
 def test_new_provider_product(test_provider_product):
     """
-    GIVEN a Quotation model
-    WHEN a new Quotation is created
-    THEN check the name and net has been asserted correctly
+    GIVEN a Provider Product object
+    WHEN a new Provider Product is created
+    THEN check the attributes have been asserted correctly
     """
     assert test_provider_product.accessType == ('fibre' ,)
     assert test_provider_product.bandwidth == ('100' ,)
@@ -57,5 +49,14 @@ def test_new_provider_product(test_provider_product):
     assert test_provider_product.product == ('fibre everywhere' ,)
     assert test_provider_product.productReference == ('1234567' ,)
     assert test_provider_product.term == ('36' ,)
-    assert test_provider_product.customer_quote == 'None'
+    assert test_provider_product.customer_quote == ('None' ,)
 
+def test_new_user(test_user):
+    """
+    GIVEN a User object
+    WHEN a new user is created
+    THEN check the email, password and role has been asserted correctly
+    """
+    assert test_user.email == 'testadmin@unittest.com'
+    assert test_user.password == 'testpassword'
+    assert test_user.role == 'admin'

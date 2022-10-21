@@ -1,60 +1,117 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='taggle.css')}}">
-    <script src="{{ url_for('static', filename='taggle.js')}}"></script>
-       <style>
-    .codeMirror-scroll{
-        height: 100%;
-        min-height: 60%;
-    }
-	.button {
-		display:block; 
-		width: 100%; 
-} 
-ul {
-  list-style: none;
-}
-</style>
- 
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-lg-8">
+        <div class="grid search">
+      <div class="grid-body">
+        <div class="row">
             <div class="form-wrapper">
                 <h1 class="mt-4">Request New Quote</h1>
                 <hr>
-                <form method="POST" id="quoteform" action="{{ url_for('customer_quote.new_quote') }}" >
+                <form method="POST" class="row g-3 needs-validation" id="quoteform" action="{{ url_for('customer_quote.new_quote') }}" novalidate >
                     {{ form.csrf_token }}
-                    <fieldset class="form-field">
+                    <div class="form-group">
                         {{ form.customer_name.label}}
-                        {{ form.customer_name(size=40) }}
-                    </fieldset>
-                    <fieldset class="form-field">
+                        {{ form.customer_name(class_="form-control") }}
+                    </div>
+                <hr>
+                            <div class="form-group">
+                        {{ form.customer_lastName.label}}
+                        {{ form.customer_lastName(class_="form-control") }}
+                    </div>
+                <hr>
+                    <div class="form-group">
                         {{ form.customer_email.label}}
-                        {{ form.customer_email(size=40) }}
-                    </fieldset>
-                    <fieldset class="form-field">
+                        {{ form.customer_email(class_="form-control", type="email") }}
+                    </div>
+                <hr>
+                    <div class="form-group">
+                        {{ form.customer_telephone.label}}
+                        {{ form.customer_telephone(class_="form-control", pattern="[0-9]{11}", title="Enter 11 digit telephone number") }}
+                    </div>
+                <hr>
+                    <div class="form-group">
                         {{ form.net.label}}
-                        {{ form.net(size=20) }}
-                    </fieldset>
-					  <fieldset class="form-field">
+                        {{ form.net(class_="form-control", type="number", max="999999999")  }}
+                        {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+                    </div>
+                    <hr>
+					  <div class="form-group">
                         {{ form.postcode.label}}
-                        {{ form.postcode(size=20) }}
-                    </fieldset>
+                        {{ form.postcode(class_="form-control", title="Enter a valid postcode", **{"onchange":"postcodeChecker()"}) }}
+                      </div>
                     <hr>
 					<div class="container">
 						<div class="row">
                             <div class="col-sm">
                                 <fieldset class="controls">
-                                    {{ form.suppliers.label}}
+                                    Suppliers
                                     <br>
                                     {{ form.suppliers(**{"onchange":"supplierFunction()"}) }}
                                 </fieldset>
                             </div>
-                            <script>
+                            <hr>
+						<div class="col-sm">
+							<fieldset class="form-field">
+							Access Type
+							{{ form.accessTypes }}
+							</fieldset>
+						</div>	
+						<div class="col-sm">
+							<fieldset class="controls" id="bandwidths_div" style="display: none">
+							TTB / Virtual 1 Bandwidth
+							<br>
+							{{ form.bandwidths }}
+							</fieldset>
+						</div>
+                        <div class="col-sm">
+							<fieldset class="controls" id="btw_bandwidths_div" style="display: none">
+							BT Wholesale Bandwidth
+							<br>
+							{{ form.btw_bandwidths }}
+                            {{ form.btw_bw_type }}
+							</fieldset>
+						</div>
+						</div>
+					<hr>
+						<div class="row">
+                            	<div class="col-sm">
+							<fieldset class="controls">
+							Bearers
+							<br>
+							{{ form.bearers }}
+							</fieldset>
+						</div>
+					<div class="col-sm">
+					<fieldset class="controls">
+                       Term
+                        <br>
+						{{ form.terms }}
+                    </fieldset>
+					</div>
+					</div>
+					<hr>
+					<div class="row">
+					<button type="submit" class="btn btn-secondary"> Submit </button>
+					</div>
+				</div>					
+                </form>
+            </div>
+	    </div>
+         <hr>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+        <script>
 					function supplierFunction() {
                         if (document.getElementById("suppliers-0").checked && (document.getElementById("suppliers-1").checked || document.getElementById("suppliers-2").checked))  {
                             document.getElementById("btw_bandwidths_div").style.display = "block";
@@ -73,58 +130,36 @@ ul {
                             document.getElementById("bandwidths_div").style.display = "none";
                         }
                     }
-					</script>
-                            <hr>
-						<div class="col-sm">
-							<fieldset class="form-field">
-							{{ form.accessTypes.label}}
-							{{ form.accessTypes }}
-							</fieldset>
-						</div>	
-						<div class="col-sm">
-							<fieldset class="controls" id="bandwidths_div" style="display: none">
-							{{ form.bandwidths.label}}
-							<br>
-							{{ form.bandwidths }}
-							</fieldset>
-						</div>
-                        <div class="col-sm">
-							<fieldset class="controls" id="btw_bandwidths_div" style="display: none">
-							{{ form.btw_bandwidths.label}}
-							<br>
-							{{ form.btw_bandwidths }}
-                            {{ form.btw_bw_type }}
-							</fieldset>
-						</div>
-						</div>
-					<hr>
-						<div class="row">
-                            	<div class="col-sm">
-							<fieldset class="controls">
-							{{ form.bearers.label}}
-							<br>
-							{{ form.bearers }}
-							</fieldset>
-						</div>
-					<div class="col-sm">
-					<fieldset class="controls">
-                        {{ form.terms.label}}
-                        <br>
-						{{ form.terms }}
-                    </fieldset>
-					</div>
-					</div>
-					<hr>
-					<div class="row">
-					<input type="submit" value="Submit" class="button">
-					</div>
-				</div>					
-                </form>
-            </div>
-	    </div>
-         <hr>
-        </div>
-    </div>
+                    function postcodeChecker() {
+                        var postcode = document.getElementById('postcode').value;
+                        var url = "{{url_for('customer_quote.search_address')}}";
+                        var json = "application/json";
 
-</div>
+                        function onSuccess(data) {
+                            var addresskey = JSON.parse(data);
+                            document.getElementbyId("address_key").innerHTML = addresskey;
+                        }
+                        $.ajax({ type:"POST",url:url,contentType:json, data :JSON.stringify({postcode : postcode})});
+
+                    }
+    (function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+    </script>
 {% endblock %}

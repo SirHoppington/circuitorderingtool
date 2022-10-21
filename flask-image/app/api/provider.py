@@ -2,12 +2,14 @@ from flask import request, json
 import requests
 import json
 import pandas as pd
-from app.utilities import add_quote_item
+from app.utilities import add_quote_item, btw_order_api_body
 from app.queries import add_btw_quote
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
 from config import v1_user, v1_password, btw_secret, btw_client_id, btw_sandbox_client_id ,btw_sandbox_secret
+from datetime import datetime
+
 class Provider:
 
     headers = {
@@ -54,17 +56,18 @@ class Provider:
 
     # Cleanse NewOrder form.
     def create_order(self, filter):
+        access = datetime.strptime(filter["accessAvailableFrom"], "%Y-%m-%d").strftime("%Y/%m/%d")
         start_cleansed_form = {k: v for k, v in filter.items() if k == 'quoteReference' or k ==
                          'pricingRequestHardwareId' or k == 'pricingRequestAccessProductId' or k == 'purchaseOrderNumber'}
         end_cleansed_form = {k: v for k, v in filter.items() if v != [
-            'Any'] and k != 'csrf_token' and k != 'FirstName' and
+            'Any'] and k != 'csrf_token' and k != 'FirstName' and k != 'accessAvailableFrom' and
                          k != 'LastName' and k != 'Telephone' and
                          k != 'Email' and k != 'quoteReference' and k !=
                          'pricingRequestHardwareId' and k != 'pricingRequestAccessProductId' and k != 'purchaseOrderNumber'}
         customer_contact = {
             "primaryProvisioningContact": {"firstName": filter["FirstName"], "lastName": filter["LastName"],
                                            "telephone": filter["Telephone"], "email": filter["Email"]}}
-        body = {**start_cleansed_form, **customer_contact, **end_cleansed_form}
+        body = {**start_cleansed_form, **customer_contact, "accessAvailableFrom":access, **end_cleansed_form }
         print(body)
         response = self.send_order(body)
         return response
@@ -90,9 +93,13 @@ class BasicProvider(Provider):
 
 class OAuthProvider(Provider):
     token = "test"
-    def __init__(self,name, url , quote_url, retrieve_quote_url, order_url, client_id, client_secret, authorization_url):
+    # don't repeat and move this to top of class.
+    def __init__(self,name, url , quote_url, retrieve_quote_url, address_url,
+                 qual_url, order_url, client_id, client_secret, authorization_url):
         self.client_id = client_id
         self.client_secret = client_secret
+        self.address_url = address_url
+        self.qual_url = qual_url
         self.authorization_url = authorization_url
         super().__init__(name, url, quote_url, retrieve_quote_url, order_url)
 
@@ -105,14 +112,23 @@ class OAuthProvider(Provider):
         self.token = token['access_token']
         print(self.token)
 
-    def quote_api(self, body):
+    def address_lookup(self, postcode):
+        headers = {
+            "Authorization": "Bearer " + self.token,
+            "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15",
+            "productFamily" : "ethernet"
+        }
+        api_url = self.url + self.address_url + "?postcode=" + postcode + "&streetNr=10"
+        print(api_url)
+        response = requests.get(api_url, headers=headers)
+        return response
 
+    def quote_api(self, body):
         headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + self.token,
             "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15"
         }
-        print(headers)
         api_url = self.url + self.quote_url
         response = requests.post(api_url, headers=headers, json = body)
         return response
@@ -120,15 +136,15 @@ class OAuthProvider(Provider):
     def get_quote(self, postcode, filters):
         #iterate through bandwidths, map to BTW value and add a new quoteItem to JSON
         quote_list = {"quoteItem": []}
-        print("test")
         print(filters)
-        print("test")
         print(filters["accessTypes"])
         if not filters["accessTypes"]:
             quote_list = add_quote_item(quote_list, filters, '100 Mbit/s', "EtherwayFibreService")
+            print(quote_list)
             quote_list = add_quote_item(quote_list, filters, '1 Gbit/s', "EtherwayFibreService")
             quote_list = add_quote_item(quote_list, filters, '10 Gbit/s', "EtherwayFibreService")
             quote_list = add_quote_item(quote_list, filters, 'FTTC 40:10 Mbit/s', "EtherwayGEAService")
+            print(quote_list)
             quote_list = add_quote_item(quote_list, filters, 'FTTC 80:20 Mbit/s', "EtherwayGEAService")
         else:
             for type in filters["accessTypes"]:
@@ -166,26 +182,40 @@ class OAuthProvider(Provider):
 
     # Cleanse NewOrder form.
     def create_order(self, filter):
-        order_list = add_order(filters)
+        body = btw_order_api_body(filter)
         print(body)
         response = self.send_order(body)
         return response
 
     # Send cleansed order to 3rd Party order API.
     def send_order(self, body):
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + self.token,
+            "APIGW-Tracking-Header": "96bb97fa-b941-46bb-8c4e-86c616c28a15",
+            "productFamily" : "ethernet"
+        }
         api_url = self.url + self.order_url
-        response = requests.get(api_url, headers=self.headers, data=json.dumps(body), auth=self.auth, verify=False)
+        print(api_url)
+        response = requests.post(api_url, headers=headers, json = body)
         print(response)
         print(response.content)
         return response
+
+
 
 v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
                   "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
                   "layer2-api/orderingV2", "address-lookup", v1_user, v1_password)
 
 btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/tmf-api/quoteManagement/v4",
-                        "/quote", "/quote", "no_order",
+                        "/quote", "/quote", "no_address_mgmt", "no_qual", "no_order",
                         btw_client_id ,btw_secret , "https://api-testa.business.bt.com/oauth/accesstoken")
-btw_sandbox_api = OAuthProvider("BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com/v1",
-                        "/quote", "/retrieveQuote", "/productOrderingManagement/productOrder",
-                        btw_sandbox_client_id ,btw_sandbox_secret , "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
+
+btw_sandbox_api = OAuthProvider(
+    "BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com",
+    "/quote", "/retrieveQuote","/common/geographicAddressManagement/v1/geographicAddress",
+    "/bt-wholesale/v1/product-qualification/ethernet",
+    "/v1/productOrderingManagement/productOrder", btw_sandbox_client_id, btw_sandbox_secret,
+    "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
+

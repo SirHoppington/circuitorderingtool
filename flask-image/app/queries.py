@@ -26,18 +26,33 @@ def search_products_ref(ref):
 
 def search_net_order(ref):
     result = db.session.query(Order).filter(
-            (Quotation.net == ref) & (NetRef.order_id == Order.id) & (NetRef.quotation_net == ref)).first()
+            (Quotation.net == ref) & (NetRef.order_id == Order.id) & (NetRef.quotation_net == ref)).all()
     return result
 def search_prod_order(product):
     result = db.session.query(Order).filter(
             (NetRef.order_id == Order.id) & (NetRef.product_id == ProviderProduct.id) & (ProviderProduct.productReference == product)).first()
     return result
 
+def search_btw_prod_order(quote):
+    result = db.session.query(Order).filter(
+            (NetRef.order_id == Order.id) & (NetRef.product_id == ProviderProduct.id) & (ProviderQuote.quoteReference == quote)).first()
+    return result
 
 #Search ProviderQuote and Quotation table for all results
 def get_all_pricing():
     result = db.session.query(Quotation, ProviderQuote, Customer, Order).filter(
         (NetRef.quotation_net == Quotation.net) & (NetRef.order_id == Order.id) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.customer_id == Customer.id)).all()
+    return result
+
+# Return all created Quotations
+def get_all_quotations():
+    result = db.session.query(Quotation, Customer, Order).filter(
+        (NetRef.quotation_net == Quotation.net) & (NetRef.order_id == Order.id) & (NetRef.customer_id == Customer.id)).all()
+    return result
+
+def get_suppliers_in_quotation(net):
+    result = db.session.query(ProviderQuote).filter(
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id ==ProviderQuote.id) & (Quotation.net == net)).all()
     return result
 
 #Search ProviderQuote and Quotation table for all results
@@ -58,8 +73,8 @@ def get_quotation_products(ref):
 
 #Search ProviderQuote, Quotation and order table for all results
 def get_all_orders():
-    result = db.session.query(ProviderQuote, Quotation, Order).filter(
-        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) & (Order.status != "Not ordered")).all()
+    result = db.session.query(ProviderQuote, Quotation, Order,ProviderProduct).filter(
+        (NetRef.quotation_net == Quotation.net) & (NetRef.provider_id == ProviderQuote.id)& (NetRef.order_id == Order.id) &(NetRef.product_id == ProviderProduct.id) & (Order.status != "Not ordered") & (ProviderProduct.customer_quote == "Added")).all()
     print(result)
     return result
 
@@ -84,14 +99,14 @@ def search_customer(email):
         (Customer.email == email)).first()
     return result
 
-def add_customer(postcode, reference, status, name, email):
-    new_quote = Quotation(name=postcode, net=reference)
+def add_customer(postcode, reference, status, name, email,lastName, telephone):
+    new_quote = Quotation(postcode=postcode, net=reference)
     db.session.add(new_quote)
     new_order = Order(status=status, ref=None)
     db.session.add(new_order)
     existing_customer = search_customer(email)
     if not existing_customer:
-        existing_customer = Customer(name=name, email=email)
+        existing_customer = Customer(name=name, email=email, lastName=lastName, telephone=telephone)
         db.session.add(existing_customer)
     db.session.commit()
     return new_quote, new_order, existing_customer
@@ -101,6 +116,12 @@ def add_v1_order(response, product):
     order_ref = dict["resultOrderNumber"]
     set_order_ref(product, order_ref)
     return order_ref, "Virtual 1"
+
+def add_btw_order(response):
+    dict = response.json()
+    order_ref = dict[0]["id"]
+    set_btw_order_ref(product,order_ref)
+    return "BT Wholesale"
 
 
 def add_v1_quote(response,new_quote, new_order, existing_customer):
@@ -138,7 +159,7 @@ def add_btw_quote(response,new_quote, new_order, existing_customer):
     dict = response.json()
     print(dict)
     bt_ref = dict["id"]
-    print(bt_ref)
+    print(dict)
     btw_quote = ProviderQuote(quoteReference=bt_ref, provider="BT Wholesale")
     db.session.add(btw_quote)
     db.session.commit()
@@ -185,8 +206,11 @@ def remove_product_from_quote(product):
 
 def send_quote_to_order(product):
     order = search_net_order(product)
-    order.status = "Orders requested"
-    db.session.commit()
+    for x in order:
+        print(x.status)
+        x.status = "Orders requested"
+        print(x.status)
+        db.session.commit()
     return True
 
 def set_order_ref(product, order_ref):
@@ -195,9 +219,23 @@ def set_order_ref(product, order_ref):
     order.status = "Order sent"
     db.session.commit()
     return True
+#Used to search BTW orders:
+def set_btw_status(quote):
+    order = search_btw_prod_order(quote)
+    print("heeeeeeeeeeeeere")
+    print(order)
+    order.status = "Order sent"
+    print(order.status)
+    db.session.commit()
+    return True
 
 # check if it is a virtual1 quote:
 def check_provider(ref):
-    result = db.session.query(ProviderQuote, ProviderProduct).filter(
-        (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.product_id == ProviderProduct.id)).first()
+    result = db.session.query(ProviderQuote, ProviderProduct, Quotation, Customer).filter(
+        (ProviderQuote.quoteReference == ref) & (NetRef.provider_id == ProviderQuote.id) & (NetRef.product_id == ProviderProduct.id) & (NetRef.quotation_net == Quotation.net) & (NetRef.customer_id == Customer.id)).first()
+    return result
+
+#check DB if net ref exists:
+def check_net_ref(ref):
+    result = db.session.query(Quotation).filter(Quotation.net == ref).first()
     return result

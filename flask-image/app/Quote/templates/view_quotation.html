@@ -85,8 +85,7 @@ background:#eee;
         <div class="row">
           <!-- BEGIN FILTERS -->
           <div class="col-md-3">
-              <h2 class="grid-title"> <div class="float-left">Filters</div></h2>
-              <br>
+              <h2 class="grid-title">Filters</h2>
               <br>
             <hr>
 
@@ -141,8 +140,7 @@ background:#eee;
           <!-- END FILTERS -->
           <!-- BEGIN RESULT -->
           <div class="col-md-9">
-              <h2 class="grid-title"><div class="float-left">Customer Quotation NET:{{net_ref}}</div></h2>
-            <br>
+              <h2 class="grid-title">Customer Quotation NET:{{net_ref}}</h2>
             <br>
             <hr>
             <div class="padding"></div>
@@ -197,8 +195,14 @@ background:#eee;
       {% endfor %}
       </tbody>
           </table>
-                    <div class="float-right"><input type="submit" value="Remove from Quote"/></div>
-                    <div class="float-right"><input type="submit" value="Send to Orders" formaction="{{ url_for('customer_quote.add_to_order', net=net_ref) }}"/></div>
+          <div class="row">
+              <div class="col-sm">
+                            <button type="submit" class="btn btn-secondary"> Remove from Quote </button>
+              </div>
+              <div class="col-sm">
+                            <button type="submit" class="btn btn-secondary" formaction="{{ url_for('customer_quote.add_to_order', net=net_ref) }}"> Send to Orders </button>
+              </div>
+          </div>
               </form>
           </div>
         </div>
