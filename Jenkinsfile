@@ -10,7 +10,7 @@ stages {
 		stage ('Launch Test environment') {
 		steps {
 			sh '''
-			    export FLASK_APP="app:create_app('development')"
+			    export FLASK_APP="app:create_app('testing')"
 				flask run --host=0.0.0.0
 			'''
 		}
@@ -28,7 +28,10 @@ stages {
 	{
 	steps {
 		echo "deploying the application"
-		sh "export FLASK_APP="app:create_app('development')" flask run --host=0.0.0.0 > log.txt 2>&1 &"
+		sh '''
+			export FLASK_APP="app:create_app('development')"
+			flask run --host=0.0.0.0 > log.txt 2>&1 &
+		'''
 	}
 	}
 }
