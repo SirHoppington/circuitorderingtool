@@ -1,22 +1,19 @@
 pipeline {
 agent { label 'gcp' }
 stages {
-	stage('Build') {
-		stage('Build Docker Image') {
-		steps {
-			sh 'docker-compose -f /vagrant/docker-compose.yml up -d'
-		}
-		}
-		stage ('Launch Test environment') {
-		steps {
+	stage('Build Docker Image') {
+	steps {
+		sh 'docker-compose -f /vagrant/docker-compose.yml up -d'
+	}
+	}
+	stage ('Launch Test environment') {
+	steps {
 			sh '''
 			    export FLASK_APP="app:create_app('testing')"
 				flask run --host=0.0.0.0
 			'''
 		}
 		}
-	}
-
 	stage('Test') {
 	steps {
 		sh 'pytest'
@@ -24,8 +21,7 @@ stages {
 	}
 	}
 
-	stage('Deploy')
-	{
+	stage('Deploy') {
 	steps {
 		echo "deploying the application"
 		sh '''
