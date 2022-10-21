@@ -37,9 +37,10 @@ class NewQuote:
                 add_v1_quote(v1_response, new_quote[0], new_quote[1], new_quote[2])
             except Exception as e:
                 return (str(e))
-        ## Add try/except for future provider Quotation APIs.
+
         if "BT Wholesale" in filters["suppliers"]:
-            if ("Fibre" in filters["accessTypes"]) or ("FTTC" in filters["accessTypes"] or not filters["accessTypes"]):
+            if ("Fibre" in filters["accessTypes"]) or \
+                    ("FTTC" in filters["accessTypes"] or not filters["accessTypes"]):
                 try:
                     btw_response = btw_test_api.get_quote(postcode, filters)
                     add_btw_quote(btw_response, new_quote[0], new_quote[1], new_quote[2])

@@ -34,7 +34,7 @@ ul {
                       <fieldset class="form-field">
                         {{ form.purchaseOrderNumber.label}}
 						<br>
-                        {{ form.purchaseOrderNumber(class_="form-control",type="number", maxlength=20) }}
+                        {{ form.purchaseOrderNumber(class_="form-control",type="number", max=999999) }}
                     </fieldset>
 					</div>
                         <div class="col-sm">
@@ -136,7 +136,7 @@ ul {
 					<fieldset class="controls">
                         {{ form.term.label}}
                         <br>
-						{{ form.term(class_="form-control", type="number", maxlength="2") }}
+						{{ form.term(class_="form-control", type="number", max="48") }}
                     </fieldset>
 					</div>
                     </div>
@@ -182,9 +182,9 @@ ul {
 					</div>
                     <script>
                         var tomorrow = new Date();
-                        var dd = today.getDate()+1;
-                        var mm = today.getMonth()+1; //January is 0 so need to add 1 to make it 1!
-                         var yyyy = today.getFullYear();
+                        var dd = tomorrow.getDate()+1;
+                        var mm = tomorrow.getMonth()+1; //January is 0 so need to add 1 to make it 1!
+                         var yyyy = tomorrow.getFullYear();
                          if(dd<10){
                              dd='0'+dd
                          }

@@ -3,8 +3,6 @@ import pandas as pd
 from app.queries import search_v1_quote_by_id, add_v1_quote, add_btw_quote, add_customer, add_v1_order, set_btw_status
 
 # Use case class to request a new quotation.
-
-
 class NewOrder:
     def __init__(self):
         pass
@@ -23,16 +21,12 @@ class NewOrder:
             try:
                 #manipulate form to gather required data
                 btw_response = btw_sandbox_api.create_order(filters)
-                #create function
                 # Change to set the btw order status
                 order_ref = set_btw_status(filters["btwProductId"])
             except:
                 btw_sandbox_api.fetch_access_token()
                 btw_response = btw_sandbox_api.create_order(filters)
-                # create function
-                print("here")
                 order_ref = set_btw_status(filters["btwProductId"])
-                print("here")
 
         ## Add try/except for future provider Quotation APIs.
         try:
@@ -41,16 +35,6 @@ class NewOrder:
                 #return v1_response.to_html(classes=["table"], border="0", index=False)
         except Exception as e:
             return (str(e))
-
-
-
-#    def place(self, reference):
-#        order = Order(status="Assigned")
-#        db.session.add(order)
-#        quote_ref = Quotation(name=postcode)
-#        v1_pricing.quotes.append(new_quote)
-#        db.session.add(new_quote)
-#        db.session.commit()
 
 new_orders = NewOrder()
         

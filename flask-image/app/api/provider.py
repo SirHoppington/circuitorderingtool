@@ -9,6 +9,7 @@ from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
 from config import v1_user, v1_password, btw_secret, btw_client_id, btw_sandbox_client_id ,btw_sandbox_secret
 from datetime import datetime
+
 class Provider:
 
     headers = {
@@ -93,7 +94,8 @@ class BasicProvider(Provider):
 class OAuthProvider(Provider):
     token = "test"
     # don't repeat and move this to top of class.
-    def __init__(self,name, url , quote_url, retrieve_quote_url, address_url, qual_url, order_url, client_id, client_secret, authorization_url):
+    def __init__(self,name, url , quote_url, retrieve_quote_url, address_url,
+                 qual_url, order_url, client_id, client_secret, authorization_url):
         self.client_id = client_id
         self.client_secret = client_secret
         self.address_url = address_url
@@ -200,6 +202,8 @@ class OAuthProvider(Provider):
         print(response.content)
         return response
 
+
+
 v1_api =BasicProvider("Virtual 1", "https://apitest.virtual1.com/",
                   "layer2-api/quoting", "layer2-api/retrieveQuote?quoteReference=",
                   "layer2-api/orderingV2", "address-lookup", v1_user, v1_password)
@@ -208,6 +212,10 @@ btw_test_api = OAuthProvider("BT Wholesale", "https://api-testa.business.bt.com/
                         "/quote", "/quote", "no_address_mgmt", "no_qual", "no_order",
                         btw_client_id ,btw_secret , "https://api-testa.business.bt.com/oauth/accesstoken")
 
-btw_sandbox_api = OAuthProvider("BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com",
-                        "/quote", "/retrieveQuote","/common/geographicAddressManagement/v1/geographicAddress", "/bt-wholesale/v1/product-qualification/ethernet", "/v1/productOrderingManagement/productOrder",
-                        btw_sandbox_client_id, btw_sandbox_secret, "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
+btw_sandbox_api = OAuthProvider(
+    "BT Wholesale sandbox", "https://api-sandbox.wholesale.bt.com",
+    "/quote", "/retrieveQuote","/common/geographicAddressManagement/v1/geographicAddress",
+    "/bt-wholesale/v1/product-qualification/ethernet",
+    "/v1/productOrderingManagement/productOrder", btw_sandbox_client_id, btw_sandbox_secret,
+    "https://api.wholesale.bt.com/oauth/accesstoken?grant_type=client_credentials")
+

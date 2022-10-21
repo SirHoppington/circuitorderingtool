@@ -47,7 +47,7 @@ class NewQuote(FlaskForm):
     customer_email = StringField(
         'Customer email',
         [DataRequired()],
-        id='net'
+        id='customerEmail'
     )
     customer_telephone = StringField(
         'Customer Telephone',
@@ -99,7 +99,7 @@ class NewQuote(FlaskForm):
         [('BEARER_100', '100Mb'),
          ('BEARER_1000', '1Gb'),
          ('BEARER_10000', '10Gb')],
-        id='bandwidths'
+        id='bearers'
     )
     productGroups = MultiCheckboxField(
         'ProductGroups',

@@ -15,7 +15,7 @@ login = Blueprint('login', __name__, template_folder='templates')
 def signup_post():
     form = SignUp()
     try:
-        #with admin_permission.require():
+        with admin_permission.require():
 
             if request.method == 'POST':
 
@@ -55,10 +55,12 @@ def log_in():
         user = User.query.filter_by(email=email).first()
 
         # check if the user actually exists
-        # take the user-supplied password, hash it, and compare it to the hashed password in the database
+        # take the user-supplied password, hash it, and compare
+        # it to the hashed password in the database
         if not user or not check_password_hash(user.password, password):
             flash('Please check your login details and try again.')
-            return redirect(url_for('login.log_in')) # if the user doesn't exist or password is wrong, reload the page
+            # if the user doesn't exist or password is wrong, reload the page
+            return redirect(url_for('login.log_in'))
 
     # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)

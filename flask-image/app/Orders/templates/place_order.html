@@ -41,7 +41,7 @@
                     <fieldset class="form-field">
                         {{ form.purchaseOrderNumber.label}}
 						<br>
-                        {{ form.purchaseOrderNumber(class_="form-control",type="number", maxlength=20) }}
+                        {{ form.purchaseOrderNumber(class_="form-control",type="number", max=999999) }}
                     </fieldset>
 					</div>
                     </div>
@@ -201,9 +201,9 @@
                         });
                         function setMinDate(){
                             var tomorrow = new Date();
-                            var dd = today.getDate();
-                            var mm = today.getMonth()+1; //January is 0 so need to add 1 to make it 1!
-                            var yyyy = today.getFullYear();
+                            var dd = tomorrow.getDate();
+                            var mm = tomorrow.getMonth()+1; //January is 0 so need to add 1 to make it 1!
+                            var yyyy = tomorrow.getFullYear();
                             if(dd<10){
                                 dd='0'+dd
                             }

@@ -52,7 +52,7 @@
 						<div class="row">
                             <div class="col-sm">
                                 <fieldset class="controls">
-                                    {{ form.suppliers.label}}
+                                    Suppliers
                                     <br>
                                     {{ form.suppliers(**{"onchange":"supplierFunction()"}) }}
                                 </fieldset>
@@ -60,20 +60,20 @@
                             <hr>
 						<div class="col-sm">
 							<fieldset class="form-field">
-							{{ form.accessTypes.label}}
+							Access Type
 							{{ form.accessTypes }}
 							</fieldset>
 						</div>	
 						<div class="col-sm">
 							<fieldset class="controls" id="bandwidths_div" style="display: none">
-							{{ form.bandwidths.label}}
+							TTB / Virtual 1 Bandwidth
 							<br>
 							{{ form.bandwidths }}
 							</fieldset>
 						</div>
                         <div class="col-sm">
 							<fieldset class="controls" id="btw_bandwidths_div" style="display: none">
-							{{ form.btw_bandwidths.label}}
+							BT Wholesale Bandwidth
 							<br>
 							{{ form.btw_bandwidths }}
                             {{ form.btw_bw_type }}
@@ -84,14 +84,14 @@
 						<div class="row">
                             	<div class="col-sm">
 							<fieldset class="controls">
-							{{ form.bearers.label}}
+							Bearers
 							<br>
 							{{ form.bearers }}
 							</fieldset>
 						</div>
 					<div class="col-sm">
 					<fieldset class="controls">
-                        {{ form.terms.label}}
+                       Term
                         <br>
 						{{ form.terms }}
                     </fieldset>
