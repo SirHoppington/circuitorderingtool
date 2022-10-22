@@ -11,7 +11,10 @@ environment {
 stages {
 	stage('Build Docker Image') {
 	steps {
-		sh 'sudo docker-compose up -d'
+		sh '''
+			sudo docker-compose --build-arg POSTGRES_DB='$POSTGRES_DB' --build-arg POSTGRES_PASSWORD='$POSTGRES_PASSWORD' --build-arg POSTGRES_USER='$POSTGRES_USER' --build-arg POSTGRES_TEST_DB='$POSTGRES_TEST_DB' --build-arg POSTGRES_TEST_DB_PASSWORD='$POSTGRES_TEST_DB_PASSWORD' --build-arg POSTGRES_TEST_DB_USER='$POSTGRES_TEST_DB_USER' --detach --verbose
+			sudo docker-compose up -d
+		'''
 	}
 	}
 	stage ('Launch Test environment') {
