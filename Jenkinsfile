@@ -28,16 +28,6 @@ stages {
 		input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
 	}
 	}
-
-	stage('Deploy') {
-	steps {
-		echo "deploying the application"
-		sh '''
-			export FLASK_APP="app:create_app('development')"
-			flask run --host=0.0.0.0 > log.txt 2>&1 &
-		'''
-	}
-	}
 }
 
 post {
