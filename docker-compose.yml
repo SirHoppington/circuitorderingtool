@@ -4,10 +4,12 @@ services:
   
   postgres:
     image: "postgres"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - database.env
+ #   environment:
+ #     POSTGRES_USER: ${POSTGRES_USER}
+ #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+ #     POSTGRES_DB: ${POSTGRES_DB}
 #    command: echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
     volumes:
      - pgdata:/var/libpostgresql/data/
@@ -15,10 +17,12 @@ services:
   test_postgres:
     image: "postgres"
     container_name: test_database
-    environment:
-      POSTGRES_USER: ${POSTGRES_TEST_DB_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_TEST_DB_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_TEST_DB}
+    env_file:
+      - test_database.env
+  #  environment:
+  #    POSTGRES_USER: ${POSTGRES_TEST_DB_USER}
+  #    POSTGRES_PASSWORD: ${POSTGRES_TEST_DB_PASSWORD}
+  #    POSTGRES_DB: ${POSTGRES_TEST_DB}
     expose:
      - "5433"
     ports:
