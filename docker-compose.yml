@@ -15,8 +15,10 @@ services:
   test_postgres:
     image: "postgres"
     container_name: test_database
-    env_file:
-     - test_database.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_TEST_DB_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_TEST_DB_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_TEST_DB}
     expose:
      - "5433"
     ports:
