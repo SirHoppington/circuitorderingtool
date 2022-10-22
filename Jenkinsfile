@@ -11,7 +11,11 @@ environment {
 stages {
 	stage('Build Docker Image') {
 	steps {
-		sh 'sudo docker-compose up -d'
+		sh '''
+			sudo groupadd docker
+			sudo usermod -aG docker jenkins
+			sudo docker-compose up -d
+		'''
 	}
 	}
 	stage ('Launch Test environment') {
