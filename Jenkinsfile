@@ -4,9 +4,9 @@ environment {
 		POSTGRES_DB = credentials('POSTGRES_DB')
 		POSTGRES_USER = credentials('POSTGRES_USER')
 		POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-		POSTGRES_DB = credentials('POSTGRES_TEST_DB')
-		POSTGRES_USER = credentials('POSTGRES_TEST_DB_USER')
-		POSTGRES_PASSWORD = credentials('POSTGRES_TEST_DB_PASSWORD')
+		POSTGRES_TEST_DB = credentials('POSTGRES_TEST_DB')
+		POSTGRES_TEST_DB_USER = credentials('POSTGRES_TEST_DB_USER')
+		POSTGRES_TEST_DB_PASSWORD = credentials('POSTGRES_TEST_DB_PASSWORD')
     }
 stages {
 	stage('Build Docker Image') {
