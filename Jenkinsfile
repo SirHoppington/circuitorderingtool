@@ -11,7 +11,7 @@ environment {
 stages {
 	stage('Build Docker Image') {
 	steps {
-		sh 'docker-compose up -d'
+		sh 'sudo docker-compose up -d'
 	}
 	}
 	stage ('Launch Test environment') {
