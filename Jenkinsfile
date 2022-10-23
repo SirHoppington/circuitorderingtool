@@ -1,21 +1,20 @@
 pipeline {
 agent { label 'gcp' }
 environment {
-		//POSTGRES_DB = credentials('POSTGRES_DB')
-		//POSTGRES_USER = credentials('POSTGRES_USER')
-		//POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-		//POSTGRES_TEST_DB = credentials('POSTGRES_TEST_DB')
-		//POSTGRES_TEST_DB_USER = credentials('POSTGRES_TEST_DB_USER')
-		//POSTGRES_TEST_DB_PASSWORD = credentials('POSTGRES_TEST_DB_PASSWORD')
-		DB_SECRETS = credentials('database.env')
+		POSTGRES_DB = credentials('POSTGRES_DB')
+		POSTGRES_USER = credentials('POSTGRES_USER')
+		POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
+		POSTGRES_TEST_DB = credentials('POSTGRES_TEST_DB')
+		POSTGRES_TEST_DB_USER = credentials('POSTGRES_TEST_DB_USER')
+		POSTGRES_TEST_DB_PASSWORD = credentials('POSTGRES_TEST_DB_PASSWORD')
+		//DB_SECRETS = credentials('database.env')
     }
 stages {
 	stage('Build Docker Image') {
 	steps {
-			//sudo docker-compose build --build-arg POSTGRES_USER=POSTGRES_USER --build-arg POSTGRES_PASSWORD='${POSTGRES_PASSWORD}' --build-arg POSTGRES_DB='${POSTGRES_DB}' --build-arg POSTGRES_TEST_DB_USER='${POSTGRES_TEST_DB_USER}' --build-arg POSTGRES_TEST_DB_PASSWORD='${POSTGRES_TEST_DB_PASSWORD}' --build-arg POSTGRES_TEST_DB='${POSTGRES_TEST_DB}'
-
 		sh '''
-			sudo docker-compose --env-file $JENKINS_HOME/secrets/'${DB_SECRETS}' up
+			sudo docker-compose build --build-arg POSTGRES_USER=POSTGRES_USER --build-arg POSTGRES_PASSWORD='${POSTGRES_PASSWORD}' --build-arg POSTGRES_DB='${POSTGRES_DB}' --build-arg POSTGRES_TEST_DB_USER='${POSTGRES_TEST_DB_USER}' --build-arg POSTGRES_TEST_DB_PASSWORD='${POSTGRES_TEST_DB_PASSWORD}' --build-arg POSTGRES_TEST_DB='${POSTGRES_TEST_DB}'
+			sudo docker-compose up -d
 		'''
 	}
 	}
