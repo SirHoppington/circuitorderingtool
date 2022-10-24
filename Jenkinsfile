@@ -13,8 +13,8 @@ stages {
 	stage('Build Docker Image') {
 	steps {
 		sh '''
-			sudo docker-compose build --build-arg POSTGRES_USER=POSTGRES_USER --build-arg POSTGRES_PASSWORD='${POSTGRES_PASSWORD}' --build-arg POSTGRES_DB='${POSTGRES_DB}' --build-arg POSTGRES_TEST_DB_USER='${POSTGRES_TEST_DB_USER}' --build-arg POSTGRES_TEST_DB_PASSWORD='${POSTGRES_TEST_DB_PASSWORD}' --build-arg POSTGRES_TEST_DB='${POSTGRES_TEST_DB}'
-			sudo docker-compose up -d
+			docker-compose build --build-arg POSTGRES_USER=POSTGRES_USER --build-arg POSTGRES_PASSWORD='${POSTGRES_PASSWORD}' --build-arg POSTGRES_DB='${POSTGRES_DB}' --build-arg POSTGRES_TEST_DB_USER='${POSTGRES_TEST_DB_USER}' --build-arg POSTGRES_TEST_DB_PASSWORD='${POSTGRES_TEST_DB_PASSWORD}' --build-arg POSTGRES_TEST_DB='${POSTGRES_TEST_DB}'
+			docker-compose up -d
 		'''
 	}
 	}
