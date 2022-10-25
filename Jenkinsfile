@@ -16,6 +16,8 @@ stages {
 			sudo groupadd docker
 			sudo usermod -aG docker jenkins
 			newgrp - docker
+			git clone https://github.com/SirHoppington/circuitorderingtool
+			cd circuitorderingtool
 			docker-compose up -d
 		'''
 	}
