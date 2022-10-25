@@ -12,7 +12,10 @@ environment {
 stages {
 	stage('Build Docker Image') {
 	steps {
-		sh "docker-compose up -d"
+		sh '''
+			newgrp - docker
+			docker-compose up -d
+		'''
 	}
 	}
 	stage ('Launch Test environment') {
