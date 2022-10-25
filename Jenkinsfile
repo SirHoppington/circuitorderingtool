@@ -13,6 +13,8 @@ stages {
 	stage('Build Docker Image') {
 	steps {
 		sh '''
+			sudo groupadd docker
+			sudo usermod -aG docker jenkins
 			newgrp - docker
 			docker-compose up -d
 		'''
